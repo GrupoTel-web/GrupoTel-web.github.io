@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="nt.png">
-    <title>Gestão Núcleo</title>
+    <title>Gestão de Carimbos</title>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -118,7 +118,20 @@
             <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/_layouts/15/Doc.aspx?sourcedoc=%7B3ca09476-ad3a-4fbe-b9d5-c58ac0f3900e%7D&action=default&CID=57f4946a-1f28-40ad-bc73-b29e1228ceeb&_SRM=2%3AS%3A560', '_blank')">RELATÓRIO MUNI ISOLADOS</button>
             <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/g/personal/aldo_stoffel_telefonica_com/EUJUyKe_Yn1GnWZlW9lup6sBGfW14Fti_q4KjmfA90UwkA?e=4%3AjxcgGa&at=9', '_blank')">RELATÓRIO NÚCLEO TÉCNICO</button>
             <button onclick="window.open('https://10.18.77.200/index.php', '_blank')">GEO FIBRA</button>
-            <button onclick="location.href='CABOS_OP_Mapa.pdf'">MAPA CABOS ÓPTICOS</button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+        </div>
+        <div class="button-grid hidden-buttons" id="hidden-buttons-3">
+            <!-- Botões da terceira página (mais links) -->
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
@@ -130,13 +143,16 @@
 
     <script>
        let currentPage = 1;
-
 function updatePageTitle() {
     const pageTitle = document.getElementById('page-title');
     if (currentPage === 1) {
         pageTitle.textContent = 'Gestão de Carimbos NT - SPI';
-    } else {
+    } else if (currentPage === 2) {
         pageTitle.textContent = 'Acessos Núcleo Técnico';
+    } else if (currentPage === 3) {
+        pageTitle.textContent = 'Acessos Núcleo Técnico';
+    } else if (currentPage === 4) {
+        pageTitle.textContent = 'Procedimentos Ações Núcleo Técnico';
     }
 }
 
