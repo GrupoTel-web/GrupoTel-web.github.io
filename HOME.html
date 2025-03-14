@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Carimbos NT - SPI</title>
     <link rel="icon" type="image/png" href="nt.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>Gestão Núcleo</title>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -23,41 +22,35 @@
             background-color: #fff;
             padding: 60px;
             border-radius: 40px;
-            box-shadow: 0 0 15Px rgba(0, 0, 0, 1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 1);
             height: 400px;
             width: 1200px;
         }
         h1 {
             color: #333;
+            font-size: 20px;
+            margin-bottom: 10px;
         }
         button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 20px;
-            margin: 10px 0; /* Adiciona espaço vertical entre os botões */
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-        button.container {
-            background-color: #7c8a7d;
-            color: white;
-            padding: 15px 20px;
-            margin: 10px 0; /* Adiciona espaço vertical entre os botões */
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 15px;
-            transition: background-color 0.3s ease;
+           background-color: #4CAF50;
+           color: white;
+           padding: 25px;
+           margin: 10px 0;
+           border: none;
+           border-radius: 5px;
+           cursor: pointer;
+           font-size: 15px;
+           transition: background-color 0.3s ease;
+           font-family: Arial, Helvetica, sans-serif;
+           width: 200px;
+           height: 85px; /* Tamanho fixo de altura */
+          font-weight: bold;
         }
         button:hover {
             font-size: 15px;
             background-color: #1c9850;
             font-weight: bold;
         }
-
         .button-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -65,26 +58,34 @@
             max-width: 1000px;
             margin-left: 80px;
         }
-        button {
-            font-family: Arial, Helvetica, sans-serif;
-            width: 200px;
-            padding: 25px;
-            font-weight: bold;
-            font-size: 15px;
+        .scroll-button {
             cursor: pointer;
+            font-size: 24px;
+            margin: 0 10px;
+            color: #333;
+            opacity: 1;
+            transition: opacity 0.3s;
         }
-
-        h1 {
-        font-size: 20px; /* Ajuste o tamanho da fonte conforme necessário */
-        margin-bottom: 10px;
-    }
+        .scroll-button.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .hidden-buttons {
+            display: none;
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
+        <h1 id="title">
+            <span class="scroll-button" id="prev-btn" onclick="changePage('prev')">⯇</span>
+            <span id="page-title">Gestão de Carimbos NT - SPI</span>
+            <span class="scroll-button" id="next-btn" onclick="changePage('next')">⯈</span>
+        </h1><br><br><br>
         
-        <h1>Gestão de Carimbos NT - SPI</h1><br><br><br>
-        <div class="button-grid">
+        <div class="button-grid" id="buttons">
+            <!-- Botões da primeira página (arquivos locais) -->
             <button onclick="location.href='CARIMBO_OLT_ISOLADA_FINAL.html'">CARIMBO OLT ISOLADA</button>
             <button onclick="location.href='CARIMBO_UPLINK_OLT_SWD_HL4.html'">ADJACÊNCIA (OLT, SWD, HL4)</button>
             <button onclick="location.href='CARIMBO_ESCALONAMENTO.html'">CARIMBO ESCALONAMENTO</button>
@@ -95,8 +96,92 @@
             <button onclick="location.href='Gestao_OLT_ISOLADA.html'">GESTÃO OLT ISOLADA</button>
             <button onclick="location.href='CARIMBO_AXT_LINK.html'">AXT FRANQUIA LINK</button>
             <button onclick="location.href='CARIMBO_AXT_DOWN.html'">AXT FRANQUIA ISOLADA</button>
-    </div>
         </div>
+        
+        <div class="button-grid hidden-buttons" id="hidden-buttons-2">
+            <!-- Botões da segunda página (links para páginas da web) -->
+            <button onclick="window.open('http://10.26.35.126/dash-dwdm_ocorrencia', '_blank')">PORTAL DWDM</button>
+            <button onclick="window.open('http://10.26.35.126/dash-metro_alta_ocorrencia', '_blank')">PORTAL METRO</button>
+            <button onclick="window.open('http://10.26.35.126/dash-mun_isolados_ocorrencia', '_blank')">PORTAL MUNI ISOLADOS</button>
+            <button onclick="window.open('http://10.215.39.31:7772/portal_hl4/inicio.php', '_blank')">ACOMPANHAMENTO HL4</button>
+            <button onclick="window.open('http://10.26.35.126/dash-geo_oper_ocor/principal-pagina', '_blank')">GESTÃO HL4 </button>
+            <button onclick="window.open('http://10.124.100.13:9091/', '_blank')">4FIELD</button>
+            <button onclick="window.open('https://10.200.36.116/cactiFusion/plugins/weathermap/weathermap-cacti-plugin.php', '_blank')">CACTI FUSION</button>
+            <button onclick="window.open('https://cactiagregador.telesp.net.br/cacti/graph_view.php?action=tree&node=tree_anchor-3&site_id=-1&host_id=-1&host_template_id=-1&hgd=&hyper=true', '_blank')">CACTI AGREGADOR</button>
+            <button onclick="window.open('https://vivosmart.tdata.com.br/Orion/Login.aspx?sessionTimeout=yes&ReturnUrl=%2fOrion%2fSummaryView.aspx%3fViewID%3d97', '_blank')">AXT</button>
+            <button onclick="window.open('https://sigitm.vivo.com.br/app/index.jsp', '_blank')">SIGITM</button>
+        </div>
+
+        <div class="button-grid hidden-buttons" id="hidden-buttons-3">
+            <!-- Botões da terceira página (mais links) -->
+            <button onclick="window.open('http://sigitm.redecorp.br/SIGITMWeb/index.jsf;jsessionid=btCU-Fco7trqzWzIdkee-j1sVwj580ciDn07Nx4NtlmJzqgkSmUU!1842956776!1395024305', '_blank')">SIGITM BD</button>
+            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/_layouts/15/Doc.aspx?sourcedoc=%7B3ca09476-ad3a-4fbe-b9d5-c58ac0f3900e%7D&action=default&CID=57f4946a-1f28-40ad-bc73-b29e1228ceeb&_SRM=2%3AS%3A560', '_blank')">RELATÓRIO MUNI ISOLADOS</button>
+            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/g/personal/aldo_stoffel_telefonica_com/EUJUyKe_Yn1GnWZlW9lup6sBGfW14Fti_q4KjmfA90UwkA?e=4%3AjxcgGa&at=9', '_blank')">RELATÓRIO NÚCLEO TÉCNICO</button>
+            <button onclick="window.open('https://10.18.77.200/index.php', '_blank')">GEO FIBRA</button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+        </div><br><br>
+        <div id="pagination-dots" style="text-align: center; margin-top: 20px;"></div>
     </div>
+
+    <script>
+       let currentPage = 1;
+
+function updatePageTitle() {
+    const pageTitle = document.getElementById('page-title');
+    if (currentPage === 1) {
+        pageTitle.textContent = 'Gestão de Carimbos NT - SPI';
+    } else {
+        pageTitle.textContent = 'Acessos Núcleo Técnico';
+    }
+}
+
+function renderPaginationDots(totalPages) {
+    const paginationDots = document.getElementById('pagination-dots');
+    paginationDots.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const dot = document.createElement('span');
+        dot.textContent = '⬤';
+        dot.style.margin = '0 5px';
+        dot.style.opacity = (i === currentPage) ? '1' : '0.3';
+        paginationDots.appendChild(dot);
+    }
+}
+
+function updateButtons() {
+    const allGrids = document.querySelectorAll('.button-grid');
+    allGrids.forEach((grid, index) => {
+        grid.style.display = (index === currentPage - 1) ? 'grid' : 'none';
+    });
+
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+
+    prevBtn.classList.toggle('disabled', currentPage === 1);
+    nextBtn.classList.toggle('disabled', currentPage === allGrids.length);
+
+    renderPaginationDots(allGrids.length);
+    updatePageTitle();
+}
+
+function changePage(direction) {
+    const totalPages = document.querySelectorAll('.button-grid').length;
+
+    if (direction === 'next' && currentPage < totalPages) {
+        currentPage++;
+    } else if (direction === 'prev' && currentPage > 1) {
+        currentPage--;
+    }
+    updateButtons();
+}
+
+updateButtons();
+    </script>
+
 </body>
 </html>
