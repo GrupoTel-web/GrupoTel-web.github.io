@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> ░ NT-SPI DUPLA FALHA ░ </title>
+    <link rel="icon" type="image/png" href="nt.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .container {
+            border: 2px solid #000;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+        }
+        .titulo {
+            background-color: #FF6347; /* Vermelho Claro */
+            color: #fff; /* Branco */
+            padding: 10px;
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .carimbo {
+            border: 2px solid #000;
+            padding: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        .carimboTitulo {
+            background-color: #FF6347; /* Vermelho Claro */
+            color: #fff; /* Branco */
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #FF6347; /* Vermelho Claro */
+            color: #fff; /* Branco */
+        }
+        td {
+            background-color: #fff; /* Branco */
+        }
+        .botoes {
+            margin-top: 20px;
+        }
+        .botoes button {
+            margin-right: 10px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="titulo"> NT-SPI ‼️ DUPLA FALHA ‼️</div>
+        <form id="afectacao-form">
+            <div class="form-section">
+                <p>AFETAÇÃO FTTX: <input type="text" id="afectacao-fttx"></p>
+                <p>AFETAÇÃO MOVEL: <input type="text" id="afectacao-movel"></p>
+            </div>
+            <div class="form-section">
+                <h2>Falha 01</h2>
+                <p><strong>Data Falha1:</strong> <input type="datetime-local" id="data-falha1"></p>
+                <p>Local: <input type="text" id="local-falha1"></p>
+                <p>TA: <input type="text" id="ta-falha1"></p>
+                <p>ROTA E CABO: <input type="text" id="rota-cabo-falha1"></p>
+                <p>STATUS: <textarea id="status-falha1"></textarea></p>
+            </div>
+            <div class="form-section">
+                <h2>Falha 02</h2>
+                <p><strong>Data Falha2:</strong> <input type="datetime-local" id="data-falha2"></p>
+                <p>Local: <input type="text" id="local-falha2"></p>
+                <p>TA: <input type="text" id="ta-falha2"></p>
+                <p>ROTA E CABO: <input type="text" id="rota-cabo-falha2"></p>
+                <p>STATUS: <textarea id="status-falha2"></textarea></p>
+            </div>
+            <button type="button" onclick="gerarCarimbo()">Enviar</button>
+        </form>
+
+        <div id="result-section" class="carimbo">
+            <div class="carimboTitulo">NT-SPI ‼️ DUPLA FALHA ‼️ </div>
+            <table>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Atualização</th>
+                </tr>
+                <tr>
+                    <td>AFETAÇÃO FTTX</td>
+                    <td><span id="result-afectacao-fttx"></span></td>
+                </tr>
+                <tr>
+                    <td>AFETAÇÃO MOVEL</td>
+                    <td><span id="result-afectacao-movel"></span></td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td><strong>Data Falha1</strong></td>
+                    <td><span id="result-data-falha1"></span></td>
+                </tr>
+                <tr>
+                    <td>Local</td>
+                    <td><span id="result-local-falha1"></span></td>
+                </tr>
+                <tr>
+                    <td>TA</td>
+                    <td><span id="result-ta-falha1"></span></td>
+                </tr>
+                <tr>
+                    <td>ROTA E CABO</td>
+                    <td><span id="result-rota-cabo-falha1"></span></td>
+                </tr>
+                <tr>
+                    <td>STATUS</td>
+                    <td><span id="result-status-falha1"></span></td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td><strong>Data Falha2</strong></td>
+                    <td><span id="result-data-falha2"></span></td>
+                </tr>
+                <tr>
+                    <td>Local</td>
+                    <td><span id="result-local-falha2"></span></td>
+                </tr>
+                <tr>
+                    <td>TA</td>
+                    <td><span id="result-ta-falha2"></span></td>
+                </tr>
+                <tr>
+                    <td>ROTA E CABO</td>
+                    <td><span id="result-rota-cabo-falha2"></span></td>
+                </tr>
+                <tr>
+                    <td>STATUS</td>
+                    <td><span id="result-status-falha2"></span></td>
+                </tr>
+            </table>
+            <div class="botoes">
+                <button id="voltar">Voltar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function gerarCarimbo() {
+            document.getElementById('result-afectacao-fttx').textContent = document.getElementById('afectacao-fttx').value;
+            document.getElementById('result-afectacao-movel').textContent = document.getElementById('afectacao-movel').value;
+
+            document.getElementById('result-data-falha1').textContent = formatarDataHora(document.getElementById('data-falha1').value);
+            document.getElementById('result-local-falha1').textContent = document.getElementById('local-falha1').value;
+            document.getElementById('result-ta-falha1').textContent = document.getElementById('ta-falha1').value;
+            document.getElementById('result-rota-cabo-falha1').textContent = document.getElementById('rota-cabo-falha1').value;
+            document.getElementById('result-status-falha1').textContent = document.getElementById('status-falha1').value;
+
+            document.getElementById('result-data-falha2').textContent = formatarDataHora(document.getElementById('data-falha2').value);
+            document.getElementById('result-local-falha2').textContent = document.getElementById('local-falha2').value;
+            document.getElementById('result-ta-falha2').textContent = document.getElementById('ta-falha2').value;
+            document.getElementById('result-rota-cabo-falha2').textContent = document.getElementById('rota-cabo-falha2').value;
+            document.getElementById('result-status-falha2').textContent = document.getElementById('status-falha2').value;
+
+            document.getElementById('result-section').style.display = 'block';
+        }
+
+        function formatarDataHora(dataHora) {
+                if (!dataHora) return '';
+                var data = new Date(dataHora);
+                var dia = String(data.getDate()).padStart(2, '0');
+                var mes = String(data.getMonth() + 1).padStart(2, '0');
+                var ano = data.getFullYear();
+                var horas = String(data.getHours()).padStart(2, '0');
+                var minutos = String(data.getMinutes()).padStart(2, '0');
+                return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+            }
+
+        document.getElementById('voltar').addEventListener('click', function() {
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('afectacao-form').reset();
+        });
+    
+function formatarDataHora(dataHora) {
+    if (!dataHora) return '';
+    var data = new Date(dataHora);
+    var dia = String(data.getDate()).padStart(2, '0');
+    var mes = String(data.getMonth() + 1).padStart(2, '0');
+    var ano = data.getFullYear();
+    var horas = String(data.getHours()).padStart(2, '0');
+    var minutos = String(data.getMinutes()).padStart(2, '0');
+    return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário com Carimbo</title>
+    <link rel="icon" type="image/png" href="nt.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            zoom: 85%;
+        }
+        .container {
+            border: 2px solid #000;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            margin-bottom: 30px;
+        }
+        .titulo {
+            background-color: #9370DB; /* Roxo mais claro */
+            color: #fff; /* Branco */
+            padding: 10px;
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .carimbo {
+            border: 2px solid #000;
+            margin-top: 20px;
+            display: none;
+        }
+        .carimboTitulo {
+            background-color: #9370DB; /* Roxo mais claro */
+            color: #fff; /* Branco */
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 9px;
+        }
+        table, th, td {
+            border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #9370DB; /* Roxo mais claro */
+            color: #fff; /* Branco */
+        }
+        td {
+            background-color: #fff; /* Branco */
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        .botoes {
+            margin-top: 20px;
+        }
+        .botoes button {
+            margin-right: 10px;
+        }
+        #atencao {
+            display: none;
+        }
+        .atencaoLaranja {
+            color: #FF8C00; /* Laranja escuro */
+        }
+        .tabela-container {
+            height: auto;
+            width: 100vw;
+            max-width: 100%;
+            overflow-x: auto;
+            border: 1px solid #d3d3d3;
+            background: white;
+            padding: 5px;
+            font-size: 10px;
+            font-weight: bold;
+            margin: 1px 0; /* Adiciona espaçamento entre as tabelas */
+        }
+
+        .tabela-container th {
+        text-align: center; 
+        vertical-align: middle; 
+        }
+
+        #mensagem-selecao {
+            position: absolute;
+            top: 4%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            animation: piscar 0.5s infinite alternate;
+            text-shadow: #000;
+        }
+
+        @keyframes piscar {
+            0% { color: #9370DB; }
+        }
+
+        
+
+        .botoes-button2 {
+    background-color: #9370DB;
+    color: #fff;
+    border: none;
+    padding: 6px 40px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-bottom: 1px;
+    margin-top: 1px;
+    vertical-align: middle;
+}
+
+/* Contêiner para centralizar o botão horizontalmente */
+.button-container {
+    display: flex;
+    justify-content: center;  /* Alinha o botão no centro horizontal */
+    margin-top: 20px;         /* Mantém a posição vertical que você já queria */
+    margin-bottom: 15px;
+}
+
+
+#conteudo {
+    display: flex;
+    flex-direction: column; /* Alinha os itens de forma vertical */
+    justify-content: center; /* Centraliza no eixo vertical */
+    align-items: center; /* Centraliza no eixo horizontal */
+    height: auto; /* Ocupa 100% da altura da tela */
+    margin: 0; /* Remove qualquer margem */
+    padding: 0; /* Remove qualquer padding */
+    text-align: center; /* Alinha o conteúdo das tabelas ao centro */
+}
+
+/* Estilo da tabela-container */
+
+/* Outras regras para estilização das tabelas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #9370DB; /* Roxo mais claro */
+    color: #fff; /* Branco */
+}
+
+td {
+    background-color: #fff; /* Branco */
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+}
+
+.botoes {
+    margin-top: 10px;
+}
+
+.botoes button {
+    margin-right: 10px;
+}
+
+#atencao {
+    display: none;
+}
+
+.atencaoLaranja {
+    color: #FF8C00; /* Laranja escuro */
+}
+
+/* Estilo do botão para centralização */
+.button-container {
+    display: flex;
+    justify-content: center;  /* Alinha o botão no centro horizontal */
+    margin-top: 3px;         /* Mantém a posição vertical que você já queria */
+    margin-bottom: 3px;
+}
+
+.tabela-container {
+            display: none; /* Oculta todas as tabelas inicialmente */
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <!-- Contêiner para centralizar todo o conteúdo -->
+<div id="conteudo">
+    <!-- Mensagem de seleção -->
+    <div class="" id="mensagem-selecao" style="display: none;">Selecione o tipo de adjacência!</div><br><br>
+
+    <!-- Primeira Tabela -->
+    <div class="tabela-container" id="tabela-OLT" style="display: none;">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 90px;">CLUSTER</th>
+                    <th style="width: 70px;">CIDADE</th>
+                    <th style="width: 70px;">CNLAT</th>
+                    <th style="width: 100px;">MINUTOS</th>
+                    <th style="width: 100px;">CLIENTES</th>
+                    <th style="width: 100px;">TQA_CODIGO</th>
+                    <th style="width: 120px;">TRATATIVA</th>
+                    <th style="width: 90px;">TIPO_FALHA</th>
+                    <th style="width: 90px;">DATA_CRIAÇÃO</th>
+                    <th style="width: 130px;">OLT</th>
+                    <th style="width: 120px;">EQUIP</th>
+                    <th style="width: 120px;">MASSIVA</th>
+                    <th style="width: 90px;">SEVERIDADE</th>
+                </tr>
+            </thead>
+            <tbody class="tabela-body"></tbody>
+        </table>
+    </div>
+
+    <!-- Segunda Tabela -->
+    <div class="tabela-container" id="tabela-HL4" style="display: none;">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 90px;">CLUSTER</th>
+                    <th style="width: 70px;">CIDADE</th>
+                    <th style="width: 70px;">MINUTOS</th>
+                    <th style="width: 100px;">CLIENTES</th>
+                    <th style="width: 100px;">TQA_CODIGO</th>
+                    <th style="width: 100px;">TQA_RAIZ</th>
+                    <th style="width: 90px;">TIPO_FALHA</th>
+                    <th style="width: 70px;">DATA_CRIAÇÃO</th>
+                    <th style="width: 70px;">HOSTNAME</th>
+                    <th style="width: 100px;">EQUIP</th>
+                    <th style="width: 100px;">SEVERIDADE</th>
+                </tr>
+            </thead>
+            <tbody class="tabela-body"></tbody>
+        </table>
+    </div>
+
+    <!-- Terceira Tabela -->
+    <div class="tabela-container" id="tabela-SWD" style="display: none;">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 90px;">CONTRATO</th>
+                    <th style="width: 70px;">MUNICIPIO</th>
+                    <th style="width: 70px;">TQA_CODIGO</th>
+                    <th style="width: 100px;">TQA_RAIZ</th>
+                    <th style="width: 100px;">TIPO_BILHETE</th>
+                    <th style="width: 100px;">DATA_CRIAÇÃO</th>
+                    <th style="width: 90px;">HOSTNAME</th>
+                    <th style="width: 70px;">NOME_REDE_AGREGADOR</th>
+                </tr>
+            </thead>
+            <tbody class="tabela-body"></tbody>
+        </table>
+    </div>
+
+    <!-- Botão de ação -->
+    <div class="button-container">
+        <button class="limparTabela botoes-button2">Limpar</button>
+    </div>
+</div>
+
+    <div class="container">
+        <div class="titulo">NT - SPI 🚧 Perda de ADJ (OLT,SWD,HL4) 🚧</div>
+        <h1>Formulário</h1>
+        <form id="meuFormulario">
+            <label for="tipo">Tipo:</label>
+            <select id="tipo" name="tipo" required>
+                <option value="" hidden>SELECIONE</option>
+                <option value="OLT">OLT</option>
+                <option value="SWD">SWD</option>
+                <option value="HL4">HL4</option>
+            </select><br><br>
+            <label for="ta">TA:</label>
+            <input type="text" id="ta" name="ta" required><br><br>
+            <label for="municipio">Municipio:</label>
+            <input type="text" id="municipio" name="municipio" required><br><br>
+            <label for="hostname">Hostname:</label>
+            <input type="text" id="hostname" name="hostname" required><br><br>
+            <label for="dataFalha">Data da Falha:</label>
+            <input type="datetime-local" id="dataFalha" name="dataFalha" required><br><br>
+            <label for="status">Status:</label>
+            <textarea id="status" name="status" required></textarea><br><br>
+            <label for="atencao" id="atencaoLabel">Atenção:</label>
+            <input type="text" id="atencao" name="atencao" readonly class="atencaoLaranja"><br><br>
+            <button type="submit">Enviar</button>
+        </form>
+        <div class="carimbo" id="carimbo">
+            <div class="carimboTitulo">NT-SPI 🚧 Perda de ADJ (OLT,SWD,HL4)🚧</div>
+            <table>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Atualização</th>
+                </tr>
+                <tr>
+                    <td>Tipo</td>
+                    <td><span id="carimboTipo"></span></td>
+                </tr>
+                <tr>
+                    <td>TA</td>
+                    <td><span id="carimboTA"></span></td>
+                </tr>
+                <tr>
+                    <td>Municipio</td>
+                    <td><span id="carimboMunicipio"></span></td>
+                </tr>
+                <tr>
+                    <td>Hostname</td>
+                    <td><span id="carimboHostname"></span></td>
+                </tr>
+                <tr>
+                    <td>Data da Falha</td>
+                    <td><span id="carimboDataFalha"></span></td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td><span id="carimboStatus"></span></td>
+                </tr>
+                <tr>
+                    <td>Atenção</td>
+                    <td><span id="carimboAtencao" class="atencaoLaranja"></span></td>
+                </tr>
+            </table>
+            <div class="botoes">
+                <button id="voltar">Voltar</button>
+            </div>
+        </div>
+    </div>
+    <script>
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const tipoSelect = document.getElementById("tipo");
+    const carimboAtencao = document.getElementById("carimboAtencao");
+    const carimboAtencaoRow = carimboAtencao.closest("tr"); // Pega a linha do "Atenção"
+
+    function verificarTipo() {
+        const tipoSelecionado = tipoSelect.value;
+
+        // Se o tipo for OLT, exibe a linha de Atenção
+        if (tipoSelecionado === "OLT") {
+            carimboAtencaoRow.style.display = "table-row"; // Exibe a linha
+        } else {
+            carimboAtencaoRow.style.display = "none"; // Oculta a linha
+        }
+    }
+
+    // Chama a função ao mudar o tipo
+    tipoSelect.addEventListener("change", verificarTipo);
+
+    // Inicializa a visibilidade ao carregar
+    verificarTipo();
+});
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const tipoSelect = document.getElementById("tipo");
+    const taInput = document.getElementById("ta");
+    const municipioInput = document.getElementById("municipio");
+    const hostnameInput = document.getElementById("hostname");
+    const dataFalhaInput = document.getElementById("dataFalha"); // Atualizado para "Data da Falha"
+
+    function atualizarCampos() {
+        const tipoSelecionado = tipoSelect.value;
+        let tabelaSelecionada;
+        let taValor = "";
+        let municipioValor = "";
+        let hostnameValor = "";
+        let dataFalhaValor = "";
+
+        // Identifica a tabela visível
+        if (tipoSelecionado === "OLT") {
+            tabelaSelecionada = document.querySelector("#tabela-OLT tbody");
+        } else if (tipoSelecionado === "HL4") {
+            tabelaSelecionada = document.querySelector("#tabela-HL4 tbody");
+        } else if (tipoSelecionado === "SWD") {
+            tabelaSelecionada = document.querySelector("#tabela-SWD tbody");
+        }
+
+        if (!tabelaSelecionada) return;
+
+        // Captura a primeira linha da tabela (se houver dados)
+        const primeiraLinha = tabelaSelecionada.querySelector("tr");
+        if (primeiraLinha) {
+            const colunas = primeiraLinha.getElementsByTagName("td");
+
+            // Define as colunas corretas para TA, Município, Hostname e Data da Falha
+            if (tipoSelecionado === "HL4") {
+                taValor = colunas[4]?.textContent.trim(); // 5ª coluna (índice 4)
+                municipioValor = colunas[1]?.textContent.trim(); // 2ª coluna (índice 1)
+                hostnameValor = colunas[8]?.textContent.trim(); // 9ª coluna (índice 8)
+                dataFalhaValor = colunas[7]?.textContent.trim(); // 8ª coluna (índice 7)
+            } else if (tipoSelecionado === "OLT") {
+                taValor = colunas[5]?.textContent.trim(); // 6ª coluna (índice 5)
+                municipioValor = colunas[1]?.textContent.trim(); // 3ª coluna (índice 2)
+                hostnameValor = colunas[9]?.textContent.trim(); // 10ª coluna (índice 9)
+                dataFalhaValor = colunas[8]?.textContent.trim(); // 9ª coluna (índice 8)
+            } else if (tipoSelecionado === "SWD") {
+                taValor = colunas[2]?.textContent.trim(); // 3ª coluna (índice 2)
+                municipioValor = colunas[1]?.textContent.trim(); // 2ª coluna (índice 1)
+                hostnameValor = colunas[6]?.textContent.trim(); // 9ª coluna (índice 8)
+                dataFalhaValor = colunas[5]?.textContent.trim(); // 3ª coluna (índice 2)
+            }
+
+            // Preenche os campos com os valores encontrados
+            taInput.value = taValor || "";
+            municipioInput.value = municipioValor || "";
+            hostnameInput.value = hostnameValor || "";
+            dataFalhaInput.value = dataFalhaValor || "";
+        }
+    }
+
+    // Monitora mudanças no select para atualizar os campos ao trocar de tabela
+    tipoSelect.addEventListener("change", atualizarCampos);
+
+    // Observa mudanças no conteúdo da tabela e atualiza os campos automaticamente
+    const observer = new MutationObserver(atualizarCampos);
+
+    observer.observe(document.querySelector("#tabela-OLT tbody"), { childList: true, subtree: true });
+    observer.observe(document.querySelector("#tabela-HL4 tbody"), { childList: true, subtree: true });
+    observer.observe(document.querySelector("#tabela-SWD tbody"), { childList: true, subtree: true });
+});
+
+
+
+
+
+        
+
+document.addEventListener("DOMContentLoaded", function () {
+    const tipoSelect = document.getElementById("tipo");
+    const atencaoInput = document.getElementById("atencao");
+    const atencaoLabel = document.getElementById("atencaoLabel");
+
+    const listaEquipamentos = [
+        'BR_CASAL_OLT02', 'BR_FZBBFL_OLT01', 'BR_CASSS_OLT04', 'BR_SOCED_OLT01', 'BR_ITVCX_OLT05',
+        'BR_ITURT_OLT03', 'BR_BGPAV_OLT01', 'BR_LMEBO_OLT01', 'BR_JAIVI_OLT06', 'BR_ARDDR_OLT02',
+        'BR_SREPC_OLT01', 'BR_SPBCB_OLT01', 'BR_BGPSC_OLT05', 'BR_ITAMD_OLT01', 'BR_PRFBO_OLT01',
+        'BR_PRFPF_OLT04', 'BR_AIAMR_OLT01', 'BR_UTBLZ_OLT01', 'BR_UTBPG_OLT01', 'BR_UTBMA_OLT01',
+        'BR_JQBJQ_OLT02', 'BR_ITACS_OLT03', 'BR_PIARG_OLT01', 'BR_ITUPI_OLT01', 'BR_JAICB_OLT02',
+        'BR_MRESPB_OLT01', 'BR_ITUCC_OLT01', 'BR_ITURT_OLT04', 'BR_MRESPJ_OLT01', 'BR_TTEAM_OLT09',
+        'BR_BOPUBP_OLT04'
+    ];
+
+    function verificarHostname() {
+        const tipoSelecionado = tipoSelect.value;
+        let tabelaOLT = document.querySelector("#tabela-OLT tbody");
+        let hostnameValor = "";
+
+        if (tipoSelecionado === "OLT" && tabelaOLT) {
+            const primeiraLinha = tabelaOLT.querySelector("tr");
+            if (primeiraLinha) {
+                const colunas = primeiraLinha.getElementsByTagName("td");
+                hostnameValor = colunas[9]?.textContent.trim(); // Coluna 10 (índice 9)
+            }
+        }
+
+        if (tipoSelecionado === "OLT") {
+            if (listaEquipamentos.includes(hostnameValor)) {
+                atencaoInput.value = "!!OLT FLAT!!";
+            } else {
+                atencaoInput.value = "";
+            }
+            atencaoInput.style.display = "block";
+            atencaoLabel.style.display = "block";
+        } else {
+            atencaoInput.style.display = "none";
+            atencaoLabel.style.display = "none";
+        }
+    }
+
+    // Chama a função ao mudar o tipo
+    tipoSelect.addEventListener("change", verificarHostname);
+
+    // Observa mudanças na tabela OLT para atualizar automaticamente
+    const observer = new MutationObserver(verificarHostname);
+    observer.observe(document.querySelector("#tabela-OLT tbody"), { childList: true, subtree: true });
+});
+
+
+        document.getElementById('meuFormulario').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var tipo = document.getElementById('tipo').value;
+            var ta = document.getElementById('ta').value;
+            var municipio = document.getElementById('municipio').value;
+            var hostname = document.getElementById('hostname').value;
+            var dataFalha = document.getElementById('dataFalha').value;
+            var status = document.getElementById('status').value;
+            var atencao = document.getElementById('atencao').value;
+
+            function formatarDataHora(dataHora) {
+                if (!dataHora) return '';
+                var data = new Date(dataHora);
+                var dia = String(data.getDate()).padStart(2, '0');
+                var mes = String(data.getMonth() + 1).padStart(2, '0');
+                var ano = data.getFullYear();
+                var horas = String(data.getHours()).padStart(2, '0');
+                var minutos = String(data.getMinutes()).padStart(2, '0');
+                return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+            }
+
+            document.getElementById('carimboTipo').textContent = tipo;
+            document.getElementById('carimboTA').textContent = ta;
+            document.getElementById('carimboMunicipio').textContent = municipio;
+            document.getElementById('carimboHostname').textContent = hostname;
+            document.getElementById('carimboDataFalha').textContent = formatarDataHora(dataFalha);
+            document.getElementById('carimboStatus').textContent = status;
+            document.getElementById('carimboAtencao').textContent = atencao;
+            document.getElementById('carimbo').style.display = 'block';
+        });
+
+       
+
+
+
+
+
+        document.getElementById('voltar').addEventListener('click', function() {
+    // Oculta o carimbo e reseta o formulário
+    document.getElementById('carimbo').style.display = 'none';
+});
+
+// Função para limpar os campos do formulário, limpar os valores da tabela e esconder o carimbo
+function limparTabela() {
+    let tipoSelecionado = document.getElementById("tipo").value;
+
+    // Limpa os campos de entrada
+    const inputs = document.querySelectorAll('#meuFormulario input, #meuFormulario select, #meuFormulario textarea');
+    inputs.forEach(input => {
+        input.value = ''; // Limpa o valor do campo de entrada
+    });
+
+    // Limpa os valores exibidos nos spans da tabela (os valores do carimbo)
+    document.getElementById('carimboTipo').textContent = '';
+    document.getElementById('carimboTA').textContent = '';
+    document.getElementById('carimboMunicipio').textContent = '';
+    document.getElementById('carimboHostname').textContent = '';
+    document.getElementById('carimboDataFalha').textContent = '';
+    document.getElementById('carimboStatus').textContent = '';
+
+    // Oculta o carimbo
+    document.getElementById('carimbo').style.display = 'none';
+
+    // Resetar o valor do "Tipo" para a opção "SELECIONE"
+    document.getElementById("tipo").value = "";
+
+    // Assegura que a opção "SELECIONE" seja selecionada
+    const selectTipo = document.getElementById("tipo");
+    const optionDefault = selectTipo.querySelector('option[value=""]');
+    if (optionDefault) {
+        optionDefault.selected = true;
+    }
+
+    // Ocultar todas as tabelas, já que o select foi resetado
+    ocultarTabelas();
+
+    // Ocultar o botão de limpar e mostrar a mensagem de seleção
+    ocultarBotaoLimpar();
+    mostrarMensagem();
+}
+
+// Adiciona o evento de click ao botão "Limpar"
+document.querySelector(".limparTabela").addEventListener("click", limparTabela);
+
+
+
+
+
+
+
+
+
+        
+
+
+        // Função para ocultar todas as tabelas
+function ocultarTabelas() {
+    document.querySelectorAll(".tabela-container").forEach(tabela => tabela.style.display = "none");
+}
+
+// Função para ocultar o botão de limpar
+function ocultarBotaoLimpar() {
+    let botaoLimpar = document.querySelector(".limparTabela");
+    botaoLimpar.style.display = "none"; // Esconde o botão de limpar
+}
+
+// Função para mostrar o botão de limpar
+function mostrarBotaoLimpar() {
+    let botaoLimpar = document.querySelector(".limparTabela");
+    botaoLimpar.style.display = "block"; // Exibe o botão de limpar
+}
+
+// Função para exibir a mensagem "Selecione o tipo de adjacência"
+function mostrarMensagem() {
+    let mensagem = document.getElementById("mensagem-selecao");
+    mensagem.style.display = "block"; // Exibe a mensagem
+}
+
+// Função para ocultar a mensagem "Selecione o tipo de adjacência"
+function esconderMensagem() {
+    let mensagem = document.getElementById("mensagem-selecao");
+    mensagem.style.display = "none"; // Esconde a mensagem
+}
+
+// Ocultar as tabelas, o botão de limpar e a mensagem ao carregar a página
+window.onload = function() {
+    ocultarTabelas();  // Garantir que as tabelas estão ocultas no carregamento
+    ocultarBotaoLimpar();  // Esconde o botão de limpar ao carregar a página
+    mostrarMensagem();  // Exibe a mensagem ao carregar
+}
+
+// Adicionando o evento de mudança ao select
+document.getElementById("tipo").addEventListener("change", function() {
+    let tipoSelecionado = this.value;
+
+    // Ocultar todas as tabelas
+    ocultarTabelas();
+
+    // Ocultar o botão de limpar se nenhuma tabela estiver selecionada
+    if (tipoSelecionado === "") {
+        ocultarBotaoLimpar();
+        mostrarMensagem(); // Exibe a mensagem quando nenhum tipo for selecionado
+    } else {
+        // Mostrar a tabela correspondente se o valor for diferente de vazio
+        let tabelaSelecionada = document.getElementById(`tabela-${tipoSelecionado}`);
+        if (tabelaSelecionada) tabelaSelecionada.style.display = "block";
+
+        // Mostrar o botão de limpar
+        mostrarBotaoLimpar();
+        esconderMensagem(); // Esconde a mensagem quando uma tabela for selecionada
+    }
+});
+
+    const colunasPorTabela = {
+    "OLT": 13,
+    "HL4": 10,
+    "SWD": 8
+};
+
+function criarLinha(tipo, valores = []) {
+    // Seleciona o corpo da tabela pelo tipo
+    let tabela = document.getElementById(`tabela-${tipo}`).querySelector("tbody");
+    let novaLinha = tabela.insertRow();
+    let totalCelulas = colunasPorTabela[tipo] || 0;
+
+    // Cria células conforme o número de colunas
+    for (let i = 0; i < totalCelulas; i++) {
+        let celula = novaLinha.insertCell();
+        celula.contentEditable = "true"; // Torna a célula editável
+        celula.textContent = valores[i] || ""; // Preenche com o valor ou vazio
+    }
+}
+
+function inicializarTabela(tipo, linhas = 1) {
+    // Seleciona o corpo da tabela
+    let tabela = document.getElementById(`tabela-${tipo}`).querySelector("tbody");
+    tabela.innerHTML = ""; // Limpa a tabela
+    for (let i = 0; i < linhas; i++) {
+        criarLinha(tipo); // Cria as linhas da tabela
+    }
+}
+
+document.querySelector(".limparTabela").addEventListener("click", limparTabela);
+
+document.getElementById("tipo").addEventListener("change", function() {
+    let tipoSelecionado = this.value;
+    let tabelas = document.querySelectorAll(".tabela-container");
+    
+    tabelas.forEach(tabela => tabela.style.display = "none");
+    
+    let tabelaSelecionada = document.getElementById(`tabela-${tipoSelecionado}`);
+    if (tabelaSelecionada) {
+        tabelaSelecionada.style.display = "block"; // Exibe a tabela selecionada
+        inicializarTabela(tipoSelecionado); // Inicializa a tabela
+    }
+});
+
+// Inicializa a tabela OLT ao carregar a página
+document.getElementById("tabela-OLT").style.display = "block";
+inicializarTabela("OLT");
+
+// Função de paste
+document.addEventListener("paste", function(event) {
+    let target = event.target;
+    if (target.tagName.toLowerCase() === 'td') {
+        event.preventDefault(); // Evita a ação padrão de colagem
+        let pasteData = event.clipboardData.getData("text");
+        let linhas = pasteData.split("\n").filter(linha => linha.trim() !== ""); // Quebra os dados por linha
+        linhas.forEach((linha, linhaIndex) => {
+            let colunas = linha.split("\t"); // Quebra os dados por tabulação (colunas)
+            colunas.forEach((valor, colunaIndex) => {
+                let linhaTabela = target.parentNode.parentNode.rows[linhaIndex];
+                if (linhaTabela) {
+                    let celula = linhaTabela.cells[colunaIndex];
+                    if (celula) {
+                        celula.innerText = valor; // Define o valor na célula
+                    }
+                }
+            });
+        });
+    }
+});
+
+// Inicializa a tabela ao carregar a página
+inicializarTabela("OLT");
+
+// Ajustando o evento para exibir a tabela de acordo com o tipo selecionado
+document.getElementById("tipo").addEventListener("change", function() {
+    let tipoSelecionado = this.value;
+    let tabelas = document.querySelectorAll(".tabela-container-1");
+    
+    tabelas.forEach(tabela => tabela.style.display = "none");
+
+    if (tipoSelecionado !== "") {
+        let tabelaSelecionada = document.getElementById(`tabela-${tipoSelecionado}`);
+        if (tabelaSelecionada) {
+            tabelaSelecionada.style.display = "block";
+            inicializarTabela(tipoSelecionado); // Inicializa a tabela do tipo selecionado
+        }
+    }
+});
+    </script>
+</body>
+</html>

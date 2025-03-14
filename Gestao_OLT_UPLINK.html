@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="viewport" content="width=device-width">
+<title>Formulário com Gráficos</title>
+<link rel="icon" type="image/png" href="nt.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<style>
+ body {
+ font-family: 'Poppins', sans-serif;
+ padding-top: 5px; /* Empurra o conteúdo para baixo */
+}
+ .chart-container {
+ display: flex;
+ justify-content: center;
+ gap: 20px; /* Reduzir o espaço entre os gráficos */
+}
+ .chart {
+ width: 200px;
+ height: 200px;
+ }
+ .chart-title {
+ text-align: center;
+ font-weight: bold;
+ margin-bottom: 10px;
+ background-color: #483D8B; /* Fundo azul escuro */
+ color: #ffffff; /* Texto branco */
+ padding: 5px;
+ border-radius: 5px;
+ font-family: 'Poppins', sans-serif;
+ }
+ .chart-table {
+ border: 4px solid #d3d3d3; /* Borda mais grossa em cinza claro */
+ padding: 10px;
+ }
+ .values-container {
+ display: flex;
+ justify-content: space-around;
+ margin-top: 10px;
+ }
+ .value-box {
+ padding: 5px;
+ width: 80px;
+ text-align: center;
+ font-weight: bold;
+ font-size: 13px;
+ color: #ffffff; /* Texto branco */
+ }
+ .ok-box {
+ background-color: #4169E1; /* Nova cor do gráfico OK */
+ }
+ .nok-box {
+ background-color: #FF6347; /* Nova cor do gráfico NOK */
+ }
+ .lessThan8-box {
+ background-color: #4169E1; /* Nova cor do gráfico < 8 horas */
+ }
+ .moreThan8-box {
+ background-color: #FF6347; /* Nova cor do gráfico > 8 horas */
+ }
+ .update-info {
+ text-align: center;
+ margin-top: 30px;
+ font-weight: bold;
+ background-color: #3d418b; /* Fundo azul escuro */
+ color: #ffffff; /* Texto branco */
+ padding: 5px;
+ border-radius: 5px;
+ width: calc(200px * 2 + 20px); /* Largura igual à soma dos gráficos e do espaço entre eles */
+ margin:  auto; /* Centralizar a faixa */
+ }
+ .input-container {
+    height: 90px;
+    text-align: center;
+    margin-top: 50px; /* Aumenta o espaço superior */
+    font-weight: thin;
+    background-color: #3d418b; /* Fundo azul escuro */
+    color: #ffffff; /* Texto branco */
+    padding: 9px;
+    border-radius: 5px;
+    width: calc(450px * 2 + 20px); /* Largura igual à soma dos gráficos e do espaço entre eles */
+    margin: 0 auto; /* Centralizar horizontalmente */
+}
+ .button-container {
+ display: flex;
+ justify-content: space-between;
+ width: 175px;
+ margin: 10px;
+ }
+ .input-container {
+    height: 90px;
+    text-align: center;
+    margin-top: 50px; /* Aumenta o espaço superior */
+    font-weight: thin;
+    background-color: #3d418b; /* Fundo azul escuro */
+    color: #ffffff; /* Texto branco */
+    padding: 9px;
+    border-radius: 5px;
+    width: calc(450px * 2 + 20px); /* Largura igual à soma dos gráficos e do espaço entre eles */
+    margin: 0 auto; /* Centralizar horizontalmente */
+}
+
+.input-group {
+    display: flex;
+    font-weight: bold;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0px; /* Espaçamento entre cada par de label e input */
+    margin-right: 40px;
+    margin-left: 40px;
+}
+
+.input-group label {
+    margin-top: 0;
+    text-align: center;
+    width: 80px; /* Largura fixa para os labels */
+}
+
+.input-group input {
+    width: 120px; /* Tamanho fixo para os inputs */
+    height: 30px;
+    font-size: large;
+    margin-top: 0;
+    text-align: center; /* Centraliza o texto dentro do input */
+    font-weight: bold;
+}
+
+/* Ajusta o botão para se alinhar com o layout */
+button {
+    width: 190%;
+    max-width: 180px;
+    border-color: #3d418b;
+    margin-bottom: 10px;
+    margin-top: 8px;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 18px; /* Tamanho do ícone */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* Garante que ele fique centralizado dentro da célula */
+    margin-top: -3px;
+    margin-bottom: -1.5px;
+}
+
+.delete-btn:hover {
+    color: red; /* Muda a cor ao passar o mouse */
+}
+
+td {
+    text-align: center; /* Centraliza o conteúdo das células */
+}
+
+</style>
+</head>
+<body>
+    <div class="input-container">
+        <form id="dataForm">
+          <div class="input-group">
+            <label for="ok">OK:</label>
+            <input id="ok" name="ok" readonly type="number" value="165" class="full-width-input"/>
+            
+            <label for="nok">NOK:</label>
+            <input id="nok" name="nok" oninput="updateOK()" type="number" min="0" max="165" class="full-width-input"/>
+            
+            <label for="lessThan8">
+                <span style="display: block;">Menos</span>
+                <span>8 horas</span>
+            </label>
+            <input id="lessThan8" name="lessThan8" type="number" class="full-width-input" min="0" max="165"/>
+            
+            <label for="moreThan8">
+                <span style="display: block;">Mais</span>
+                <span>8 horas</span>
+            </label>
+            <input id="moreThan8" name="moreThan8" type="number" class="full-width-input" min="0" max="165"/>
+        </div>
+
+            <div style="margin-top: 10px;">
+                <button onclick="generateCharts()" type="button">Gerar Gráficos</button> 
+                <button onclick="resetAll()" type="button">Limpar</button>
+            </div>
+    </div>
+<script>
+   
+</script>
+    </form>
+    <br/>
+<div class="button-container">
+</div>
+</form>
+<div class="update-info">
+<img alt="Imagem" src="upl.png"/>
+<div>NT-SPI GESTÃO de UPLINK OLT's REMOTAS - Atualização: <span id="currentDateTime"></span></div>
+</div><br/><br/>
+<div class="chart-container">
+<div class="chart-table">
+<div class="chart-title">OLT's UPLINK FORA</div>
+<canvas class="chart" id="doughnutChart"></canvas>
+<div class="values-container">
+<div class="value-box ok-box" id="okValue">OK: 165</div>
+<div class="value-box nok-box" id="nokValue">NOK: 0</div>
+</div>
+</div>
+<div class="chart-table">
+<div class="chart-title">SLA DOS TAS ATIVOS</div>
+<canvas class="chart" id="pieChart"></canvas>
+<div class="values-container">
+<div class="value-box lessThan8-box" id="lessThan8Value">< 8 horas: 0</div>
+<div class="value-box moreThan8-box" id="moreThan8Value">> 8 horas: 0</div>
+</div>
+</div>
+</div><br/><br/>
+<div class="update-info">
+<img alt="Imagem" src="upl.png"/>
+<div>NT-SPI GESTÃO de UPLINK OLT's REMOTAS DESC </div>
+</div>
+<script>
+ function updateOK() {
+ const nok = document.getElementById('nok').value;
+ const ok = 165 - nok;
+ document.getElementById('ok').value = ok;
+ document.getElementById('okValue').innerText = `OK: ${ok}`;
+ document.getElementById('nokValue').innerText = `NOK: ${nok}`;
+ }
+ let doughnutChartInstance = null;
+let pieChartInstance = null;
+
+function clearCharts() {
+    if (doughnutChartInstance) {
+        doughnutChartInstance.destroy();
+        doughnutChartInstance = null;
+    }
+    if (pieChartInstance) {
+        pieChartInstance.destroy();
+        pieChartInstance = null;
+    }
+}
+
+function clearInputs() {
+    // Limpa os valores dos inputs
+    document.getElementById('nok').value = '';
+    document.getElementById('lessThan8').value = '';
+    document.getElementById('moreThan8').value = '';
+
+    // Reseta o campo OK para o valor original
+    document.getElementById('ok').value = 165;
+
+    // Atualiza os textos exibidos
+    document.getElementById('okValue').innerText = 'OK: 165';
+    document.getElementById('nokValue').innerText = 'NOK: 0';
+    document.getElementById('lessThan8Value').innerText = '< 8 horas: 0';
+    document.getElementById('moreThan8Value').innerText = '> 8 horas: 0';
+}
+
+function generateCharts() {
+    const ok = parseInt(document.getElementById('ok').value) || 0;
+    const nok = parseInt(document.getElementById('nok').value) || 0;
+    const lessThan8 = parseInt(document.getElementById('lessThan8').value) || 0;
+    const moreThan8 = parseInt(document.getElementById('moreThan8').value) || 0;
+
+    document.getElementById('okValue').innerText = `OK: ${ok}`;
+    document.getElementById('nokValue').innerText = `NOK: ${nok}`;
+    document.getElementById('lessThan8Value').innerText = `< 8 horas: ${lessThan8}`;
+    document.getElementById('moreThan8Value').innerText = `> 8 horas: ${moreThan8}`;
+
+    const doughnutCtx = document.getElementById('doughnutChart').getContext('2d');
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+
+    clearCharts(); // Agora limpa os gráficos antes de criar novos
+
+    doughnutChartInstance = new Chart(doughnutCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['OK', 'NOK'],
+            datasets: [{
+                data: [ok, nok],
+                backgroundColor: ['#4169E1', '#FF6347'],
+                hoverBackgroundColor: ['#4169E1', '#FF6347']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' },
+                datalabels: {
+                    color: '#fff',
+                    formatter: (value) => value,
+                    font: { weight: 'bold' }
+                }
+            },
+            cutout: '70%'
+        }
+    });
+
+    pieChartInstance = new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: ['< 8 horas', '> 8 horas'],
+            datasets: [{
+                data: [lessThan8, moreThan8],
+                backgroundColor: ['#4169E1', '#FF6347'],
+                hoverBackgroundColor: ['#4169E1', '#FF6347']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' },
+                datalabels: {
+                    color: '#fff',
+                    formatter: (value) => value,
+                    font: { weight: 'bold' }
+                }
+            }
+        }
+    });
+}
+
+function resetAll() {
+    clearCharts();
+    clearInputs();
+}
+
+ // Set current date and time
+ document.getElementById('currentDateTime').innerText = new Date().toLocaleString();
+</script>
+<table border="1" style="width:100%; margin-top:20px;">
+  <thead>
+    <tr>
+      <th style="background-color: #483D8B; color: #ffffff; width: 120px;">TA</th>
+      <th style="background-color: #483D8B; color: #ffffff; width: 150px;">OLT</th>
+      <th style="background-color: #483D8B; color: #ffffff; width: 80px;">AFETAÇÃO</th>
+      <th style="background-color: #483D8B; color: #ffffff; width: 80px;">EPS</th>
+      <th style="background-color: #483D8B; color: #ffffff; width: 150px;">DATA CRIAÇÃO</th>
+      <th style="background-color: #483D8B; color: #ffffff; width: 120px;">SLA</th>
+      <th style="background-color: #483D8B; color: #ffffff;">STATUS</th>
+      <th style="background-color: #483D8B; color: #ffffff; width: 100px;"></th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<button onclick="addRow()" type="button">Adicionar Linha</button>
+<button onclick="deleteRow()" type="button">Apagar Linha</button>
+<button onclick="calculateSLA()" type="button">Calcular SLA</button>
+<button onclick="undoDelete()" type="button">Desfazer</button>
+
+<script>
+  let deletedRows = [];
+
+  function addRow() {
+  var table = document.querySelector("table tbody");
+  var newRow = table.insertRow();
+  
+  for (var i = 0; i < 7; i++) {
+    var cell = newRow.insertCell();
+    if (i === 3) {
+      var select = document.createElement("select");
+
+      // Criando a opção padrão "SELECIONE"
+      var defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.textContent = "SELECIONE";
+      defaultOption.hidden = true;
+      defaultOption.selected = true;
+      select.appendChild(defaultOption);
+
+      // Criando as demais opções
+      ["ABILITY", "TEL-REDE", "TEL-N1", "ICOMON"].forEach(optionText => {
+        var option = document.createElement("option");
+        option.value = optionText;
+        option.textContent = optionText;
+        select.appendChild(option);
+      });
+
+      cell.appendChild(select);
+    } else if (i === 4) {
+      var inputDate = document.createElement("input");
+      inputDate.type = "datetime-local";
+      cell.appendChild(inputDate);
+    } else {
+      cell.contentEditable = true;
+    }
+  }
+  var deleteButtonCell = newRow.insertCell();
+  deleteButtonCell.innerHTML = '<button class="delete-btn" onclick="deleteSpecificRow(this)">❌</button>';
+}
+
+function deleteRow() {
+  var table = document.querySelector("table tbody");
+  var rows = table.rows;
+
+  if (rows.length > 0) {
+    var lastRow = rows[rows.length - 1]; // Última linha
+
+    // Armazena o valor selecionado do EPS antes de deletar
+    var selectEPS = lastRow.cells[3].querySelector("select");
+    var selectedValue = selectEPS ? selectEPS.value : "";
+
+    // Clona a linha e adiciona o valor do EPS ao dataset
+    var clonedRow = lastRow.cloneNode(true);
+    clonedRow.dataset.epsValue = selectedValue;
+
+    deletedRows.push(clonedRow); // Salva a linha clonada na pilha de "Desfazer"
+    lastRow.remove();
+  }
+}
+
+function deleteSpecificRow(button) {
+  var row = button.closest("tr");
+
+  // Armazena o valor selecionado do EPS antes de deletar
+  var selectEPS = row.cells[3].querySelector("select");
+  var selectedValue = selectEPS ? selectEPS.value : "";
+
+  // Clona a linha e adiciona o valor selecionado ao dataset
+  var clonedRow = row.cloneNode(true);
+  clonedRow.dataset.epsValue = selectedValue; 
+
+  deletedRows.push(clonedRow);
+  row.remove();
+}
+
+function undoDelete() {
+  var table = document.querySelector("table tbody");
+  if (deletedRows.length > 0) {
+    var lastDeletedRow = deletedRows.pop();
+    
+    // Restaura a linha na tabela
+    table.appendChild(lastDeletedRow);
+
+    // Recupera o valor do EPS salvo e o reaplica
+    var selectEPS = lastDeletedRow.cells[3].querySelector("select");
+    if (selectEPS) {
+      selectEPS.value = lastDeletedRow.dataset.epsValue || "";
+    }
+
+    sortTableBySLA();
+  }
+}
+
+function calculateSLA() {
+  var rows = document.querySelectorAll('table tbody tr');
+  rows.forEach(row => {
+    var dataCriacao = row.cells[4].querySelector('input').value;
+    if (dataCriacao) {
+      var dataCriacaoDate = new Date(dataCriacao);
+      var now = new Date();
+      var diff = now - dataCriacaoDate;
+      var hours = Math.floor(diff / 1000 / 60 / 60);
+      var minutes = Math.floor((diff / 1000 / 60) % 60);
+      row.cells[5].innerText = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+    }
+  });
+  sortTableBySLA();
+}
+
+function sortTableBySLA() {
+  var table = document.querySelector("table tbody");
+  var rows = Array.from(table.rows);
+  
+  rows.sort((a, b) => {
+    var slaA = a.cells[5].innerText.split(":");
+    var slaB = b.cells[5].innerText.split(":");
+    var totalMinutesA = parseInt(slaA[0]) * 60 + parseInt(slaA[1]) || 0;
+    var totalMinutesB = parseInt(slaB[0]) * 60 + parseInt(slaB[1]) || 0;
+    return totalMinutesB - totalMinutesA;
+  });
+  
+  table.innerHTML = "";
+  rows.forEach(row => table.appendChild(row));
+}
+
+document.getElementById('dataForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  calculateSLA();
+});
+
+setInterval(calculateSLA, 60000);
+
+// Adiciona uma linha por padrão ao carregar a página
+document.addEventListener("DOMContentLoaded", function() {
+  addRow();
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelector("table").addEventListener("paste", function (e) {
+    e.preventDefault(); // Impede a formatação original
+
+    let text = (e.clipboardData || window.clipboardData).getData("text"); // Obtém apenas o texto puro
+    document.execCommand("insertText", false, text); // Insere o texto sem formatação
+  });
+});
+
+</script>
+</body>
+</html>

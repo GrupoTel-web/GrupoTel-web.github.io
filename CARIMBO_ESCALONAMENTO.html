@@ -1,0 +1,604 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Formulário com Carimbo</title>
+ <link rel="icon" type="image/png" href="nt.png">
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+ <style>
+ body {
+ font-family: 'Poppins', sans-serif;
+ }
+ .container {
+ border: 2px solid #000;
+ padding: 20px;
+ max-width: 600px;
+ margin: 0 auto;
+ background-color: #f9f9f9;
+ }
+ .titulo {
+ background-color: #FF4500; /* Roxo */
+ color: #fff; /* Branco */
+ padding: 10px;
+ text-align: center;
+ font-size: 1.5em;
+ margin-bottom: 20px;
+ }
+ .carimbo {
+ border: 2px solid #000;
+ padding: 10px;
+ margin-top: 20px;
+ display: none;
+ 
+ }
+ .carimboTitulo {
+ background-color: #FF4500; /* Roxo */
+ color: #fff; /* Branco */
+ padding: 10px;
+ text-align: center;
+ font-size: 1.2em;
+ margin-bottom: 10px;
+ }
+ table {
+ width: 100%;
+ border-collapse: collapse;
+ }
+ table, th, td {
+ border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+ }
+ th, td {
+ padding: 8px;
+ text-align: left;
+ }
+ th {
+ background-color: #FF4500; /* Roxo */
+ color: #fff; /* Branco */
+ }
+ td {
+ background-color: #fff; /* Branco */
+ }
+ textarea {
+ width: 100%;
+ height: 100px;
+ }
+ .botoes {
+ margin-top: 20px;
+ }
+ .botoes button {
+ margin-right: 10px;
+ }
+
+ .tabela-container-1 {
+            width: 90vw;
+            max-width: 100%;
+            overflow-x: auto;
+            border: 1px solid #d3d3d3;
+            background: white;
+            padding: 5px;
+            margin-left: 40px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .tabela-container-1 th {
+        text-align: center; 
+        vertical-align: middle; 
+        }
+
+        .tabela-container {
+            width: 93vw;
+            max-width: 100%;
+            overflow-x: auto;
+            border: 1px solid #d3d3d3;
+            background: white;
+            padding: 5px;
+            margin-left: 90px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        .botoes {
+            margin-top: 9px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .botoes button {
+            background-color: #FF4500;
+            color: #fff;
+            border: none;
+            padding: 6px 40px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .botoes-1 {
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+ </style>
+</head>
+<body>
+
+
+  <div class="tabela-container-1">
+    <table id="tabela">
+        <thead>
+            <tr>
+                <th style="width: 90px;">TA METRO / OUTRO</th>
+                <th style="width: 70px;">DWDM LINHA</th>
+                <th style="width: 70px;">TA RAIZ (REDE)</th>
+                <th style="width: 100px;">LOCALIDADE</th>
+                <th style="width: 100px;">ROTA</th>
+                <th style="width: 100px;">DATA ALARME</th>
+                <th style="width: 120px;">TEMPO CORRIDO</th>
+                <th style="width: 90px;">RISCO FTTX</th>
+                <th style="width: 90px;">RISCO ADSL</th>
+                <th style="width: 130px;">AFETAÇÃO ERB</th>
+                <th style="width: 120px;">TOTAL RISCO</th>
+                <th style="width: 120px;">AFETAÇÃO FTTX</th>
+                <th style="width: 90px;">AFETAÇÃO ADSL</th>
+                <th style="width: 90px;">AFETAÇÃO TOTAL</th>
+                <th style="width: 130px;">RESUMO STATUS</th>
+                <th style="width: 120px;">AREA RESPONSAVEL</th>
+                <th style="width: 90px;">EVENTOS ENVOLVIDOS</th>
+                <th style="width: 90px;">TECNOLOGIA</th>
+                <th style="width: 130px;">TTMC</th>
+                <th style="width: 120px;">ADJ, SPC</th>
+                </tr>
+        </thead>
+        <tbody id="tabela-body"></tbody>
+    </table>
+</div>
+
+<div class="botoes">
+    <button class="limparTabela">Limpar</button>
+</div>
+
+ <div class="container">
+ <div class="titulo">NT-SPI 🌡️ Escalonamentos 🌡️</div>
+ <h1>Formulário</h1>
+ <form id="meuFormulario">
+
+  <label for="escalonamento">Escalonamento:</label>
+  <select id="escalonamento" name="escalonamento" required>
+  <option value="" hidden>SELECIONAR O TIPO</option>
+  <option value="OLT-LINK">OLT-LINK</option>
+ <option value="OLT-DOWN">OLT-DOWN</option>
+ <option value="DRACO">DRACO</option>
+ <option value="DWDM">DWDM</option>
+ <option value="HL4">HL4</option>
+ <option value="METRO">METRO</option>
+ <option value="MÓVEL">MÓVEL</option>
+ </select><br><br>
+ 
+ <label for="municipio">Municipio:</label>
+ <input type="text" id="municipio" name="municipio" required><br><br>
+ 
+ <label for="ta">TA:</label>
+ <input type="text" id="ta" name="ta" required><br><br>
+ 
+ <label for="dataAbertura">Data Abertura:</label>
+ <input type="datetime-local" id="dataAbertura" name="dataAbertura" required><br><br>
+ 
+ <label for="taRaiz">TA Raiz:</label>
+ <input type="text" id="taRaiz" name="taRaiz" required><br><br>
+
+
+ <label for="gestorAtual">Gestor Atual:</label>
+<select id="gestorAtual" name="gestorAtual" required>
+  <option value="" hidden>SELECIONAR</option>
+  <option value="N1 - ABILITY">N1 - ABILITY</option>
+  <option value="N1 - TEL">N1 - TEL</option>
+  <option value="REDE - TEL">REDE - TEL</option>
+  <option value="REDE - ICOMON">REDE - ICOMON</option>
+  <option value="NOC">NOC</option>
+  <option value="N2">N2</option>
+  <option value="SUPORTE">SUPORTE</option>
+  <option value="SWAP">SWAP</option>
+  <option value="CO-N1">CO-N1</option>
+  <option value="SOBRESSALENTE CHAMADO INTERNO">SOBRESSALENTE INTERNO</option>
+  <option value="SOBRESSALENTE FORNECEDOR">SOBRESSALENTE FORNECEDOR</option>
+  <option value="OPERACAO RF">OPERACAO RF</option>
+  <option value="OPERACAO MOVEL BACKHAUL">OPERACAO MOVEL BACKHAUL</option>
+  <option value="OPERAÇÃO BANDA LARGA">OPERAÇÃO BANDA LARGA</option>
+  <option value="OPERAÇÃO DWDM">OPERAÇÃO DWDM</option>
+  <option value="OPERAÇÃO REDE IP">OPERAÇÃO REDE IP</option>
+  <option value="N1 CAPITAL">N1 CAPITAL</option>
+  <option value="N1 SUDESTE">N1 SUDESTE</option>
+  <option value="REDE SUDESTE">REDE SUDESTE</option>
+  <option value="REDE CAPITAL">REDE CAPITAL</option>
+</select><br><br>
+
+
+<label for="tempoNoc">Tempo NOC (horas):</label>
+<input type="text" id="tempoNoc" name="tempoNoc" required pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM"><br><br>
+
+<label for="tempoN1">Tempo N1 (horas):</label>
+<input type="text" id="tempoN1" name="tempoN1" required pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM"><br><br>
+
+<label for="tempoRede">Tempo Rede (horas):</label>
+<input type="text" id="tempoRede" name="tempoRede" required pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM"><br><br>
+
+<!-- Campo para selecionar "Outro" -->
+<label for="outroTipo">Outro:</label>
+<input type="checkbox" id="outroTipo" name="outroTipo" onclick="toggleOutroOptions()">
+<br><br>
+
+<div id="outroOptions" style="display: none;">
+    <label for="outrosOPP"></label>
+    <select id="outrosOPP" name="outrosOPP" onchange="atualizarTituloTempoOutro()">
+      <option value="" hidden>SELECIONE</option>
+      <option value="N2">N2</option>
+      <option value="SUPORTE">SUPORTE</option>
+      <option value="SWAP">SWAP</option>
+      <option value="CO-N1">CO-N1</option>
+      <option value="SOBRESSALENTE CHAMADO INTERNO">SOBRESSALENTE INTERNO</option>
+      <option value="SOBRESSALENTE FORNECEDOR">SOBRESSALENTE FORNECEDOR</option>
+      <option value="OPERACAO RF">OPERACAO RF</option>
+      <option value="OPERACAO MOVEL BACKHAUL">OPERACAO MOVEL BACKHAUL</option>
+      <option value="OPERAÇÃO BANDA LARGA">OPERAÇÃO BANDA LARGA</option>
+      <option value="OPERAÇÃO DWDM">OPERAÇÃO DWDM</option>
+      <option value="OPERAÇÃO REDE IP">OPERAÇÃO REDE IP</option>
+      <option value="N1 CAPITAL">N1 CAPITAL</option>
+      <option value="N1 SUDESTE">N1 SUDESTE</option>
+      <option value="REDE SUDESTE">REDE SUDESTE</option>
+      <option value="REDE CAPITAL">REDE CAPITAL</option>
+    </select>
+    <input type="text" id="tempoOutro" name="tempoOutro" pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM"><br><br>
+  </div>
+  
+  <label for="nivel">Nível:</label>
+  <select id="nivel" name="nivel" required>
+    <option value="" hidden>SELECIONAR</option>
+    <option value="COORDENADOR">COORDENADOR</option>
+    <option value="GERENTE">GERENTE</option>
+    <option value="SENIOR">SENIOR</option>
+    <option value="DIRETOR">DIRETOR</option>
+  </select><br><br>
+  
+  <label for="status">Status:</label>
+  <textarea id="status" name="status" required></textarea><br><br>
+  
+  <input type="hidden" id="envio" name="envio" value="">
+  <button type="submit">Enviar</button>
+  
+  <div class="carimbo" id="carimbo">
+    <div class="carimboTitulo">NT-SPI 🌡️ Escalonamentos 🌡️</div>
+    <table>
+      <tr>
+        <th>Descrição</th>
+        <th>Atualização</th>
+      </tr>
+      <tr>
+        <td>Escalonamento</td>
+        <td><span id="carimboEscalonamento"></span></td>
+      </tr>
+      <tr>
+        <td>Municipio</td>
+        <td><span id="carimboMunicipio"></span></td>
+      </tr>
+      <tr>
+        <td>TA</td>
+        <td><span id="carimboTA"></span></td>
+      </tr>
+      <tr>
+        <td>Data Abertura</td>
+        <td><span id="carimboDataAbertura"></span></td>
+      </tr>
+      <tr>
+        <td>TA Raiz</td>
+        <td><span id="carimboTARaiz"></span></td>
+      </tr>
+      <tr>
+        <td>Gestor Atual</td>
+        <td><span id="carimboGestorAtual"></span></td>
+      </tr>
+      <tr>
+        <td>Tempo NOC</td>
+        <td><span id="carimboTempoNoc"></span></td>
+      </tr>
+      <tr>
+        <td>Tempo N1</td>
+        <td><span id="carimboTempoN1"></span></td>
+      </tr>
+      <tr>
+        <td>Tempo Rede</td>
+        <td><span id="carimboTempoRede"></span></td>
+      </tr>
+      <tr>
+        <td>Tempo Total (NOC, N1, Rede)</td>
+        <td><span id="carimboTempoTotal"></span></td>
+      </tr>
+      <tr id="outroRow" style="display: none;">
+        <td id="tituloTempoOutro">Tempo Outros</td>
+        <td><span id="carimboTempoOutro"></span></td>
+      </tr>
+      <tr>
+        <td>Nível</td>
+        <td><span id="carimboNivel"></span></td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td><span id="carimboStatus"></span></td>
+      </tr>
+      <tr>
+        <td>Envio</td>
+        <td><span id="carimboEnvio"></span></td>
+      </tr>
+      <tr>
+        <td>Tempo TA</td>
+        <td><span id="carimboTempoTA"></span></td>
+      </tr>
+    </table>
+    <div class="botoes">
+      <button id="voltar">Voltar</button>
+    </div>
+  </div>
+ <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    function preencherFormulario() {
+        let tabela = document.querySelector("table");
+        if (!tabela) return;
+
+        let linhas = tabela.querySelectorAll("tbody tr");
+        if (linhas.length === 0) return;
+
+        let ultimaLinha = linhas[linhas.length - 1];
+        let colunas = ultimaLinha.querySelectorAll("td");
+
+        if (colunas.length < 4) return; // Garante que tem colunas suficientes antes de preencher
+
+        let ta = colunas[1].textContent.trim(); // Coluna DWDM LINHA
+        let taRaiz = colunas[2].textContent.trim(); // Coluna TA RAIZ (REDE)
+        let dataAbertura = colunas[5].textContent.trim(); // Coluna DATA ALARME
+        let municipioCompleto = colunas[3].textContent.trim(); // Coluna LOCALIDADE (Município)
+
+        // Pegando apenas o que vem antes do "-" no município
+        let municipio = municipioCompleto.split("-")[0].trim();
+
+        // Preenchendo os campos do formulário
+        document.getElementById("ta").value = ta;
+        document.getElementById("taRaiz").value = taRaiz;
+        document.getElementById("dataAbertura").value = formatarData(dataAbertura);
+        document.getElementById("municipio").value = municipio; // Adicionando o município
+    }
+
+    function formatarData(data) {
+        if (!data) return "";
+        let partes = data.split(" ");
+        if (partes.length < 2) return "";
+
+        let [dia, mes, ano] = partes[0].split("/");
+        let horario = partes[1];
+
+        return `${ano}-${mes}-${dia}T${horario}`;
+    }
+
+    let observer = new MutationObserver(preencherFormulario);
+    let tabela = document.querySelector("table");
+
+    if (tabela) {
+        observer.observe(tabela, { childList: true, subtree: true });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+function criarLinha(celulas = 20, valores = []) {
+            let tabela = document.getElementById("tabela-body");
+            let novaLinha = tabela.rows[0];
+
+            if (novaLinha) {
+                for (let i = 0; i < celulas; i++) {
+                    novaLinha.cells[i].textContent = valores[i] || "";
+                }
+            } else {
+                novaLinha = tabela.insertRow();
+                for (let i = 0; i < celulas; i++) {
+                    let celula = novaLinha.insertCell();
+                    celula.contentEditable = "true";
+                    celula.textContent = valores[i] || "";
+                }
+            }
+        }
+
+        function inicializarTabela(linhas = 1) {
+            let tabela = document.getElementById("tabela-body");
+            tabela.innerHTML = "";
+            for (let i = 0; i < linhas; i++) {
+                criarLinha();
+            }
+        }
+
+        document.addEventListener("paste", function(event) {
+    let target = event.target;
+    if (target.tagName.toLowerCase() === 'td') {
+        event.preventDefault();
+        let pasteData = event.clipboardData.getData("text");
+
+        // Substituir quebras de linha dentro de células por espaço para evitar divisão incorreta
+        pasteData = pasteData.replace(/([^\t])\n([^\t])/g, "$1 $2");
+
+        let linhas = pasteData.split("\n").filter(linha => linha.trim() !== "");
+        let tabela = target.closest("table"); // Pega a tabela mais próxima
+        let ultimaLinhaIndex = target.parentNode.rowIndex; // Obtém o índice da linha onde começou a colagem
+
+        linhas.forEach((linha, linhaIndex) => {
+            let colunas = linha.split("\t");
+            let linhaTabela = tabela.rows[ultimaLinhaIndex];
+
+            if (linhaTabela) {
+                if (linhaIndex === 0) {
+                    // Primeira linha: Preencher normalmente
+                    colunas.forEach((valor, colunaIndex) => {
+                        let celula = linhaTabela.cells[colunaIndex];
+                        if (celula) {
+                            celula.innerText = valor;
+                        }
+                    });
+                } else {
+                    // Segunda linha: Adicionar os dados na próxima célula vazia da linha principal
+                    let ultimaCelulaIndex = [...linhaTabela.cells].findIndex(celula => celula.innerText.trim() === "");
+                    let celulaDestino = linhaTabela.cells[ultimaCelulaIndex] || linhaTabela.insertCell(-1);
+                    celulaDestino.innerText = colunas.join(" "); // Junta tudo para evitar separação errada
+                }
+            }
+        });
+    }
+});
+
+
+
+        function limparTabela() {
+            inicializarTabela();
+        }
+
+        // Associar o evento de clique no botão "Limpar"
+        document.querySelector(".limparTabela").addEventListener("click", limparTabela);
+
+        inicializarTabela();
+
+
+function atualizarTituloTempoOutro() {
+    const outrosOPP = document.getElementById("outrosOPP").value;
+    const titulo = document.getElementById("tituloTempoOutro");
+
+    if (escalonamento) {
+      titulo.innerText = `Tempo Outros (${outrosOPP})`;
+    } else {
+      titulo.innerText = "Tempo Outros"; // Caso não tenha nada selecionado
+    }
+  }
+
+function toggleOutroOptions() {
+    var outroDiv = document.getElementById("outroOptions");
+    var outroCheckBox = document.getElementById("outroTipo");
+    
+    if (outroCheckBox.checked) {
+        outroDiv.style.display = "block";
+        document.getElementById("outroRow").style.display = "table-row"; // Mostra a linha de 'Tempo Outros'
+        document.getElementById("carimboTempoOutro").innerText = document.getElementById("tempoOutro").value; // Adiciona o tempo do outro
+    } else {
+        outroDiv.style.display = "none";
+        document.getElementById("outroRow").style.display = "none"; // Oculta a linha de 'Tempo Outros'
+        document.getElementById("carimboTempoOutro").innerText = ''; // Limpa o campo
+    }
+}
+
+ 
+ document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("input[type='text'][name^='tempo']").forEach(input => {
+        input.addEventListener("input", function (event) {
+            let value = this.value.replace(/[^0-9]/g, ""); // Remove caracteres não numéricos
+
+            // Limitar o valor a no máximo 6 caracteres
+            if (value.length > 5) {
+                value = value.slice(0, 5);
+            }
+
+            if (value.length > 3) {
+                let horas = value.slice(0, value.length - 2); // Tudo antes dos últimos 2 dígitos
+                let minutos = value.slice(-2); // Últimos 2 dígitos
+
+                // Ajusta os minutos para 59 se for maior que 59
+                if (parseInt(minutos) > 59) {
+                    minutos = "59";
+                }
+
+                this.value = `${horas}:${minutos}`;
+            } else {
+                this.value = value;
+            }
+        });
+    });
+});
+ document.getElementById('meuFormulario').addEventListener('submit', function(event) {
+ event.preventDefault();
+ var escalonamento = document.getElementById('escalonamento').value;
+ var municipio = document.getElementById('municipio').value;
+ var ta = document.getElementById('ta').value;
+ var dataAbertura = document.getElementById('dataAbertura').value;
+ var taRaiz = document.getElementById('taRaiz').value;
+ var gestorAtual = document.getElementById('gestorAtual').value;
+ var tempoNoc = document.getElementById('tempoNoc').value;
+ var tempoN1 = document.getElementById('tempoN1').value;
+ var tempoRede = document.getElementById('tempoRede').value;
+ var tempoOutro = document.getElementById('tempoOutro').value;
+ var tempoTotal = calcularTempoTotal(tempoNoc, tempoN1, tempoRede);
+ var nivel = document.getElementById('nivel').value;
+ var status = document.getElementById('status').value;
+ var envio = new Date().toISOString();
+ var envioFormatado = formatarDataHora(envio);
+ var tempoTA = calcularTempoTA(dataAbertura, envio);
+
+ function formatarDataHora(dataHora) {
+   if (!dataHora) return '';
+   var data = new Date(dataHora);
+   var dia = String(data.getDate()).padStart(2, '0');
+   var mes = String(data.getMonth() + 1).padStart(2, '0');
+   var ano = data.getFullYear();
+   var horas = String(data.getHours()).padStart(2, '0');
+   var minutos = String(data.getMinutes()).padStart(2, '0');
+   return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+ }
+
+ function calcularTempoTotal(tempoNoc, tempoN1, tempoRede) {
+   var [horasNoc, minutosNoc] = tempoNoc.split(':').map(Number);
+   var [horasN1, minutosN1] = tempoN1.split(':').map(Number);
+   var [horasRede, minutosRede] = tempoRede.split(':').map(Number);
+   var totalMinutos = (horasNoc * 60 + minutosNoc) + (horasN1 * 60 + minutosN1) + (horasRede * 60 + minutosRede);
+   var totalHoras = Math.floor(totalMinutos / 60);
+   var totalMinutosRestantes = totalMinutos % 60;
+   return `${String(totalHoras).padStart(2, '0')}:${String(totalMinutosRestantes).padStart(2, '0')}`;
+ }
+
+ function calcularTempoTA(dataAbertura, envio) {
+   var dataAberturaDate = new Date(dataAbertura);
+   var envioDate = new Date(envio);
+   var diffMs = envioDate - dataAberturaDate;
+   var diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+   var diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+   return `${String(diffHrs).padStart(2, '0')}:${String(diffMins).padStart(2, '0')}`;
+ }
+
+ document.getElementById('carimboEscalonamento').textContent = escalonamento;
+ document.getElementById('carimboMunicipio').textContent = municipio;
+ document.getElementById('carimboTA').textContent = ta;
+ document.getElementById('carimboDataAbertura').textContent = formatarDataHora(dataAbertura);
+ document.getElementById('carimboTARaiz').textContent = taRaiz;
+ document.getElementById('carimboGestorAtual').textContent = gestorAtual;
+ document.getElementById('carimboTempoNoc').textContent = tempoNoc;
+ document.getElementById('carimboTempoN1').textContent = tempoN1;
+ document.getElementById('carimboTempoRede').textContent = tempoRede;
+ document.getElementById('carimboTempoOutro').textContent = tempoOutro;
+ document.getElementById('carimboTempoTotal').textContent = tempoTotal;
+ document.getElementById('carimboNivel').textContent = nivel;
+ document.getElementById('carimboStatus').textContent = status;
+ document.getElementById('carimboEnvio').textContent = envioFormatado;
+ document.getElementById('carimboTempoTA').textContent = tempoTA;
+ document.getElementById('carimbo').style.display = 'block';
+});
+
+document.getElementById('voltar').addEventListener('click', function() {
+ document.getElementById('carimbo').style.display = 'none';
+ document.getElementById('meuFormulario').reset();
+});
+</script>
+</body>
+</html>

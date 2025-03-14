@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário com Carimbo</title>
+    <link rel="icon" type="image/png" href="nt.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .container {
+            border: 2px solid #000;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            margin-bottom: 50px;
+        }
+        .titulo {
+            background-color: #800080; /* Roxo */
+            color: #fff; /* Branco */
+            padding: 10px;
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .carimbo {
+            border: 2px solid #000;
+            padding: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        .carimboTitulo {
+            background-color: #800080; /* Roxo */
+            color: #fff; /* Branco */
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #800080; /* Roxo */
+            color: #fff; /* Branco */
+        }
+        td {
+            background-color: #fff; /* Branco */
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        .botoes {
+            margin-top: 20px;
+        }
+        .botoes button {
+            margin-right: 10px;
+        }
+
+        
+        .tabela-container-1 {
+            width: 90vw;
+            max-width: 100%;
+            overflow-x: auto;
+            border: 1px solid #d3d3d3;
+            background: white;
+            padding: 5px;
+            margin-left: 40px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .tabela-container-1 th {
+        text-align: center; 
+        vertical-align: middle; 
+        }
+
+        .botoes {
+            margin-top: 9px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .botoes button {
+            background-color: #800080;
+            color: #fff;
+            border: none;
+            padding: 6px 40px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .botoes-1 {
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+
+        .botoes button:hover {
+            background-color: #800080;
+        }
+        
+        .no-bg {
+    background-color: transparent; /* Remove o fundo apenas dessas células */
+}
+    </style>
+</head>
+<body>
+
+    <div class="tabela-container-1">
+        <table id="tabela">
+            <thead>
+                <tr>
+                    <th style="width: 90px;">CLUSTER</th>
+                    <th style="width: 70px;">CIDADE</th>
+                    <th style="width: 70px;">MINUTOS</th>
+                    <th style="width: 100px;">CLIENTES</th>
+                    <th style="width: 100px;">TQA_CODIGO</th>
+                    <th style="width: 100px;">TQA_RAIZ</th>
+                    <th style="width: 120px;">DATA_CRIAÇÃO</th>
+                    <th style="width: 90px;">OLT</th>
+                    <th style="width: 90px;">EQUIP</th>
+                    <th style="width: 130px;">MASSIVA</th>
+                    <th style="width: 120px;">SEVERIDADE</th>
+                    <th style="width: 120px;">DATA_ULT_REINC</th>
+                    <th style="width: 90px;">VOL_REINC</th>
+                    <th style="width: 90px;">VIP_GOAS</th>
+                    <th style="width: 130px;">TAADJ</th>
+                    <th style="width: 120px;">FALHA1</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-body"></tbody>
+        </table>
+    </div>
+
+    <div class="botoes">
+        <button class="limparTabela">Limpar</button>
+    </div>
+
+
+
+
+
+   
+    <div class="container">
+        <div class="titulo">NT-SPI 🚨 Ocorrências - Alarme - OLT Isolada 🚨</div>
+        <h1>Formulário</h1>
+        <form id="meuFormulario">
+            <label for="taF1">TA Falha 1:</label>
+            <input type="text" id="taF1" name="ta" required><br><br>
+
+            <label for="horarioFalha1">Horário da Falha 1:</label>
+            <input type="datetime-local" id="horarioFalha1" name="horarioFalha1" required><br><br>
+
+            
+            <label for="statusFalha1">Status Falha 1:</label>
+            <textarea id="statusFalha1" name="statusFalha1" required></textarea><br><br>
+
+            
+            <label for="taF2">TA Falha 2:</label>
+            <input type="text" id="taF2" name="ta"><br><br>
+
+            <label for="horarioFalha2">Horário da Falha 2:</label>
+            <input type="datetime-local" id="horarioFalha2" name="horarioFalha2" ><br><br>
+
+            <label for="statusFalha2">Status Falha 2:</label>
+            <textarea id="statusFalha2" name="statusFalha2"></textarea><br><br>
+
+            <label for="eps">EPS:</label>
+            <select id="eps" name="eps" required>
+                <option value="" hidden>SELECIONE</option>
+                <option value="ABILITY">ABILITY</option>
+                <option value="TEL">TEL</option>
+                <option value="ICOMON">ICOMON</option>
+                </select>
+            <br><br>
+
+            <label for="Municipio">Municipio:</label>
+            <input type="text" id="Municipio" name="Municipio" required><br><br>
+
+            <label for="equipamento">Equipamento:</label>
+            <input type="text" id="equipamento" name="equipamento" required oninput="atualizarFlat()"><br><br>
+
+
+            <label for="flat">FLAT ?:</label>
+            <input type="text" id="flat" name="flat" readonly><br><br>
+
+
+            <label for="tipoFalha">Tipo da Falha:</label>
+            <input type="text" id="tipoFalha" name="tipoFalha" required><br><br>
+
+            <label for="dataFalha">Data da Falha:</label>
+            <input type="datetime-local" id="dataFalha" name="dataFalha" required><br><br>
+
+
+            <button type="submit">Enviar</button>
+        </form>
+        <div class="carimbo" id="carimbo">
+            <div class="carimboTitulo">NT-SPI 🚨 Ocorrências - Alarme - OLT Isolada 🚨</div>
+            <table>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Atualização</th>
+                </tr>
+                               
+                <tr>
+                    <td>EPS</td>
+                    <td><span id="carimboEPS"></span></td>
+                </tr>
+
+                <tr>
+                    <td>Municipio</td>
+                    <td><span id="carimboMunicipio"></span></td>
+                </tr>
+                <tr>
+                    <td>Equipamento</td>
+                    <td><span id="carimboEquipamento"></span></td>
+                </tr>
+                <tr>
+                    <td>FLAT ?</td>
+                    <td><span id="carimboFlat"></span></td>
+                </tr>
+                <tr>
+                    <td>Tipo da Falha</td>
+                    <td><span id="carimboTipoFalha"></span></td>
+                </tr>
+                <tr>
+                    <td>Data da Falha</td>
+                    <td><span id="carimboDataFalha"></span></td>
+                </tr>
+                <tr>
+                    <td<strong></strong></td>
+                    <td></td> 
+                </tr>
+                <tr>
+                    <td class="no-bg"><strong>Falha 1:</strong></td>
+                    <td></td> 
+                </tr>
+                <tr>
+                    <td>TA</td>
+                    <td><span id="carimboTAF1"></span></td>
+                </tr>
+                <tr>
+                    <td>Horário da Falha</td>
+                    <td><span id="carimboHorarioFalha1"></span></td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td><span id="carimboStatusFalha1"></span></td>
+                </tr>
+                
+                <tr>
+                    <td class="no-bg"><strong>Falha 2:</strong></td>
+                    <td><span id="titiloTAF2"></span></td> 
+                </tr>
+                <tr>
+                    <td>TA</td>
+                    <td><span id="carimboTAF2"></span></td>
+                </tr>
+                <tr>
+                    <td>Horário da Falha</td>
+                    <td><span id="carimboHorarioFalha2"></span></td>
+                </tr>
+                
+                <tr>
+                    <td>Status</td>
+                    <td><span id="carimboStatusFalha2"></span></td>
+                </tr>
+                                
+                
+            </table>
+            <div class="botoes">
+                <button id="voltar">Voltar</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <script>
+
+
+
+
+
+
+function addRow() {
+    var table = document.querySelector("table tbody");
+    var newRow = table.insertRow();
+    
+    for (var i = 0; i < 9; i++) {
+        var cell = newRow.insertCell();
+        
+        if (i === 3) {
+            var select = document.createElement("select");
+
+            var defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.textContent = "SELECIONE";
+            defaultOption.hidden = true;
+            defaultOption.selected = true;
+            select.appendChild(defaultOption);
+
+            ["ABILITY", "TEL","ICOMON"].forEach(optionText => {
+                var option = document.createElement("option");
+                option.value = optionText;
+                option.textContent = optionText;
+                select.appendChild(option);
+            });
+
+            cell.appendChild(select);
+        }
+        else if (i === 8) {  // A nova célula de EPS
+            var epsValue = document.getElementById("eps").value; // Pega o valor selecionado
+            cell.textContent = epsValue;
+        } else {
+            // Preencher outras células conforme o seu formulário
+            var value = document.getElementById("ta").value; // Exemplo, você pode adaptar para pegar o valor correto
+            cell.textContent = value;
+        }
+    }
+}
+
+
+
+
+
+
+const tabela = document.getElementById("tabela");
+
+function atualizarCamposAutomaticamente() {
+    let linhas = tabela.getElementsByTagName("tr");
+    if (linhas.length > 1) {
+        let ultimaLinha = linhas[linhas.length - 1]; // Pega a última linha
+        let colunas = ultimaLinha.getElementsByTagName("td");
+
+        if (colunas.length >= 16) {
+            // Preenche o Município e Equipamento
+            document.getElementById("Municipio").value = colunas[1].innerText; // Cidade
+            document.getElementById("equipamento").value = colunas[7].innerText;
+            let equipamentoValor = colunas[7].innerText; // Equipamento
+            document.getElementById("dataFalha").value = colunas[6].innerText; // Data Criação
+
+            // Atualiza os campos de falha com base no valor de 'flat'
+            setTimeout(() => {
+                atualizarFlat(equipamentoValor); // Chama atualizarFlat com o valor correto
+
+                // Agora pegamos diretamente o valor de 'flat'
+                let flat = document.getElementById("flat").value;
+                console.log("Valor de flat: ", flat); // Verifique o valor de flat no console
+
+                // Preenche taF1 ou taF2 com base no valor de flat
+                if (flat === "Sim") {
+                    document.getElementById("taF1").value = colunas[4].innerText; // Falha 1
+                    console.log("taF1 preenchido com: ", colunas[4].innerText);
+                } else {
+                    document.getElementById("taF2").value = colunas[4].innerText; // Falha 2
+                    console.log("taF2 preenchido com: ", colunas[4].innerText);
+                }
+            }, 100); // Mais tempo para garantir que flat foi atualizado
+
+            atualizarCarimbo(); // Atualiza o carimbo
+        }
+    }
+}
+
+
+
+
+const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+        if (mutation.addedNodes.length > 0) {
+            atualizarCamposAutomaticamente();
+        }
+    });
+});
+
+
+document.addEventListener("paste", function(event) {
+    let target = event.target;
+
+    if (target.tagName.toLowerCase() === 'td') {
+        event.preventDefault();  // Impede o comportamento de colagem padrão
+        let pasteData = event.clipboardData.getData("text");
+        let linhas = pasteData.split("\n").filter(linha => linha.trim() !== "");
+
+        linhas.forEach((linha, linhaIndex) => {
+            let colunas = linha.split("\t");
+
+            colunas.forEach((valor, colunaIndex) => {
+                let linhaTabela = target.parentNode.parentNode.rows[linhaIndex];
+                if (linhaTabela) {
+                    let celula = linhaTabela.cells[colunaIndex];
+                    if (celula) {
+                        celula.innerText = valor;  // Preenche a célula com o valor
+                    }
+                }
+            });
+        });
+
+        atualizarCamposAutomaticamente();  // Atualiza o carimbo
+    } else {
+        return;  // Deixa o comportamento de colar padrão funcionar
+    }
+});
+
+
+
+
+
+
+
+
+
+
+        function criarLinha(celulas = 16, valores = []) {
+            let tabela = document.getElementById("tabela-body");
+            let novaLinha = tabela.rows[0];
+
+            if (novaLinha) {
+                for (let i = 0; i < celulas; i++) {
+                    novaLinha.cells[i].textContent = valores[i] || "";
+                }
+            } else {
+                novaLinha = tabela.insertRow();
+                for (let i = 0; i < celulas; i++) {
+                    let celula = novaLinha.insertCell();
+                    celula.contentEditable = "true";
+                    celula.textContent = valores[i] || "";
+                }
+            }
+        }
+
+        function inicializarTabela(linhas = 1) {
+            let tabela = document.getElementById("tabela-body");
+            tabela.innerHTML = "";
+            for (let i = 0; i < linhas; i++) {
+                criarLinha();
+            }
+        }
+
+        document.addEventListener("paste", function(event) {
+            let target = event.target;
+            if (target.tagName.toLowerCase() === 'td') {
+                event.preventDefault();
+                let pasteData = event.clipboardData.getData("text");
+                let linhas = pasteData.split("\n").filter(linha => linha.trim() !== "");
+                linhas.forEach((linha, linhaIndex) => {
+                    let colunas = linha.split("\t");
+                    colunas.forEach((valor, colunaIndex) => {
+                        let linhaTabela = target.parentNode.parentNode.rows[linhaIndex];
+                        if (linhaTabela) {
+                            let celula = linhaTabela.cells[colunaIndex];
+                            if (celula) {
+                                celula.innerText = valor;
+                            }
+                        }
+                    });
+                });
+            }
+        });
+
+        function limparTabela() {
+    inicializarTabela();
+    
+    // Simulando o clique no botão 'voltar'
+    document.getElementById('carimbo').style.display = 'none';
+    document.getElementById('meuFormulario').reset();
+
+    // Desocultar os campos de Falha 2
+    desocultarFalha2();
+}
+
+
+function desocultarFalha2() {
+    // Lista de IDs dos campos de Falha 2 no formulário
+    const elementosFalha2 = ["taF2", "horarioFalha2", "statusFalha2"];
+
+    // Lista de IDs dos campos de Falha 2 no carimbo
+    const elementosCarimboFalha2 = ["carimboTAF2", "carimboHorarioFalha2", "carimboStatusFalha2"];
+
+    // Mostrar os campos do formulário
+    elementosFalha2.forEach(id => {
+        let elemento = document.getElementById(id);
+        if (elemento) {
+            elemento.style.display = "block";
+
+            // Mostrar também o label associado
+            let label = document.querySelector(`label[for=${id}]`);
+            if (label) label.style.display = "block";
+        }
+    });
+
+    // Mostrar as linhas no carimbo
+    elementosCarimboFalha2.forEach(id => {
+        let elemento = document.getElementById(id);
+        if (elemento) {
+            elemento.closest("tr").style.display = "table-row";
+        }
+    });
+}
+
+// Associar o evento de clique no botão "Limpar"
+document.querySelector(".limparTabela").addEventListener("click", limparTabela);
+
+inicializarTabela();
+
+        // Associar o evento de clique no botão "Limpar"
+        document.querySelector(".limparTabela").addEventListener("click", limparTabela);
+
+        inicializarTabela();
+    
+
+
+
+
+
+        const equipamentosFlat = {
+    "BR_CASAL_OLT02": "Sim",
+    "BR_FZBBFL_OLT01": "Sim",
+    "BR_CASSS_OLT04": "Sim",
+    "BR_SOCED_OLT01": "Sim",
+    "BR_ITVCX_OLT05": "Sim",
+    "BR_ITURT_OLT03": "Sim",
+    "BR_BGPAV_OLT01": "Sim",
+    "BR_LMEBO_OLT01": "Sim",
+    "BR_JAIVI_OLT06": "Sim",
+    "BR_ARDDR_OLT02": "Sim",
+    "BR_SREPC_OLT01": "Sim",
+    "BR_SPBCB_OLT01": "Sim",
+    "BR_BGPSC_OLT05": "Sim",
+    "BR_ITAMD_OLT01": "Sim",
+    "BR_PRFBO_OLT01": "Sim",
+    "BR_PRFPF_OLT04": "Sim",
+    "BR_AIAMR_OLT01": "Sim",
+    "BR_UTBLZ_OLT01": "Sim",
+    "BR_UTBPG_OLT01": "Sim",
+    "BR_UTBMA_OLT01": "Sim",
+    "BR_JQBJQ_OLT02": "Sim",
+    "BR_ITACS_OLT03": "Sim",
+    "BR_PIARG_OLT01": "Sim",
+    "BR_ARDIP_OLT01": "Sim",
+    "BR_ITUPI_OLT01": "Sim",
+    "BR_JAICB_OLT02": "Sim",
+    "BR_MRESPB_OLT01": "Sim",
+    "BR_ITUCC_OLT01": "Sim",
+    "BR_ITURT_OLT04": "Sim",
+    "BR_MRESPJ_OLT01": "Sim",
+    "BR_TTEAM_OLT09": "Sim",
+    "BR_BOPUBP_OLT04": "Sim",
+    "BR_IFZCG_OLT01": "Sim"
+};
+
+function atualizarFlat() {
+    const equipamento = document.getElementById("equipamento").value;
+    const flatInput = document.getElementById("flat");
+
+    // Verifica se o equipamento está na lista (simulando a lógica de FLAT)
+    const flat = equipamentosFlat[equipamento] || "Não"; 
+    flatInput.value = flat;
+
+    // Ocultar ou exibir Falha 2 com base no valor do FLAT
+    ocultarFalha2(flat);
+}
+
+function ocultarFalha2(flat) {
+    const deveOcultar = flat === "Sim"; // Se for "Sim", esconde os campos
+
+    // Lista de IDs dos campos de Falha 2 no formulário
+    const elementosFalha2 = ["taF2", "horarioFalha2", "statusFalha2"];
+
+    // Lista de IDs dos campos de Falha 2 no carimbo
+    const elementosCarimboFalha2 = ["carimboTAF2", "carimboHorarioFalha2", "carimboStatusFalha2" , "titiloTAF2"];
+
+    // Oculta/mostra os campos do formulário
+    elementosFalha2.forEach(id => {
+        let elemento = document.getElementById(id);
+        if (elemento) {
+            elemento.style.display = deveOcultar ? "none" : "block";
+
+            // Esconde também o label associado
+            let label = document.querySelector(`label[for=${id}]`);
+            if (label) label.style.display = deveOcultar ? "none" : "block";
+        }
+    });
+
+    // Oculta/mostra as linhas no carimbo
+    elementosCarimboFalha2.forEach(id => {
+        let elemento = document.getElementById(id);
+        if (elemento) {
+            elemento.closest("tr").style.display = deveOcultar ? "none" : "table-row";
+        }
+    });
+}
+
+function processarTabela() {
+    let tabelaBody = document.getElementById("tabela-body");
+    let linhas = tabelaBody.getElementsByTagName("tr");
+
+    for (let i = linhas.length - 1; i >= 0; i--) { // Pega a última linha preenchida corretamente
+        let colunas = linhas[i].getElementsByTagName("td");
+        if (colunas.length >= 8 && colunas[7].innerText.trim() !== "") {
+            let oltValor = colunas[7].innerText.trim();
+            atualizarFlat(oltValor);
+            break;
+        }
+    }
+}
+
+// Observador para mudanças na tabela
+let observer2 = new MutationObserver(() => {
+    processarTabela();
+});
+
+let config2 = { childList: true, subtree: true, characterData: true };
+observer2.observe(document.getElementById("tabela-body"), config2);
+
+document.addEventListener("DOMContentLoaded", function () {
+    processarTabela(); // Garante que o campo `flat` seja atualizado ao carregar a página
+});
+
+
+        document.getElementById('meuFormulario').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var taF1 = document.getElementById('taF1').value;
+            var taF2 = document.getElementById('taF2').value;
+            var municipio = document.getElementById('Municipio').value;
+            var equipamento = document.getElementById('equipamento').value;
+var flat = document.getElementById('flat').value;
+var tipoFalha = document.getElementById('tipoFalha').value;
+var dataFalha = document.getElementById('dataFalha').value;
+var horarioFalha1 = document.getElementById('horarioFalha1').value;
+var horarioFalha2 = document.getElementById('horarioFalha2').value;
+var statusFalha1 = document.getElementById('statusFalha1').value;
+var statusFalha2 = document.getElementById('statusFalha2').value;
+var statusEPS = document.getElementById('eps').value;
+
+function formatarDataHora(dataHora) {
+    if (!dataHora) return '';
+    var data = new Date(dataHora);
+    var dia = String(data.getDate()).padStart(2, '0');
+    var mes = String(data.getMonth() + 1).padStart(2, '0');
+    var ano = data.getFullYear();
+    var horas = String(data.getHours()).padStart(2, '0');
+    var minutos = String(data.getMinutes()).padStart(2, '0');
+    return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+}
+
+document.getElementById('carimboTAF1').textContent = taF1;
+document.getElementById('carimboTAF2').textContent = taF2;
+document.getElementById('carimboEPS').textContent = statusEPS;
+document.getElementById('carimboMunicipio').textContent = municipio;
+document.getElementById('carimboEquipamento').textContent = equipamento;
+document.getElementById('carimboFlat').textContent = flat;
+document.getElementById('carimboTipoFalha').textContent = tipoFalha;
+document.getElementById('carimboDataFalha').textContent = formatarDataHora(dataFalha);
+document.getElementById('carimboHorarioFalha1').textContent = formatarDataHora(horarioFalha1);
+document.getElementById('carimboHorarioFalha2').textContent = formatarDataHora(horarioFalha2);
+document.getElementById('carimboStatusFalha1').textContent = statusFalha1;
+document.getElementById('carimboStatusFalha2').textContent = statusFalha2;
+document.getElementById('carimbo').style.display = 'block';
+});
+
+document.getElementById('voltar').addEventListener('click', function() {
+    document.getElementById('carimbo').style.display = 'none';
+    document.getElementById('meuFormulario').reset();
+});
+</script>
+</body>
+</html>
