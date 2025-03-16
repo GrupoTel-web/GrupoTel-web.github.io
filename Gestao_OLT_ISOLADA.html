@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Formulário com Gráficos</title>
+<title>Gestão OLT Isoladas</title>
 <link rel="icon" type="image/png" href="nt.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,6 +12,7 @@
  body {
  font-family: 'Poppins', sans-serif;
  padding-top: 5px; /* Empurra o conteúdo para baixo */
+ background-color: #935993;
 }
  .chart-container {
  display: flex;
@@ -159,10 +160,20 @@ td {
     text-align: center; /* Centraliza o conteúdo das células */
 }
 
+.container-principal {
+        background-color: #fff; /* Fundo branco */
+        border-radius: 15px; /* Bordas arredondadas */
+        padding: 20px; /* Espaçamento interno */
+        margin: 20px auto; /* Centraliza o container */
+        width: 90%; /* Largura responsiva */
+        max-width: 1200px; /* Limita a largura máxima */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
+        }
 </style>
 </head>
 <body>
-    <div class="input-container">
+  <div class="container-principal">
+        <div class="input-container">
         <form id="dataForm">
           <div class="input-group">
             <label for="ok">OK:</label>
@@ -223,6 +234,7 @@ td {
 <img alt="Imagem" src="upl.png"/>
 <div>NT-SPI GESTÃO OLT ISOLADA  DESC </div>
 </div>
+
 <script>
  function updateOK() {
  const nok = document.getElementById('nok').value;
