@@ -4,12 +4,13 @@
 <head>
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Formulário com Carimbo</title>
+ <title>Escalonamento</title>
  <link rel="icon" type="image/png" href="nt.png">
  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
  <style>
  body {
  font-family: 'Poppins', sans-serif;
+ background-color: #ff6f00;
  }
  .container {
  border: 2px solid #000;
@@ -19,7 +20,7 @@
  background-color: #f9f9f9;
  }
  .titulo {
- background-color: #FF4500; /* Roxo */
+ background-color: #ff6f00; /* Roxo */
  color: #fff; /* Branco */
  padding: 10px;
  text-align: center;
@@ -34,7 +35,7 @@
  
  }
  .carimboTitulo {
- background-color: #FF4500; /* Roxo */
+ background-color: #ff6f00; /* Roxo */
  color: #fff; /* Branco */
  padding: 10px;
  text-align: center;
@@ -53,7 +54,7 @@
  text-align: left;
  }
  th {
- background-color: #FF4500; /* Roxo */
+ background-color: #ff6f00; /* Roxo */
  color: #fff; /* Branco */
  }
  td {
@@ -76,9 +77,9 @@
             overflow-x: auto;
             border: 1px solid #d3d3d3;
             background: white;
-            padding: 5px;
-            margin-left: 40px;
-            font-size: 10px;
+            padding: 0px;
+            margin-left: 0px;
+            font-size: 9px;
             font-weight: bold;
         }
 
@@ -109,7 +110,7 @@
             justify-content: center;
         }
         .botoes button {
-            background-color: #FF4500;
+            background-color: #ff6f00;
             color: #fff;
             border: none;
             padding: 6px 40px;
@@ -122,16 +123,25 @@
             margin-top: 20px;
             margin-right: 10px;
         }
+        .container-principal {
+        background-color: #fff; /* Fundo branco */
+        border-radius: 15px; /* Bordas arredondadas */
+        padding: 20px; /* Espaçamento interno */
+        margin: 20px auto; /* Centraliza o container */
+        width: 90%; /* Largura responsiva */
+        max-width: 1200px; /* Limita a largura máxima */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
+        }
  </style>
 </head>
 <body>
 
-
+  <div class="container-principal">
   <div class="tabela-container-1">
     <table id="tabela">
         <thead>
             <tr>
-                <th style="width: 90px;">TA METRO / OUTRO</th>
+                <th style="width: 90px;">TA METRO</th>
                 <th style="width: 70px;">DWDM LINHA</th>
                 <th style="width: 70px;">TA RAIZ (REDE)</th>
                 <th style="width: 100px;">LOCALIDADE</th>
@@ -341,6 +351,7 @@
       <button id="voltar">Voltar</button>
     </div>
   </div>
+</div>
  <script>
 
 document.addEventListener("DOMContentLoaded", function () {
