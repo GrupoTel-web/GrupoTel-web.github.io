@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário com Carimbo</title>
+    <title>Risco de Isolamento</title>
     <link rel="icon" type="image/png" href="nt.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
+            background-color: #ffa600c9;
         }
         .container {
             border: 2px solid #000;
@@ -32,13 +33,17 @@
             display: none;
         }
         .carimboTitulo {
-            background-color: #ffa600c9; /* Roxo */
-            color: #fff; /* Branco */
-            padding: 10px;
-            text-align: center;
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
+    background-color: #ffa600c9; /* Cor de fundo */
+    color: #fff; /* Cor do texto */
+    padding: 10px;
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.emoji {
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5); /* Sombra suave nos emojis */
+}
         table {
             width: 100%;
             border-collapse: collapse;
@@ -73,11 +78,21 @@
         .textoCompleto textarea {
             text-align: left;
         }
+        .container-principal {
+        background-color: #fff; /* Fundo branco */
+        border-radius: 15px; /* Bordas arredondadas */
+        padding: 20px; /* Espaçamento interno */
+        margin: 20px auto; /* Centraliza o container */
+        width: 90%; /* Largura responsiva */
+        max-width: 1200px; /* Limita a largura máxima */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
+        }
     </style>
 </head>
 <body>
+    <div class="container-principal">
     <div class="container">
-        <div class="titulo">NT-SPI ⚠️ Avaliação de Risco Isolamento ⚠️</div>
+        <div class="carimboTitulo">NT-SPI <span class="emoji">⚠️</span> Avaliação de Risco Isolamento <span class="emoji">⚠️</span></div>
         <h1>Formulário</h1>
         <form id="meuFormulario">
             <label for="acionadoPor">Acionado por:</label>
@@ -175,6 +190,7 @@
             </div>
         </div>
     </div>
+</div>
     <script>
     document.getElementById('meuFormulario').addEventListener('submit', function(event) {
         event.preventDefault();
