@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário com Carimbo</title>
+    <title>Carimbo Adjacencia</title>
     <link rel="icon" type="image/png" href="nt.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            zoom: 85%;
+            background-color: #9370DB;
+            
         }
         .container {
             border: 2px solid #000;
@@ -94,19 +95,17 @@
         }
 
         #mensagem-selecao {
-            position: absolute;
-            top: 4%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 20px;
-            font-family: Arial, sans-serif;
-            font-weight: bold;
-            animation: piscar 0.5s infinite alternate;
-            text-shadow: #000;
-        }
+    position: relative;
+    margin-bottom: 20px; /* Espaço entre o texto e as tabelas */
+    text-align: center;
+    font-size: 20px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    animation: piscar 0.7s infinite alternate;
+}
 
         @keyframes piscar {
-            0% { color: #9370DB; }
+            0% { color: #ff0000; }
         }
 
         
@@ -202,16 +201,25 @@ textarea {
 .tabela-container {
             display: none; /* Oculta todas as tabelas inicialmente */
         }
+        .container-principal {
+        background-color: #fff; /* Fundo branco */
+        border-radius: 15px; /* Bordas arredondadas */
+        padding: 20px; /* Espaçamento interno */
+        margin: 20px auto; /* Centraliza o container */
+        width: 90%; /* Largura responsiva */
+        max-width: 1200px; /* Limita a largura máxima */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
+        }
 
 
     </style>
 </head>
 <body>
-
+    <div class="container-principal">
     <!-- Contêiner para centralizar todo o conteúdo -->
 <div id="conteudo">
     <!-- Mensagem de seleção -->
-    <div class="" id="mensagem-selecao" style="display: none;">Selecione o tipo de adjacência!</div><br><br>
+    <div id="mensagem-selecao" style="display: none;">Selecione o tipo de adjacência!</div>
 
     <!-- Primeira Tabela -->
     <div class="tabela-container" id="tabela-OLT" style="display: none;">
@@ -350,6 +358,7 @@ textarea {
             </div>
         </div>
     </div>
+</div>
     <script>
 
 
