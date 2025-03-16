@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta name="viewport" content="width=device-width">
-<title>Formulário com Gráficos</title>
+<title>Gestão OLT Uplink</title>
 <link rel="icon" type="image/png" href="nt.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,6 +13,7 @@
  body {
  font-family: 'Poppins', sans-serif;
  padding-top: 5px; /* Empurra o conteúdo para baixo */
+ background-color: #656895;
 }
  .chart-container {
  display: flex;
@@ -159,10 +160,20 @@ button {
 td {
     text-align: center; /* Centraliza o conteúdo das células */
 }
+.container-principal {
+        background-color: #fff; /* Fundo branco */
+        border-radius: 15px; /* Bordas arredondadas */
+        padding: 20px; /* Espaçamento interno */
+        margin: 20px auto; /* Centraliza o container */
+        width: 90%; /* Largura responsiva */
+        max-width: 1200px; /* Limita a largura máxima */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
+        }
 
 </style>
 </head>
 <body>
+  <div class="container-principal">
     <div class="input-container">
         <form id="dataForm">
           <div class="input-group">
