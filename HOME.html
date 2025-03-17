@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="nt.png">
     <title>Gestão de Carimbos</title>
     <style>
         body {
@@ -143,33 +142,35 @@
 
     <script>
        let currentPage = 1;
-function updatePageTitle() {
-    const pageTitle = document.getElementById('page-title');
-    if (currentPage === 1) {
-        pageTitle.textContent = 'Gestão de Carimbos NT - SPI';
-    } else if (currentPage === 2) {
-        pageTitle.textContent = 'Acessos Núcleo Técnico';
-    } else if (currentPage === 3) {
-        pageTitle.textContent = 'Acessos Núcleo Técnico';
-    } else if (currentPage === 4) {
-        pageTitle.textContent = 'Procedimentos Ações Núcleo Técnico';
+    const totalPages = 4;
+
+    function updatePageTitle() {
+        const pageTitle = document.getElementById('page-title');
+        if (currentPage === 1) {
+            pageTitle.textContent = 'Gestão de Carimbos NT - SPI';
+        } else if (currentPage === 2) {
+            pageTitle.textContent = 'Acessos Núcleo Técnico';
+        } else if (currentPage === 3) {
+            pageTitle.textContent = 'Acessos Núcleo Técnico';
+        } else if (currentPage === 4) {
+            pageTitle.textContent = 'Procedimentos Ações Núcleo Técnico';
+        }
     }
-}
 
-function renderPaginationDots(totalPages) {
-    const paginationDots = document.getElementById('pagination-dots');
-    paginationDots.innerHTML = '';
+    function renderPaginationDots(totalPages) {
+        const paginationDots = document.getElementById('pagination-dots');
+        paginationDots.innerHTML = '';
 
-    for (let i = 1; i <= totalPages; i++) {
-        const dot = document.createElement('span');
-        dot.textContent = '⬤';
-        dot.style.margin = '0 5px';
-        dot.style.opacity = (i === currentPage) ? '1' : '0.3';
-        paginationDots.appendChild(dot);
+        for (let i = 1; i <= totalPages; i++) {
+            const dot = document.createElement('span');
+            dot.textContent = '⬤';
+            dot.style.margin = '0 5px';
+            dot.style.opacity = (i === currentPage) ? '1' : '0.3';
+            paginationDots.appendChild(dot);
+        }
     }
-}
 
-function updateButtons() {
+    function updateButtons() {
     const allGrids = document.querySelectorAll('.button-grid');
     allGrids.forEach((grid, index) => {
         grid.style.display = (index === currentPage - 1) ? 'grid' : 'none';
@@ -178,25 +179,47 @@ function updateButtons() {
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
 
-    prevBtn.classList.toggle('disabled', currentPage === 1);
-    nextBtn.classList.toggle('disabled', currentPage === allGrids.length);
-
-    renderPaginationDots(allGrids.length);
-    updatePageTitle();
-}
-
-function changePage(direction) {
-    const totalPages = document.querySelectorAll('.button-grid').length;
-
-    if (direction === 'next' && currentPage < totalPages) {
-        currentPage++;
-    } else if (direction === 'prev' && currentPage > 1) {
-        currentPage--;
+    // Controle de visibilidade dos botões de navegação
+    if (currentPage === 1) {
+        prevBtn.style.opacity = '0.3';
+        prevBtn.style.pointerEvents = 'none';
+    } else {
+        prevBtn.style.opacity = '1';
+        prevBtn.style.pointerEvents = 'auto';
     }
-    updateButtons();
+
+    if (currentPage === allGrids.length) {
+        nextBtn.style.opacity = '0.3';
+        nextBtn.style.pointerEvents = 'none';
+    } else {
+        nextBtn.style.opacity = '1';
+        nextBtn.style.pointerEvents = 'auto';
+    }
+
+    updatePageTitle();
+    renderPaginationDots(allGrids.length);
 }
 
-updateButtons();
+    function changePage(direction) {
+        if (direction === 'prev' && currentPage > 1) {
+            currentPage--;
+        } else if (direction === 'next' && currentPage < totalPages) {
+            currentPage++;
+        }
+        updateButtons();
+    }
+
+    // Adiciona controle pelas setas do teclado
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowLeft') {
+            changePage('prev');
+        } else if (event.key === 'ArrowRight') {
+            changePage('next');
+        }
+    });
+
+    // Inicializa a página
+    updateButtons();
     </script>
 
 </body>
