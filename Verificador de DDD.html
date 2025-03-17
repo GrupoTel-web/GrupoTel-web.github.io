@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #d1d1d1;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -47,6 +47,8 @@
             height: 600px;
             width: 100%;
             margin-top: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 1);
+            background-color:#ffffff;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
@@ -60,11 +62,32 @@
     <div id="map"></div>
 
     <script>
+
 let map;
 let marker;
 
+function carregarCache() {
+    try {
+        const data = localStorage.getItem('cache');
+        return data ? JSON.parse(data) : {};
+    } catch (err) {
+        console.error('Erro ao carregar o cache:', err);
+        return {};
+    }
+}
+
+function salvarCache(cache) {
+    try {
+        localStorage.setItem('cache', JSON.stringify(cache));
+    } catch (err) {
+        console.error('Erro ao salvar o cache:', err);
+    }
+}
+
+let cache = carregarCache();
+
 function removerAcentos(texto) {
-    return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
 function calcularDistanciaLevenshtein(a, b) {
@@ -76,9 +99,9 @@ function calcularDistanciaLevenshtein(a, b) {
         for (let j = 1; j <= b.length; j++) {
             const custo = a[i - 1] === b[j - 1] ? 0 : 1;
             matrix[i][j] = Math.min(
-                matrix[i - 1][j] + 1,       // Exclusão
-                matrix[i][j - 1] + 1,       // Inserção
-                matrix[i - 1][j - 1] + custo // Substituição
+                matrix[i - 1][j] + 1,
+                matrix[i][j - 1] + 1,
+                matrix[i - 1][j - 1] + custo
             );
         }
     }
@@ -90,11 +113,19 @@ function compararStringsFuzzy(str1, str2) {
     const s2 = removerAcentos(str2.toLowerCase());
     const distancia = calcularDistanciaLevenshtein(s1, s2);
     const similaridade = 1 - distancia / Math.max(s1.length, s2.length);
-    return similaridade >= 0.7;
+    return similaridade >= 0.85; // Ajustado para ser mais rigoroso e reduzir confusões
 }
 
 function buscarDDD() {
-    const municipio = removerAcentos(document.getElementById("municipio").value.trim().toLowerCase());
+    const municipio = removerAcentos(document.getElementById('municipio').value.trim().toLowerCase());
+
+    if (cache[municipio]) {
+        const resultado = cache[municipio];
+        document.getElementById('resultado').innerText = `Município: ${resultado.cidade}, DDD: ${resultado.ddd}`;
+        exibirMapa(resultado.cidade);
+        return;
+    }
+
     const ddds = [11, 12, 14, 15, 16, 17, 18, 19];
     let encontrado = false;
 
@@ -102,28 +133,40 @@ function buscarDDD() {
         fetch(`https://brasilapi.com.br/api/ddd/v1/${ddd}`)
             .then(response => response.json())
             .then(data => {
-                const cidadeEncontrada = data.cities.find(city => 
-                    compararStringsFuzzy(city, municipio)
-                );
+                // Primeiro, tentar encontrar uma correspondência exata
+                const cidadeExata = data.cities.find(city => removerAcentos(city.toLowerCase()) === municipio);
 
-                if (cidadeEncontrada) {
+                if (cidadeExata) {
                     encontrado = true;
-                    document.getElementById("resultado").innerText = `Município: ${cidadeEncontrada}, DDD: ${ddd}`;
-                    exibirMapa(cidadeEncontrada);
+                    document.getElementById('resultado').innerText = `Município: ${cidadeExata}, DDD: ${ddd}`;
+                    cache[municipio] = { cidade: cidadeExata, ddd: ddd };
+                    salvarCache(cache);
+                    exibirMapa(cidadeExata);
+                } else {
+                    // Se não houver correspondência exata, realizar o fuzzy matching mais rigoroso
+                    const cidadeEncontrada = data.cities.find(city => compararStringsFuzzy(city, municipio));
+
+                    if (cidadeEncontrada) {
+                        encontrado = true;
+                        document.getElementById('resultado').innerText = `Município: ${cidadeEncontrada}, DDD: ${ddd}`;
+                        cache[municipio] = { cidade: cidadeEncontrada, ddd: ddd };
+                        salvarCache(cache);
+                        exibirMapa(cidadeEncontrada);
+                    }
                 }
             });
     }
 
     if (!encontrado) {
-        document.getElementById("resultado").innerText = "Município não encontrado.";
+        document.getElementById('resultado').innerText = 'Município não encontrado.';
     }
 }
 
 function exibirMapa(cidade) {
     if (!map) {
-        map = L.map("map").setView([-23.5505, -46.6333], 8);
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: "&copy; OpenStreetMap contributors"
+        map = L.map('map').setView([-23.5505, -46.6333], 8);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
     }
 
@@ -140,6 +183,7 @@ function exibirMapa(cidade) {
             }
         });
 }
+
 
     </script>
 </body>
