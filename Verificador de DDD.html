@@ -90,32 +90,6 @@ function removerAcentos(texto) {
     return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-function calcularDistanciaLevenshtein(a, b) {
-    const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
-    for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
-    for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
-
-    for (let i = 1; i <= a.length; i++) {
-        for (let j = 1; j <= b.length; j++) {
-            const custo = a[i - 1] === b[j - 1] ? 0 : 1;
-            matrix[i][j] = Math.min(
-                matrix[i - 1][j] + 1,
-                matrix[i][j - 1] + 1,
-                matrix[i - 1][j - 1] + custo
-            );
-        }
-    }
-    return matrix[a.length][b.length];
-}
-
-function compararStringsFuzzy(str1, str2) {
-    const s1 = removerAcentos(str1.toLowerCase());
-    const s2 = removerAcentos(str2.toLowerCase());
-    const distancia = calcularDistanciaLevenshtein(s1, s2);
-    const similaridade = 1 - distancia / Math.max(s1.length, s2.length);
-    return similaridade >= 0.85; // Ajustado para ser mais rigoroso e reduzir confusões
-}
-
 function buscarDDD() {
     const municipio = removerAcentos(document.getElementById('municipio').value.trim().toLowerCase());
 
@@ -127,39 +101,37 @@ function buscarDDD() {
     }
 
     const ddds = [11, 12, 14, 15, 16, 17, 18, 19];
-    let encontrado = false;
 
-    for (const ddd of ddds) {
-        fetch(`https://brasilapi.com.br/api/ddd/v1/${ddd}`)
-            .then(response => response.json())
-            .then(data => {
-                // Primeiro, tentar encontrar uma correspondência exata
-                const cidadeExata = data.cities.find(city => removerAcentos(city.toLowerCase()) === municipio);
-
-                if (cidadeExata) {
-                    encontrado = true;
-                    document.getElementById('resultado').innerText = `Município: ${cidadeExata}, DDD: ${ddd}`;
-                    cache[municipio] = { cidade: cidadeExata, ddd: ddd };
-                    salvarCache(cache);
-                    exibirMapa(cidadeExata);
-                } else {
-                    // Se não houver correspondência exata, realizar o fuzzy matching mais rigoroso
-                    const cidadeEncontrada = data.cities.find(city => compararStringsFuzzy(city, municipio));
-
-                    if (cidadeEncontrada) {
-                        encontrado = true;
-                        document.getElementById('resultado').innerText = `Município: ${cidadeEncontrada}, DDD: ${ddd}`;
-                        cache[municipio] = { cidade: cidadeEncontrada, ddd: ddd };
-                        salvarCache(cache);
-                        exibirMapa(cidadeEncontrada);
+    // Cria uma promessa para cada DDD que resolve se encontrar a cidade exata (ignorando acentos e diferenças de caixa)
+    const promises = ddds.map(ddd => {
+        return new Promise((resolve, reject) => {
+            fetch(`https://brasilapi.com.br/api/ddd/v1/${ddd}`)
+                .then(response => response.json())
+                .then(data => {
+                    const cidadeExata = data.cities.find(city =>
+                        removerAcentos(city.toLowerCase()) === municipio
+                    );
+                    if (cidadeExata) {
+                        resolve({ cidade: cidadeExata, ddd: ddd });
+                    } else {
+                        reject();
                     }
-                }
-            });
-    }
+                })
+                .catch(() => reject());
+        });
+    });
 
-    if (!encontrado) {
-        document.getElementById('resultado').innerText = 'Município não encontrado.';
-    }
+    // Promise.any resolve assim que a primeira das promessas for bem-sucedida
+    Promise.any(promises)
+        .then(result => {
+            document.getElementById('resultado').innerText = `Município: ${result.cidade}, DDD: ${result.ddd}`;
+            cache[municipio] = { cidade: result.cidade, ddd: result.ddd };
+            salvarCache(cache);
+            exibirMapa(result.cidade);
+        })
+        .catch(() => {
+            document.getElementById('resultado').innerText = 'Município não encontrado.';
+        });
 }
 
 function exibirMapa(cidade) {
