@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+	<link rel="icon" type="image/png" href="nt.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificador de DDD</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+        }
+
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #map {
+            height: 600px;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+</head>
+<body>
+    <h1>Verificador de DDD</h1>
+    <input type="text" id="municipio" placeholder="Digite o município">
+    <button onclick="buscarDDD()">Buscar</button>
+    <p id="resultado"></p>
+    <div id="map"></div>
+
+    <script>
+let map;
+let marker;
+
+function removerAcentos(texto) {
+    return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function calcularDistanciaLevenshtein(a, b) {
+    const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+    for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+    for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+
+    for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+            const custo = a[i - 1] === b[j - 1] ? 0 : 1;
+            matrix[i][j] = Math.min(
+                matrix[i - 1][j] + 1,       // Exclusão
+                matrix[i][j - 1] + 1,       // Inserção
+                matrix[i - 1][j - 1] + custo // Substituição
+            );
+        }
+    }
+    return matrix[a.length][b.length];
+}
+
+function compararStringsFuzzy(str1, str2) {
+    const s1 = removerAcentos(str1.toLowerCase());
+    const s2 = removerAcentos(str2.toLowerCase());
+    const distancia = calcularDistanciaLevenshtein(s1, s2);
+    const similaridade = 1 - distancia / Math.max(s1.length, s2.length);
+    return similaridade >= 0.7;
+}
+
+function buscarDDD() {
+    const municipio = removerAcentos(document.getElementById("municipio").value.trim().toLowerCase());
+    const ddds = [11, 12, 14, 15, 16, 17, 18, 19];
+    let encontrado = false;
+
+    for (const ddd of ddds) {
+        fetch(`https://brasilapi.com.br/api/ddd/v1/${ddd}`)
+            .then(response => response.json())
+            .then(data => {
+                const cidadeEncontrada = data.cities.find(city => 
+                    compararStringsFuzzy(city, municipio)
+                );
+
+                if (cidadeEncontrada) {
+                    encontrado = true;
+                    document.getElementById("resultado").innerText = `Município: ${cidadeEncontrada}, DDD: ${ddd}`;
+                    exibirMapa(cidadeEncontrada);
+                }
+            });
+    }
+
+    if (!encontrado) {
+        document.getElementById("resultado").innerText = "Município não encontrado.";
+    }
+}
+
+function exibirMapa(cidade) {
+    if (!map) {
+        map = L.map("map").setView([-23.5505, -46.6333], 8);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "&copy; OpenStreetMap contributors"
+        }).addTo(map);
+    }
+
+    fetch(`https://nominatim.openstreetmap.org/search?city=${cidade}&country=Brazil&format=json`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length > 0) {
+                const { lat, lon } = data[0];
+                if (marker) {
+                    map.removeLayer(marker);
+                }
+                marker = L.marker([lat, lon]).addTo(map).bindPopup(cidade).openPopup();
+                map.setView([lat, lon], 12);
+            }
+        });
+}
+
+    </script>
+</body>
+</html>
