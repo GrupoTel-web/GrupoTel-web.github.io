@@ -205,6 +205,8 @@
             <label for="equipamento">Equipamento:</label>
             <input type="text" id="equipamento" name="equipamento" required oninput="atualizarFlat()"><br><br>
 
+            <label for="Afetação">Afetação:</label>
+            <input type="text" id="Afetação" name="Afetação" readonly><br><br>
 
             <label for="flat">FLAT ?:</label>
             <input type="text" id="flat" name="flat" readonly><br><br>
@@ -239,6 +241,10 @@
                 <tr>
                     <td>Equipamento</td>
                     <td><span id="carimboEquipamento"></span></td>
+                </tr>
+                <tr>
+                    <td>Afetação</td>
+                    <td><span id="carimboAfetação"></span></td>
                 </tr>
                 <tr>
                     <td>FLAT ?</td>
@@ -367,6 +373,7 @@ function atualizarCamposAutomaticamente() {
             document.getElementById("equipamento").value = colunas[7].innerText;
             let equipamentoValor = colunas[7].innerText; // Equipamento
             document.getElementById("dataFalha").value = colunas[6].innerText; // Data Criação
+            document.getElementById("Afetação").value = colunas[3].innerText; // Data Criação
 
             // Atualiza os campos de falha com base no valor de 'flat'
             setTimeout(() => {
@@ -661,6 +668,7 @@ var horarioFalha2 = document.getElementById('horarioFalha2').value;
 var statusFalha1 = document.getElementById('statusFalha1').value;
 var statusFalha2 = document.getElementById('statusFalha2').value;
 var statusEPS = document.getElementById('eps').value;
+var Afetação = document.getElementById('Afetação').value;
 
 function formatarDataHora(dataHora) {
     if (!dataHora) return '';
@@ -685,6 +693,7 @@ document.getElementById('carimboHorarioFalha1').textContent = formatarDataHora(h
 document.getElementById('carimboHorarioFalha2').textContent = formatarDataHora(horarioFalha2);
 document.getElementById('carimboStatusFalha1').textContent = statusFalha1;
 document.getElementById('carimboStatusFalha2').textContent = statusFalha2;
+document.getElementById('carimboAfetação').textContent = Afetação;
 document.getElementById('carimbo').style.display = 'block';
 });
 
