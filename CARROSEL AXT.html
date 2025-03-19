@@ -107,9 +107,32 @@
         #pagination-dots span.active {
             opacity: 1;
         }
+
+
+         #popup-balao {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* Mostra o balão */
+#popup-balao.show {
+    opacity: 1;
+}
     </style>
 </head>
 <body>
+
+    <div id="popup-balao">Clique no nome para fazer o download da imagem 📥</div>
+    
     <div class="carousel-container">
         <button class="carousel-button prev">←</button>
         <div class="carousel">
@@ -242,6 +265,20 @@
             document.exitFullscreen();
         }
     });
+
+        function showPopup() {
+    const popup = document.getElementById("popup-balao");
+    popup.classList.add("show");
+
+    // Oculta o balão após 10 segundos
+    setTimeout(() => {
+        popup.classList.remove("show");
+    }, 10000);
+}
+
+// Mostra o balão ao carregar a página
+window.onload = showPopup;
+
     </script>
 </body>
 </html>
