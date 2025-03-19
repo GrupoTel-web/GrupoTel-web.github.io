@@ -115,9 +115,8 @@
         <div class="carousel">
             <!-- Itens do Carrossel -->
             <div class="carousel-item active">
-                <a href="AXTIMAGES/AXT -pages-1.pdf" target="_blank" class="download-btn" download="AXTIMAGES/AXT -pages-1.pdf">
-                    <img src="AXTIMAGES/AXT -pages-1.png" alt="Imagem 1">
-                </a>
+                <img src="AXTIMAGES/AXT -pages-1.png" alt="Cidade Laranjal" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="AXTIMAGES/AXT -pages-1.pdf" download="Cidade Laranjal" class="download-btn" style="display: block; text-align: center; margin-top: 5px;">Cidade Laranjal</a>
             </div>
 
             <div class="carousel-item active">
@@ -226,6 +225,23 @@
         // Inicializa o carrossel
         renderPaginationDots();
         showImage(currentIndex);
+
+        function openFullscreen(image) {
+        if (image.requestFullscreen) {
+            image.requestFullscreen();
+        } else if (image.webkitRequestFullscreen) { // Para navegadores Safari
+            image.webkitRequestFullscreen();
+        } else if (image.msRequestFullscreen) { // Para navegadores IE/Edge
+            image.msRequestFullscreen();
+        }
+    }
+
+    // Saída da tela cheia ao pressionar ESC
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && document.fullscreenElement) {
+            document.exitFullscreen();
+        }
+    });
     </script>
 </body>
 </html>
