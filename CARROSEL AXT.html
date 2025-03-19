@@ -54,12 +54,13 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
+            background: rgba(0, 0, 0, 0);
+            color: rgb(0, 0, 0);
             border: none;
             padding: 10px;
             cursor: pointer;
             z-index: 10;
+            font-size: 40px;
         }
 
         .prev {
@@ -197,89 +198,86 @@
         <div id="pagination-dots"></div>
     </div>
     <script>
-        const items = document.querySelectorAll('.carousel-item');
-        const totalItems = items.length;
-        let currentIndex = 0;
+ const items = document.querySelectorAll('.carousel-item');
+    const totalItems = items.length;
+    let currentIndex = 0;
 
-        // Função para exibir a imagem ativa
-        function showImage(index) {
-            items.forEach((item, idx) => {
-                item.classList.toggle('active', idx === index);
-            });
-            updatePaginationDots(index);
-        }
-
-        // Função para atualizar os pontos de paginação
-        function updatePaginationDots(index) {
-            const dots = document.querySelectorAll('#pagination-dots span');
-            dots.forEach((dot, idx) => {
-                dot.classList.toggle('active', idx === index);
-            });
-        }
-
-        // Função para renderizar os pontos de paginação
-        function renderPaginationDots() {
-            const paginationDots = document.getElementById('pagination-dots');
-            paginationDots.innerHTML = '';
-
-            for (let i = 0; i < totalItems; i++) {
-                const dot = document.createElement('span');
-                dot.textContent = '⬤';
-                dot.classList.toggle('active', i === currentIndex);
-                dot.addEventListener('click', () => {
-                    currentIndex = i;
-                    showImage(currentIndex);
-                });
-                paginationDots.appendChild(dot);
-            }
-        }
-
-        // Botão Próximo
-        document.querySelector('.next').addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % totalItems;
-            showImage(currentIndex);
+    // Função para exibir a imagem ativa
+    function showImage(index) {
+        items.forEach((item, idx) => {
+            item.classList.toggle('active', idx === index);
         });
+        updatePaginationDots(index);
+    }
 
-        // Botão Anterior
-        document.querySelector('.prev').addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-            showImage(currentIndex);
+    // Função para atualizar os pontos de paginação
+    function updatePaginationDots(index) {
+        const dots = document.querySelectorAll('#pagination-dots span');
+        dots.forEach((dot, idx) => {
+            dot.classList.toggle('active', idx === index);
         });
+    }
 
-        // Inicializa o carrossel
-        renderPaginationDots();
-        showImage(currentIndex);
+    // Função para renderizar os pontos de paginação
+    function renderPaginationDots() {
+        const paginationDots = document.getElementById('pagination-dots');
+        paginationDots.innerHTML = '';
 
-        function openFullscreen(image) {
-        if (image.requestFullscreen) {
-            image.requestFullscreen();
-        } else if (image.webkitRequestFullscreen) { // Para navegadores Safari
-            image.webkitRequestFullscreen();
-        } else if (image.msRequestFullscreen) { // Para navegadores IE/Edge
-            image.msRequestFullscreen();
+        for (let i = 0; i < totalItems; i++) {
+            const dot = document.createElement('span');
+            dot.textContent = '⬤';
+            dot.classList.toggle('active', i === currentIndex);
+            dot.addEventListener('click', () => {
+                currentIndex = i;
+                showImage(currentIndex);
+            });
+            paginationDots.appendChild(dot);
         }
     }
 
-    // Saída da tela cheia ao pressionar ESC
-    document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && document.fullscreenElement) {
-            document.exitFullscreen();
+    // Função para mudar a página
+    function changePage(direction) {
+        if (direction === 'prev') {
+            currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+        } else if (direction === 'next') {
+            currentIndex = (currentIndex + 1) % totalItems;
+        }
+        showImage(currentIndex);
+    }
+
+    // Botão Próximo
+    document.querySelector('.next').addEventListener('click', () => changePage('next'));
+
+    // Botão Anterior
+    document.querySelector('.prev').addEventListener('click', () => changePage('prev'));
+
+    // Controle pelas setas do teclado
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowLeft') {
+            changePage('prev');
+        } else if (event.key === 'ArrowRight') {
+            changePage('next');
         }
     });
 
-        function showPopup() {
+    // Função para mostrar e esconder o balão de aviso
+function showPopup() {
     const popup = document.getElementById("popup-balao");
     popup.classList.add("show");
 
     // Oculta o balão após 10 segundos
     setTimeout(() => {
         popup.classList.remove("show");
-    }, 10000);
+    }, 5000);
 }
 
 // Mostra o balão ao carregar a página
-window.onload = showPopup;
+window.addEventListener("load", showPopup);
 
+
+    // Inicializa o carrossel
+    renderPaginationDots();
+    showImage(currentIndex);
     </script>
 </body>
 </html>
