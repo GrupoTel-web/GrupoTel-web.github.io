@@ -278,6 +278,23 @@ window.addEventListener("load", showPopup);
     // Inicializa o carrossel
     renderPaginationDots();
     showImage(currentIndex);
+
+
+        function openFullscreen(image) {
+    if (image.requestFullscreen) {
+        image.requestFullscreen();
+    } else if (image.webkitRequestFullscreen) { // Para navegadores Safari
+        image.webkitRequestFullscreen();
+    } else if (image.msRequestFullscreen) { // Para navegadores IE/Edge
+        image.msRequestFullscreen();
+    }
+}
+
+document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && document.fullscreenElement) {
+        document.exitFullscreen();
+    }
+});
     </script>
 </body>
 </html>
