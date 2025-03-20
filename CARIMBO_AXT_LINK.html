@@ -147,6 +147,8 @@
                                 </select><br><br>
                                 <label for="ta">TA:</label>
                                 <input type="text" id="ta" name="ta" required><br><br>
+                                <label for="bd">BD:</label>
+                                <input type="text" id="bd" name="bd" required><br><br>
                                 <label for="dataTA">DATA TA:</label>
                                 <input type="datetime-local" id="dataTA" name="dataTA" required><br><br>
                                 <label for="status">STATUS:</label>
@@ -169,6 +171,10 @@
                                         <td><span id="carimboTA"></span></td>
                                     </tr>
                                     <tr>
+                                        <td>BD</td>
+                                        <td><span id="carimboBD"></span></td>
+                                    </tr>
+                                    <tr>
                                         <td>DATA TA</td>
                                         <td><span id="carimboDataTA"></span></td>
                                     </tr>
@@ -188,6 +194,7 @@
                                 event.preventDefault();
                                 var franquia = document.getElementById('franquia').value;
                                 var ta = document.getElementById('ta').value;
+                                var bd = document.getElementById('bd').value;
                                 var dataTA = document.getElementById('dataTA').value;
                                 var status = document.getElementById('status').value;
                                 function formatarDataHora(dataHora) {
@@ -202,6 +209,7 @@
                                 }
                                 document.getElementById('carimboFranquia').textContent = franquia;
                                 document.getElementById('carimboTA').textContent = ta;
+                                document.getElementById('carimboBD').textContent = bd;
                                 document.getElementById('carimboDataTA').textContent = formatarDataHora(dataTA);
                                 document.getElementById('carimboStatus').textContent = status;
                                 document.getElementById('carimbo').style.display = 'block';
