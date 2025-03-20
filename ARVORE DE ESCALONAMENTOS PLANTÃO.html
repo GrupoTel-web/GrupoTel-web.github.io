@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="nt.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <title>Botões para Mostrar Tabelas</title>
     <style>
@@ -78,7 +77,7 @@
             padding: 60px;
             border-radius: 40px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 1);
-            height: 600px;
+            height: 650px;
             width: 1700px;
         }
 
@@ -103,6 +102,34 @@
     background-color: #e0e0e0; /* Mudança na cor do fundo ao passar o mouse */
 }
 
+.container3 {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.area {
+    width: 300px;
+    margin: 10px;
+    text-align: center;
+    border: 2px solid #0c0141;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.content {
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+
     </style>
 </head>
 
@@ -119,12 +146,12 @@
         <button class="table-navigation-button" onclick="showTable(0)">1 Hora</button>
         <button class="table-navigation-button" onclick="showTable(1)">2 Horas</button>
         <button class="table-navigation-button" onclick="showTable(2)">4 Horas</button>
-        <button class="table-navigation-button" onclick="showTable(3)">6 Horas</button>
+        <button class="table-navigation-button" onclick="showTable(3)">5 Horas</button>
         <button class="table-navigation-button" onclick="showTable(4)">8 Horas</button>
     </div>
 
     <div class="table-container" id="table-0">
-        <h1 style="font-size: 30px; margin-top: 100px;"> </h1>
+        <h1 style="font-size: 30px; margin-top: 10px;"> </h1>
         <table>
             <tr>
                 <th>N1 (Ability)</th><th>N1 (Tel)</th><th>Rede (Icomon)</th><th>Rede (TEL)</th><th>NOC</th><th>NOC Móvel</th><th>Sobressalentes (Chamado interno - Merinod)</th>
@@ -157,8 +184,59 @@
 <td>Quinteiro, Aldo ou Celso</td>
 <td>Quinteiro, Aldo ou Celso</td>
 </tr>
+</table>
 
-        </table>
+<br>
+<h1 style="font-size: 15px; text-shadow: 1px 1px 2px #00fff7;">LISTA DOS PLANTONISTAS: ❗VERIFICAR SEMANALMENTE❗</h1>
+<div class="container3">
+    <div class="area">
+        <div class="title">12</div>
+        <div class="content">
+            Luiz Antonio dos Santos<br>
+            Fernando Lelis Brito Rocha<br>
+            Rogerio Alves Tavares
+        </div>
+    </div>
+
+    <div class="area">
+        <div class="title">15 e 19</div>
+        <div class="content">
+            Alexandre Pichutti Binatti<br>
+            Vanderlei Marques de Oliveira<br>
+            Mauro Proença Junior<br>
+            Luciano Ribeiro da Silva<br>
+            Claudinei Henrique dos Santos<br>
+            Leandro Barrutia
+        </div>
+    </div>
+
+    <div class="area">
+        <div class="title">14 e 18</div>
+        <div class="content">
+            Ciro Tadashi Shiguematsu<br>
+            Ricardo Marcos Gonçalves<br>
+            Júlio César Leme<br>
+            Reginaldo Barbosa Santana<br>
+            Edilson Rodrigues Bezerra<br>
+            André Fábio Gama
+        </div>
+    </div>
+
+    <div class="area">
+        <div class="title">16 e 17</div>
+        <div class="content">
+            André Luis Molesini Galan<br>
+            José Ricardo Rodrigues Alves<br>
+            Edimilson Rosa<br>
+            Claudionor Máximo Souza<br>
+            Airton César Longhi Baliero<br>
+            Edgar Rizzo de Matos<br>
+            Elvis Rodrigues Lopes
+        </div>
+    </div>
+</div>
+
+
     </div>
 
     <div class="table-container" id="table-1">
@@ -175,9 +253,9 @@
                 <td>Palamin escalonar Alexandre do Bem</td>
                 <td>Renato escalonar Diego Barbosa</td>
                 <td>Rodrigo padilha escalonar Lidiane Ribeiro</td>
-                <td>Renato escalonar Gustavo Siqueira</td>
-                <td>Renato escalonar Paulo Sergio De Lima - BL / Lucio - IP</td>
-                <td>Escalonar Renato</td>
+                <td>Reinaldo escalonar Gustavo Siqueira</td>
+                <td>Reinaldo escalonar Paulo Sergio De Lima - BL / Lucio - IP</td>
+                <td>Escalonar Marcelo Figlarz</td>
             </tr>
         </table>
         <br>
@@ -186,7 +264,7 @@
                 <th>SWAP INTERNO (VIVO)</th><th>Operação Banda Larga</th><th>Operação DWDM</th><th>Operação Rede IP</th><th>CO-N1 (NOC-BL)</th><th>Operação Móvel Backhaul (Metro Baixa)</th><th>Rede Sudeste</th><th>Operação Móvel RF (Radio / Enlace)</th>
             </tr>
             <tr>
-                <td>Escalonar Renato</td>
+                <td>Escalonar Fernanda Marize</td>
 <td>Renato escalonar Paulo Sergio</td>
 <td>Renato escalonar Marcelo Monteiro</td>
 <td>Renato escalonar Lucio Pinto</td>
@@ -211,8 +289,8 @@
                 <td>Escalonar Vetoretti (17)99618-2197</td>
                 <td>Renato escalonar Geraldo Ramazotti</td>
                 <td>Rodrigo Padilha escalonar Geraldo Ramazotti</td>
-                <td>Renato escalonar DEL REY</td>
-                <td>Renato escalonar Menon - IP</td>
+                <td>Reinaldo escalonar DEL REY</td>
+                <td>Reinaldo escalonar Menon - IP</td>
                 <td>Renato escalonar Geraldo Ramazotti</td>
             </tr>                
         </table>
@@ -247,9 +325,9 @@
 <td>Escalonar José Aparecido Cardoso (16)99961-8028</td>
 <td>Renato escalonar Marcelo Figlarz</td>
 <td>Renato escalonar Marcelo Figlarz</td>
-<td>Renato escalonar DEL REY</td>
-<td>Marcelo escalonar Figlarz</td>
-<td>Marcelo escalonar Figlarz</td>
+<td>Reinaldo escalonar DEL REY</td>
+<td>Reinaldo escalonar Marcelo Figlarz</td>
+<td>Renato Escalonar Marcelo Figlarz</td>
             </tr>
 </table>
         <br>
@@ -264,7 +342,7 @@
 <td>Renato escalonar Marcelo Figlarz</td>
 <td>Renato escalonar Fabio Stellato</td>
 <td>Renato escalonar Marcelo Figlarz</td>
-<td>Escalonar Renato</td>
+<td>Escalonar Aparecido</td>
 <td>Renato escalonar Marcelo Figlarz</td>
 </tr>
 
