@@ -146,12 +146,16 @@
                             </select><br><br>
                             <label for="taFalha1">TA FALHA 1:</label>
                             <input type="text" id="taFalha1" name="taFalha1" required><br><br>
+                            <label for="bdFalha1">BD FALHA 1:</label>
+                            <input type="text" id="bdFalha1" name="bdFalha1" required><br><br>
                             <label for="dataTAFalha1">DATA TA FALHA 1:</label>
                             <input type="datetime-local" id="dataTAFalha1" name="dataTAFalha1" required><br><br>
                             <label for="status1">STATUS:</label>
                             <textarea id="status1" name="status1" required></textarea><br><br>
                             <label for="taFalha2">TA FALHA 2:</label>
                             <input type="text" id="taFalha2" name="taFalha2" required><br><br>
+                            <label for="bdFalha2">BD FALHA 2:</label>
+                            <input type="text" id="bdFalha2" name="bdFalha2" required><br><br>
                             <label for="dataTAFalha2">DATA TA FALHA 2:</label>
                             <input type="datetime-local" id="dataTAFalha2" name="dataTAFalha2" required><br><br>
                             <label for="status2">STATUS:</label>
@@ -174,6 +178,10 @@
                                     <td><span id="carimboTAFalha1"></span></td>
                                 </tr>
                                 <tr>
+                                    <td>BD FALHA 1</td>
+                                    <td><span id="carimboBDFalha1"></span></td>
+                                </tr>
+                                <tr>
                                     <td>DATA TA FALHA 1</td>
                                     <td><span id="carimboDataTAFalha1"></span></td>
                                 </tr>
@@ -184,6 +192,10 @@
                                                            <tr>
                                     <td>TA FALHA 2</td>
                                     <td><span id="carimboTAFalha2"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>BD FALHA 2</td>
+                                    <td><span id="carimboBDFalha2"></span></td>
                                 </tr>
                                 <tr>
                                     <td>DATA TA FALHA 2</td>
@@ -208,6 +220,8 @@
                             var dataTAFalha1 = document.getElementById('dataTAFalha1').value;
                             var status1 = document.getElementById('status1').value;
                             var taFalha2 = document.getElementById('taFalha2').value;
+                            var bdFalha1 = document.getElementById('bdFalha1').value;
+                            var bdFalha2 = document.getElementById('bdFalha2').value;
                             var dataTAFalha2 = document.getElementById('dataTAFalha2').value;
                             var status2 = document.getElementById('status2').value;
                             function formatarDataHora(dataHora) {
@@ -225,6 +239,8 @@
                             document.getElementById('carimboDataTAFalha1').textContent = formatarDataHora(dataTAFalha1);
                             document.getElementById('carimboStatus1').textContent = status1;
                             document.getElementById('carimboTAFalha2').textContent = taFalha2;
+                            document.getElementById('carimboBDFalha1').textContent = bdFalha1;
+                            document.getElementById('carimboBDFalha2').textContent = bdFalha2;
                             document.getElementById('carimboDataTAFalha2').textContent = formatarDataHora(dataTAFalha2);
                             document.getElementById('carimboStatus2').textContent = status2;
                             document.getElementById('carimbo').style.display = 'block';
