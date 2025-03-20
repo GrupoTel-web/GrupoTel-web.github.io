@@ -128,7 +128,7 @@
         <div class="button-grid hidden-buttons" id="hidden-buttons-3">
             <!-- Botões da terceira página (mais links) -->
             <button onclick="location.href='CARROSEL AXT.html'">DIAGRAMA AXT</button>
-            <button onclick="location.href='ARVORE DE ESCALONAMENTOS.html'">ESCALONAMENTOS</button>
+            <button onclick="redirecionarEscalonamento()">ESCALONAMENTOS</button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
@@ -221,6 +221,19 @@
 
     // Inicializa a página
     updateButtons();
+
+        function redirecionarEscalonamento() {
+    const agora = new Date();
+    const hora = agora.getHours();
+    const dia = agora.getDay(); // 0 = Domingo, 6 = Sábado
+
+    if (hora >= 18 || hora < 8 || dia === 0 || dia === 6) {
+        location.href = 'ARVORE DE ESCALONAMENTOS PLANTÃO.html';
+    } else {
+        location.href = 'ARVORE DE ESCALONAMENTOS.html';
+    }
+}
+</script>
     </script>
 
 </body>
