@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="nt.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <title>Botões para Mostrar Tabelas</title>
+    <title>Escalonamento Plantão</title>
     <style>
         body {
             display: flex;
@@ -130,6 +130,18 @@
     line-height: 1.5;
 }
 
+.pulsating-text {
+        animation: pulse 2s infinite;
+    }
+
+@keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+    }
 
     </style>
 </head>
@@ -353,10 +365,13 @@
     <div class="table-container" id="table-4">
         <table1>
             <tr>
-             <h1 style="font-size: 30px; margin-top: 250px;">Independente do Gestor atual escalonar Renato Farias se TA com 8h</h1>
-             </tr>
+                <h1 class="pulsating-text" style="font-size: 30px; margin-top: 250px;">
+                    Independente do Gestor atual escalonar Renato Farias se TA com 8h
+                </h1>
+            </tr>
         </table1>
     </div>
+
 
 </div>
 
