@@ -24,7 +24,7 @@
             border-radius: 40px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 1);
             height: 400px;
-            width: 1200px;
+            width: 1300px;
         }
         h1 {
             color: #333;
@@ -53,10 +53,10 @@
         }
         .button-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             gap: 10px;
             max-width: 1000px;
-            margin-left: 80px;
+            margin-left: 30px;
         }
         .scroll-button {
             cursor: pointer;
@@ -96,6 +96,8 @@
             <button onclick="location.href='Gestao_OLT_ISOLADA.html'">GESTÃO OLT ISOLADA</button>
             <button onclick="location.href='CARIMBO_AXT_LINK.html'">AXT FRANQUIA LINK</button>
             <button onclick="location.href='CARIMBO_AXT_DOWN.html'">AXT FRANQUIA ISOLADA</button>
+            <button onclick="location.href='ESCALONAMENTO_MOVEL_PENDENCIA_REDE.html'">PENDENCIA REDE EXTERNA MÓVEL</button>
+            <button onclick="location.href='MUNICIPIO_ISOLADO_MOVEL.html'">CARIMBO MUNI ISOLADO MOVEL</button>
         </div>
         
         <div class="button-grid hidden-buttons" id="hidden-buttons-2">
@@ -110,12 +112,12 @@
             <button onclick="window.open('https://cactiagregador.telesp.net.br/cacti/graph_view.php?action=tree&node=tree_anchor-3&site_id=-1&host_id=-1&host_template_id=-1&hgd=&hyper=true', '_blank')">CACTI AGREGADOR</button>
             <button onclick="window.open('https://vivosmart.tdata.com.br/Orion/Login.aspx?sessionTimeout=yes&ReturnUrl=%2fOrion%2fSummaryView.aspx%3fViewID%3d97', '_blank')">AXT</button>
             <button onclick="window.open('https://sigitm.vivo.com.br/app/index.jsp', '_blank')">SIGITM</button>
+            <button onclick="window.open('http://sigitm.redecorp.br/SIGITMWeb/index.jsf;jsessionid=btCU-Fco7trqzWzIdkee-j1sVwj580ciDn07Nx4NtlmJzqgkSmUU!1842956776!1395024305', '_blank')">SIGITM BD</button>
+            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/_layouts/15/Doc.aspx?sourcedoc=%7B3ca09476-ad3a-4fbe-b9d5-c58ac0f3900e%7D&action=default&CID=57f4946a-1f28-40ad-bc73-b29e1228ceeb&_SRM=2%3AS%3A560', '_blank')">RELATÓRIO MUNI ISOLADOS</button>
         </div>
 
         <div class="button-grid hidden-buttons" id="hidden-buttons-3">
             <!-- Botões da terceira página (mais links) -->
-            <button onclick="window.open('http://sigitm.redecorp.br/SIGITMWeb/index.jsf;jsessionid=btCU-Fco7trqzWzIdkee-j1sVwj580ciDn07Nx4NtlmJzqgkSmUU!1842956776!1395024305', '_blank')">SIGITM BD</button>
-            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/_layouts/15/Doc.aspx?sourcedoc=%7B3ca09476-ad3a-4fbe-b9d5-c58ac0f3900e%7D&action=default&CID=57f4946a-1f28-40ad-bc73-b29e1228ceeb&_SRM=2%3AS%3A560', '_blank')">RELATÓRIO MUNI ISOLADOS</button>
             <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/g/personal/aldo_stoffel_telefonica_com/EUJUyKe_Yn1GnWZlW9lup6sBGfW14Fti_q4KjmfA90UwkA?e=4%3AjxcgGa&at=9', '_blank')">RELATÓRIO NÚCLEO TÉCNICO</button>
             <button onclick="window.open('https://10.18.77.200/index.php', '_blank')">GEO FIBRA</button>
             <button onclick="location.href='CABOS_OP_Mapa.pdf'">MAPA DE CABOS</button>
@@ -124,11 +126,17 @@
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
         </div>
         <div class="button-grid hidden-buttons" id="hidden-buttons-3">
             <!-- Botões da terceira página (mais links) -->
-            <button onclick="location.href='CARROSEL AXT.html'">DIAGRAMA AXT</button>
             <button onclick="location.href='ARVORE DE ESCALONAMENTOS.html'">ESCALONAMENTOS</button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
@@ -221,7 +229,6 @@
 
     // Inicializa a página
     updateButtons();
-</script>
     </script>
 
 </body>
