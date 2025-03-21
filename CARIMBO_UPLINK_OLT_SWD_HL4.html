@@ -286,6 +286,24 @@ textarea {
         </table>
     </div>
 
+
+    <div class="tabela-container" id="tabela-CONDOMÍNIO" style="display: none;">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 90px;">REGIONAL</th>
+                    <th style="width: 70px;">MINUTOS</th>
+                    <th style="width: 70px;">CONDOMÍNIO</th>
+                    <th style="width: 70px;">TA</th>
+                    <th style="width: 100px;">FALHA</th>
+                    <th style="width: 100px;">DATA CRIAÇÃO</th>
+                    <th style="width: 100px;">TIPO FALHA</th>
+                </tr>
+            </thead>
+            <tbody class="tabela-body"></tbody>
+        </table>
+    </div>
+
     <!-- Botão de ação -->
     <div class="button-container">
         <button class="limparTabela botoes-button2">Limpar</button>
@@ -414,6 +432,8 @@ document.addEventListener("DOMContentLoaded", function () {
             tabelaSelecionada = document.querySelector("#tabela-HL4 tbody");
         } else if (tipoSelecionado === "SWD") {
             tabelaSelecionada = document.querySelector("#tabela-SWD tbody");
+        } else if (tipoSelecionado === "CONDOMÍNIO") {
+            tabelaSelecionada = document.querySelector("#tabela-CONDOMÍNIO tbody");
         }
 
         if (!tabelaSelecionada) return;
@@ -439,6 +459,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 municipioValor = colunas[1]?.textContent.trim(); // 2ª coluna (índice 1)
                 hostnameValor = colunas[6]?.textContent.trim(); // 9ª coluna (índice 8)
                 dataFalhaValor = colunas[5]?.textContent.trim(); // 3ª coluna (índice 2)
+            } else if (tipoSelecionado === "CONDOMÍNIO") {
+                taValor = colunas[3]?.textContent.trim(); // 3ª coluna (índice 2)
+                municipioValor = colunas[2]?.textContent.trim(); // 2ª coluna (índice 1)
+                hostnameValor = colunas[6]?.textContent.trim(); // 9ª coluna (índice 8)
+                dataFalhaValor = colunas[5]?.textContent.trim(); // 3ª coluna (índice 2)
             }
 
             // Preenche os campos com os valores encontrados
@@ -458,6 +483,7 @@ document.addEventListener("DOMContentLoaded", function () {
     observer.observe(document.querySelector("#tabela-OLT tbody"), { childList: true, subtree: true });
     observer.observe(document.querySelector("#tabela-HL4 tbody"), { childList: true, subtree: true });
     observer.observe(document.querySelector("#tabela-SWD tbody"), { childList: true, subtree: true });
+    observer.observe(document.querySelector("#tabela-CONDOMÍNIO tbody"), { childList: true, subtree: true });
 });
 
 
@@ -673,7 +699,8 @@ document.getElementById("tipo").addEventListener("change", function() {
     const colunasPorTabela = {
     "OLT": 13,
     "HL4": 10,
-    "SWD": 8
+    "SWD": 8,
+    "CONDOMÍNIO": 7
 };
 
 function criarLinha(tipo, valores = []) {
