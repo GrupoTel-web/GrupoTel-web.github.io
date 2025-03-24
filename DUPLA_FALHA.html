@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> NT-SPI DUPLA FALHA </title>
-    <link rel="icon" type="image/png" href="nt.png">
+    <link rel="icon" type="image/png" href="icons/nt.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -88,25 +88,25 @@
         <div class="titulo"> NT-SPI ‼️ DUPLA FALHA ‼️</div>
         <form id="afectacao-form">
             <div class="form-section">
-                <p>AFETAÇÃO FTTX: <input type="text" id="afectacao-fttx"></p><br>
-                <p>AFETAÇÃO MOVEL: <input type="text" id="afectacao-movel"></p><br>
-            </div>
+                <p>AFETAÇÃO FTTX: <input type="text" id="afectacao-fttx"></p>
+                <p>AFETAÇÃO MOVEL: <input type="text" id="afectacao-movel"></p>
+            </div><br style="line-height: 0.2;">
             <div class="form-section">
                 <h2>Falha 01:</h2>
-                <p><strong>Data Falha1:</strong> <input type="datetime-local" id="data-falha1"></p><br>
-                <p>Local: <input type="text" id="local-falha1"></p><br>
-                <p>TA: <input type="text" id="ta-falha1"></p><br>
-                <p>ROTA E CABO: <input type="text" id="rota-cabo-falha1"></p><br>
-                <p>STATUS: <textarea id="status-falha1"></textarea></p><br>
-            </div>
+                <p><strong>Data Falha1:</strong> <input type="datetime-local" id="data-falha1"></p>
+                <p>Local: <input type="text" id="local-falha1"></p>
+                <p>TA: <input type="text" id="ta-falha1"></p>
+                <p>ROTA E CABO: <input type="text" id="rota-cabo-falha1"></p>
+                <p>STATUS: <textarea id="status-falha1"></textarea></p>
+            </div><br style="line-height: 0.2;">
             <div class="form-section">
                 <h2>Falha 02</h2>
-                <p><strong>Data Falha2:</strong> <input type="datetime-local" id="data-falha2"></p><br>
-                <p>Local: <input type="text" id="local-falha2"></p><br>
-                <p>TA: <input type="text" id="ta-falha2"></p><br>
-                <p>ROTA E CABO: <input type="text" id="rota-cabo-falha2"></p><br>
-                <p>STATUS: <textarea id="status-falha2"></textarea></p><br>
-            </div>
+                <p><strong>Data Falha2:</strong> <input type="datetime-local" id="data-falha2"></p>
+                <p>Local: <input type="text" id="local-falha2"></p>
+                <p>TA: <input type="text" id="ta-falha2"></p>
+                <p>ROTA E CABO: <input type="text" id="rota-cabo-falha2"></p>
+                <p>STATUS: <textarea id="status-falha2"></textarea></p>
+            </div><br style="line-height: 0.2;">
             <button type="button" onclick="gerarCarimbo()">Enviar</button>
         </form>
 
@@ -229,3 +229,44 @@ function formatarDataHora(dataHora) {
 </script>
 </body>
 </html>
+
+<div class="sair">
+    <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
+    <span>Sair</span>
+</div>
+
+<style>
+    .sair {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        z-index: 9999; /* Fica sempre no topo */
+        background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
+        padding: 5px;
+        border-radius: 8px;
+    }
+
+    .icone-porta {
+        width: 30px;
+        height: 30px;
+        margin-right: 5px;
+    }
+
+    .sair span {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .sair:hover {
+        opacity: 0.8;
+    }
+</style>
+
+<script>
+    document.querySelector('.sair').addEventListener('click', function() {
+        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+    });
+</script>

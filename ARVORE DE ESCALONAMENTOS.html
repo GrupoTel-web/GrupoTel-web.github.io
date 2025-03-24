@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="nt.png">
+    <link rel="icon" type="image/png" href="icons/nt.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <title>Botões para Mostrar Tabelas</title>
     <style>
@@ -16,7 +17,7 @@
             margin: 0;
             background-color: #ffc800;
             font-family: 'Poppins', sans-serif;
-            zoom: 70%;
+            zoom: 65%;
         }
         .button-container {
             display: center;
@@ -79,7 +80,7 @@
             padding: 60px;
             border-radius: 40px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 1);
-            height: 700px;
+            height: 720px;
             width: 1700px;
         }
 
@@ -142,13 +143,42 @@
 }
 
 
+.sair {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        z-index: 9999; /* Fica sempre no topo */
+        background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
+        padding: 5px;
+        border-radius: 8px;
+    }
 
+    .icone-porta {
+        width: 30px;
+        height: 30px;
+        margin-right: 5px;
+    }
+
+    .sair span {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .sair:hover {
+        opacity: 0.8;
+    }
 
 
     </style>
 </head>
 
-
+<div class="sair">
+    <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
+    <span>Sair</span>
+</div>
 
 <div class="navigation-container">
     <button class="custom-button" onclick="changePage('prev')">⯇</button>
@@ -401,6 +431,10 @@ function changePage(direction) {
         window.location.href = 'ARVORE DE ESCALONAMENTOS PLANTÃO.html'; // Página seguinte
     }
 }
+
+document.querySelector('.sair').addEventListener('click', function() {
+        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+    });
 
     </script>
 </body>

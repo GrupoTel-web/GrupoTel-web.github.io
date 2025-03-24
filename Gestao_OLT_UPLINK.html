@@ -5,7 +5,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta name="viewport" content="width=device-width">
 <title>Gestão OLT Uplink</title>
-<link rel="icon" type="image/png" href="nt.png">
+<link rel="icon" type="image/png" href="icons/nt.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
@@ -210,7 +210,7 @@ td {
 </div>
 </form>
 <div class="update-info">
-<img alt="Imagem" src="upl.png"/>
+<img alt="Imagem" src="icons/upl.png"/>
 <div>NT-SPI GESTÃO de UPLINK OLT's REMOTAS - Atualização: <span id="currentDateTime"></span></div>
 </div><br/><br/>
 <div class="chart-container">
@@ -232,7 +232,7 @@ td {
 </div>
 </div><br/><br/>
 <div class="update-info">
-<img alt="Imagem" src="upl.png"/>
+<img alt="Imagem" src="icons/upl.png"/>
 <div>NT-SPI GESTÃO de UPLINK OLT's REMOTAS DESC </div>
 </div>
 <script>
@@ -517,3 +517,44 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 </body>
 </html>
+
+<div class="sair">
+  <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
+  <span>Sair</span>
+</div>
+
+<style>
+  .sair {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      z-index: 9999; /* Fica sempre no topo */
+      background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
+      padding: 5px;
+      border-radius: 8px;
+  }
+
+  .icone-porta {
+      width: 30px;
+      height: 30px;
+      margin-right: 5px;
+  }
+
+  .sair span {
+      font-size: 18px;
+      font-weight: bold;
+  }
+
+  .sair:hover {
+      opacity: 0.8;
+  }
+</style>
+
+<script>
+  document.querySelector('.sair').addEventListener('click', function() {
+      window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+  });
+</script>

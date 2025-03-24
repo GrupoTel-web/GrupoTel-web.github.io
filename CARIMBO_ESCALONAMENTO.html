@@ -1,456 +1,661 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="icons/nt.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <title>Escalonamento Plantão</title>
-    <style>
-        body {
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Escalonamento</title>
+ <link rel="icon" type="image/png" href="icons/nt.png">
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+ <style>
+ body {
+ font-family: 'Poppins', sans-serif;
+ background-color: #ff6f00;
+ }
+ .container {
+ border: 2px solid #000;
+ padding: 20px;
+ max-width: 600px;
+ margin: 0 auto;
+ background-color: #f9f9f9;
+ }
+ .titulo {
+ background-color: #ff6f00; /* Roxo */
+ color: #fff; /* Branco */
+ padding: 10px;
+ text-align: center;
+ font-size: 1.5em;
+ margin-bottom: 20px;
+ }
+ .carimbo {
+ border: 2px solid #000;
+ padding: 10px;
+ margin-top: 20px;
+ display: none;
+ 
+ }
+ .carimboTitulo {
+ background-color: #ff6f00; /* Roxo */
+ color: #fff; /* Branco */
+ padding: 10px;
+ text-align: center;
+ font-size: 1.2em;
+ margin-bottom: 10px;
+ }
+ table {
+ width: 100%;
+ border-collapse: collapse;
+ }
+ table, th, td {
+ border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+ }
+ th, td {
+ padding: 8px;
+ text-align: left;
+ }
+ th {
+ background-color: #ff6f00; /* Roxo */
+ color: #fff; /* Branco */
+ }
+ td {
+ background-color: #fff; /* Branco */
+ }
+ textarea {
+ width: 100%;
+ height: 100px;
+ }
+ .botoes {
+ margin-top: 20px;
+ }
+ .botoes button {
+ margin-right: 10px;
+ }
+
+ .tabela-container-1 {
+            width: 90vw;
+            max-width: 100%;
+            overflow-x: auto;
+            border: 1px solid #d3d3d3;
+            background: white;
+            padding: 0px;
+            margin-left: 0px;
+            font-size: 9px;
+            font-weight: bold;
+        }
+
+        .tabela-container-1 th {
+        text-align: center; 
+        vertical-align: middle; 
+        }
+
+        .tabela-container {
+            width: 93vw;
+            max-width: 100%;
+            overflow-x: auto;
+            border: 1px solid #d3d3d3;
+            background: white;
+            padding: 5px;
+            margin-left: 90px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        .botoes {
+            margin-top: 9px;
+            margin-bottom: 10px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            height: 900px;
-            margin: 0;
-            background-color: #096b9c;
-            font-family: 'Poppins', sans-serif;
-            zoom: 70%;
-        }
-        .button-container {
-            display: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        button {
-            padding: 15px 30px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            background-color: #096b9c;
-            color: rgb(255, 255, 255);
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s, opacity 0.3s;
-        }
-        button:hover {
-            background-color: #0e3392;
-            color: #fff;
-        }
-        button.inactive {
-            opacity: 0.4; /* Deixa os botões inativos mais claros */
-        }
-
-        .table-container {
-            display: none;
-            margin-left: 20px;
-            margin-right: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 5px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
-            text-align: center;
             justify-content: center;
-            font-weight: bold;
         }
-        th, td {
-            padding: 8px;
-            text-align: center;
-            
-        }
-        th {
-            background-color: #85fff9; /* Roxo */
-            color: #000; 
-        }
-        td {
-            background-color: #fff; /* Branco */
-            
+        .botoes button {
+            background-color: #ff6f00;
+            color: #fff;
+            border: none;
+            padding: 6px 40px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
         }
 
-        .container {
-            text-align: center;
-            background-color: #fff;
-            padding: 60px;
-            border-radius: 40px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 1);
-            height: 650px;
-            width: 1700px;
+        .botoes-1 {
+            margin-top: 20px;
+            margin-right: 10px;
         }
-
-        .navigation-container {
-    display: flex;
-    align-items: center; /* Alinha os itens verticalmente ao centro */
-    justify-content: center; /* Centraliza os itens horizontalmente */
-    gap: 10px; /* Espaço entre os itens */
-    font-size: 40px;
-    margin-bottom: 30px;
-}
-
-.custom-button {
-    padding: 5px 10px; /* Padding dentro do botão */
-    font-size: 18px; /* Tamanho da fonte */
-    cursor: pointer; /* Indicador de que o botão pode ser clicado */
-    border-radius: 5px; /* Cantos arredondados */
-    font-size: 40px;
-}
-
-.custom-button:hover {
-    background-color: #e0e0e0; /* Mudança na cor do fundo ao passar o mouse */
-}
-
-.container3 {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.area {
-    width: 300px;
-    margin: 10px;
-    text-align: center;
-    border: 2px solid #0c0141;
-    padding: 15px;
-    background-color: #ffffff; 
-    border-radius: 10px;
-}
-
-.title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.content {
-    font-size: 15px;
-    line-height: 1.5;
-}
-
-.pulsating-text {
-        animation: pulse 2s infinite;
-    }
-
-@keyframes pulse {
-        0%, 100% {
-            transform: scale(1);
+        .container-principal {
+        background-color: #fff; /* Fundo branco */
+        border-radius: 15px; /* Bordas arredondadas */
+        padding: 20px; /* Espaçamento interno */
+        margin: 20px auto; /* Centraliza o container */
+        width: 90%; /* Largura responsiva */
+        max-width: 1200px; /* Limita a largura máxima */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
         }
-        50% {
-            transform: scale(1.1);
-        }
-    }
-
-    </style>
+ </style>
 </head>
-
-<div class="navigation-container">
-    <button class="custom-button" onclick="changePage('prev')">⯇</button>
-    <span id="page-title" style="font-weight: bold;">TABELA DE ESCALONAMENTO (PLANTÃO)</span>
-    <button class="custom-button" onclick="changePage('next')">⯈</button>
-</div>
-
-
-<div class="container">
 <body>
-    <div class="button-container">
-        <button class="table-navigation-button" onclick="showTable(0)">1 Hora</button>
-        <button class="table-navigation-button" onclick="showTable(1)">2 Horas</button>
-        <button class="table-navigation-button" onclick="showTable(2)">4 Horas</button>
-        <button class="table-navigation-button" onclick="showTable(3)">5 Horas</button>
-        <button class="table-navigation-button" onclick="showTable(4)">8 Horas</button>
-    </div>
 
-    <div class="table-container" id="table-0">
-        <h1 style="font-size: 30px; margin-top: 10px;"> </h1>
-        <table>
+  <div class="container-principal">
+  <div class="tabela-container-1">
+    <table id="tabela">
+        <thead>
             <tr>
-                <th>N1 (Ability)</th><th>N1 (Tel)</th><th>Rede (Icomon)</th><th>Rede (TEL)</th><th>NOC</th><th>NOC Móvel</th><th>Sobressalentes (Chamado interno - Merinod)</th>
-                <th>Sobressalentes (C/ o Fornecedor)</th><th>SWAP EXTERNO</th>                
-            </tr>
-            <tr>
-                <td>Conferir Plantonistas da Área</td>
-                    
-                    
-                    <td>Conferir Plantonistas da Área</td>
-
-
-
-<td>Jose mauro ou Quinalia</td><td>Jose mauro ou Quinalia</td>
-<td>Quinteiro, Aldo ou Celso</td><td>Quinteiro, Aldo ou Celso</td><td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td><td>Quinteiro, Aldo ou Celso</td>
-        </table>
-        <br>
-        <table>
-            <tr>
-                <th>SWAP INTERNO (VIVO)</th><th>Operação Banda Larga</th><th>Operação DWDM</th><th>Operação Rede IP</th><th>CO-N1 (NOC-BL)</th><th>Operação Móvel Backhaul (Metro Baixa)</th><th>Rede Sudeste</th><th>Operação Móvel RF (Radio / Enlace)</th>
-            </tr>
-            <tr>
-                <td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-</tr>
-</table>
-
-<br>
-<h1 style="font-size: 15px; text-shadow: 1px 1px 2px #00fff7;">LISTA DOS PLANTONISTAS: ❗VERIFICAR SEMANALMENTE❗</h1>
-<div class="container3">
-    <div class="area">
-        <div class="title">12</div>
-        <div class="content">
-            Luiz Antonio dos Santos<br>
-            Fernando Lelis Brito Rocha<br>
-            Rogerio Alves Tavares
-        </div>
-    </div>
-
-    <div class="area">
-        <div class="title">15 e 19</div>
-        <div class="content">
-            Alexandre Pichutti Binatti<br>
-            Vanderlei Marques de Oliveira<br>
-            Mauro Proença Junior<br>
-            Luciano Ribeiro da Silva<br>
-            Claudinei Henrique dos Santos<br>
-            Leandro Barrutia
-        </div>
-    </div>
-
-    <div class="area">
-        <div class="title">14 e 18</div>
-        <div class="content">
-            Ciro Tadashi Shiguematsu<br>
-            Ricardo Marcos Gonçalves<br>
-            Júlio César Leme<br>
-            Reginaldo Barbosa Santana<br>
-            Edilson Rodrigues Bezerra<br>
-            André Fábio Gama
-        </div>
-    </div>
-
-    <div class="area">
-        <div class="title">16 e 17</div>
-        <div class="content">
-            André Luis Molesini Galan<br>
-            José Ricardo Rodrigues Alves<br>
-            Edimilson Rosa<br>
-            Claudionor Máximo Souza<br>
-            Airton César Longhi Baliero<br>
-            Edgar Rizzo de Matos<br>
-            Elvis Rodrigues Lopes
-        </div>
-    </div>
+                <th style="width: 90px;">TA METRO</th>
+                <th style="width: 70px;">DWDM LINHA</th>
+                <th style="width: 70px;">TA RAIZ (REDE)</th>
+                <th style="width: 100px;">LOCALIDADE</th>
+                <th style="width: 100px;">ROTA</th>
+                <th style="width: 100px;">DATA ALARME</th>
+                <th style="width: 120px;">TEMPO CORRIDO</th>
+                <th style="width: 90px;">RISCO FTTX</th>
+                <th style="width: 90px;">RISCO ADSL</th>
+                <th style="width: 130px;">AFETAÇÃO ERB</th>
+                <th style="width: 120px;">TOTAL RISCO</th>
+                <th style="width: 120px;">AFETAÇÃO FTTX</th>
+                <th style="width: 90px;">AFETAÇÃO ADSL</th>
+                <th style="width: 90px;">AFETAÇÃO TOTAL</th>
+                <th style="width: 130px;">RESUMO STATUS</th>
+                <th style="width: 120px;">AREA RESPONSAVEL</th>
+                <th style="width: 90px;">EVENTOS ENVOLVIDOS</th>
+                <th style="width: 90px;">TECNOLOGIA</th>
+                <th style="width: 130px;">TTMC</th>
+                <th style="width: 120px;">ADJ, SPC</th>
+                </tr>
+        </thead>
+        <tbody id="tabela-body"></tbody>
+    </table>
 </div>
 
-
-    </div>
-
-    <div class="table-container" id="table-1">
-        <h1 style="font-size: 30px; margin-top: 100px;"> </h1>
-        <table>
-            <tr>
-                <th>N1 (Ability)</th><th>N1 (Tel)</th><th>Rede (Icomon)</th><th>Rede (TEL)</th><th>NOC</th><th>NOC Móvel</th><th>Sobressalentes (Chamado interno - Merinod)</th>
-                <th>Sobressalentes (C/ o Fornecedor)</th><th>SWAP EXTERNO</th>                
-            </tr>
-            <tr>
-                <td>Escalonar Vargas (41)99209-9681</td>
-                <td>Escalonar Adenilson (19)99724-3654</td>
-                <td>Palamin escalonar Alex Ferraz (11)97469-2530</td>
-                <td>Palamin escalonar Alexandre do Bem</td>
-                <td>Renato escalonar Diego Barbosa</td>
-                <td>Rodrigo padilha escalonar Lidiane Ribeiro</td>
-                <td>Reinaldo escalonar Gustavo Siqueira</td>
-                <td>Reinaldo escalonar Paulo Sergio De Lima - BL / Lucio - IP</td>
-                <td>Escalonar Marcelo Figlarz</td>
-            </tr>
-        </table>
-        <br>
-        <table>
-            <tr>
-                <th>SWAP INTERNO (VIVO)</th><th>Operação Banda Larga</th><th>Operação DWDM</th><th>Operação Rede IP</th><th>CO-N1 (NOC-BL)</th><th>Operação Móvel Backhaul (Metro Baixa)</th><th>Rede Sudeste</th><th>Operação Móvel RF (Radio / Enlace)</th>
-            </tr>
-            <tr>
-                <td>Escalonar Fernanda Marize</td>
-<td>Renato escalonar Paulo Sergio</td>
-<td>Renato escalonar Marcelo Monteiro</td>
-<td>Renato escalonar Lucio Pinto</td>
-<td>Renato escalonar Wanderley Duarte</td>
-<td>Renato escalonar Itamar Burato</td>
-<td>Palamin escalonar Fred</td>
-<td>Renato escalonar Wanderley Duarte</td>
-        </table>
-    </div>
-
-    <div class="table-container" id="table-2">
-        <h1 style="font-size: 30px; margin-top: 100px;"> </h1>
-        <table>
-            <tr>
-                <th>N1 (Ability)</th><th>N1 (Tel)</th><th>Rede (Icomon)</th><th>Rede (TEL)</th><th>NOC</th><th>NOC Móvel</th><th>Sobressalentes (Chamado interno - Merinod)</th>
-                <th>Sobressalentes (C/ o Fornecedor)</th><th>SWAP EXTERNO</th>                
-            </tr>
-            <tr>
-                <td>Escalonar Geber (11)91669-3286</td>
-                <td>Escalonar Antonio Cesar (16)99991-4255</td>
-                <td>Escalonar Odirlei (11)96496-5286</td>
-                <td>Escalonar Vetoretti (17)99618-2197</td>
-                <td>Renato escalonar Geraldo Ramazotti</td>
-                <td>Rodrigo Padilha escalonar Geraldo Ramazotti</td>
-                <td>Reinaldo escalonar DEL REY</td>
-                <td>Reinaldo escalonar Menon - IP</td>
-                <td>Renato escalonar Geraldo Ramazotti</td>
-            </tr>                
-        </table>
-        <br>
-        <table>
-            <tr>
-                <th>SWAP INTERNO (VIVO)</th><th>Operação Banda Larga</th><th>Operação DWDM</th><th>Operação Rede IP</th><th>CO-N1 (NOC-BL)</th><th>Operação Móvel Backhaul (Metro Baixa)</th><th>Rede Sudeste</th><th>Operação Móvel RF (Radio / Enlace)</th>
-            </tr>
-            <tr>
-                <td>Renato escalonar Fernanda Marize</td>
-<td>Renato escalonar Márcio Fagundes</td>
-<td>Renato escalonar Menon</td>
-<td>Renato escalonar Menon</td>
-<td>Renato escalonar Sergio Rodrigo de Souza</td>
-<td>Renato escalonar Leandro Amaral</td>
-<td>Palamin escalonar Fred</td>
-<td>Renato escalonar Leandro Amaral</td>
-        </table>
-    </div>
-
-    <div class="table-container" id="table-3">
-        <h1 style="font-size: 30px; margin-top: 100px;"> </h1>
-        <table>
-            <tr>
-                <th>N1 (Ability)</th><th>N1 (Tel)</th><th>Rede (Icomon)</th><th>Rede (TEL)</th><th>NOC</th><th>NOC Móvel</th><th>Sobressalentes (Chamado interno - Merinod)</th>
-                <th>Sobressalentes (C/ o Fornecedor)</th><th>SWAP EXTERNO</th>                
-            </tr>
-            <tr>
-                <td>Escalonar Ricardo Boccatto (11)99972-3510</td>
-<td>Escalonar José Aparecido Cardoso (16)99961-8028</td>
-<td>Escalonar Sorrilha (11)99654-1671</td>
-<td>Escalonar José Aparecido Cardoso (16)99961-8028</td>
-<td>Renato escalonar Marcelo Figlarz</td>
-<td>Renato escalonar Marcelo Figlarz</td>
-<td>Reinaldo escalonar DEL REY</td>
-<td>Reinaldo escalonar Marcelo Figlarz</td>
-<td>Renato Escalonar Marcelo Figlarz</td>
-            </tr>
-</table>
-        <br>
-        <table>
-            <tr>
-                <th>SWAP INTERNO (VIVO)</th><th>Operação Banda Larga</th><th>Operação DWDM</th><th>Operação Rede IP</th><th>CO-N1 (NOC-BL)</th><th>Operação Móvel Backhaul (Metro Baixa)</th><th>Rede Sudeste</th><th>Operação Móvel RF (Radio / Enlace)</th>
-            </tr>
-            <tr>
-                <td>Renato escalonar Fernanda Marize</td>
-<td>Renato escalonar Marcelo Figlarz</td>
-<td>Renato escalonar Marcelo Figlarz</td>
-<td>Renato escalonar Marcelo Figlarz</td>
-<td>Renato escalonar Fabio Stellato</td>
-<td>Renato escalonar Marcelo Figlarz</td>
-<td>Escalonar Aparecido</td>
-<td>Renato escalonar Marcelo Figlarz</td>
-</tr>
-
-        </table>
-    </div>
-
-    <div class="table-container" id="table-4">
-        <table1>
-            <tr>
-                <h1 class="pulsating-text" style="font-size: 30px; margin-top: 250px;">
-                    Independente do Gestor atual escalonar Renato Farias se TA com 8h
-                </h1>
-            </tr>
-        </table1>
-    </div>
-
-
+<div class="botoes">
+    <button class="limparTabela">Limpar</button>
 </div>
 
-    <script>
-        function showTable(tableIndex) {
-     // Ocultar todas as tabelas
-     const tables = document.querySelectorAll('.table-container');
-     tables.forEach(table => table.style.display = 'none');
+ <div class="container">
+ <div class="titulo">NT-SPI 🌡️ Escalonamentos 🌡️</div>
+ <h1>Formulário</h1>
+ <form id="meuFormulario">
+
+  <label for="escalonamento">Escalonamento:</label>
+  <select id="escalonamento" name="escalonamento" required>
+    <option value="" hidden>SELECIONAR O TIPO</option>
+    <option value="OLT-LINK">OLT-LINK</option>
+  <option value="INFRA">INFRA</option>
+   <option value="OLT-DOWN">OLT-DOWN</option>
+   <option value="DRACO">DRACO</option>
+   <option value="DWDM">DWDM</option>
+   <option value="HL4">HL4</option>
+   <option value="METRO">METRO</option>
+   <option value="MÓVEL">MÓVEL</option>
+  <option value="ADJACÊNCIA">ADJANCÊNCIA</option>
+  <option value="BBN">BBN</option>
+  <option value="CONDOMÍNIO PLANTA INTERNA">CONDOMÍNIO PLANTA INTERNA</option>
+ </select><br><br>
  
-     // Mostrar a tabela clicada
-     const selectedTable = document.getElementById('table-' + tableIndex);
-     selectedTable.style.display = 'block';
+ <label for="municipio">Municipio:</label>
+ <input type="text" id="municipio" name="municipio" required><br><br>
  
-     // Alterar opacidade dos botões (somente os relacionados à navegação entre tabelas)
-     const buttons = document.querySelectorAll('.table-navigation-button'); // Seleciona apenas botões de navegação de tabelas
-     buttons.forEach((btn, index) => {
-         if (index === tableIndex) {
-             btn.classList.remove('inactive');  // Destaca o botão selecionado
-         } else {
-             btn.classList.add('inactive');  // Torna os outros botões mais claros
-         }
-     });
+ <label for="ta">TA:</label>
+ <input type="text" id="ta" name="ta" required><br><br>
+ 
+ <label for="dataAbertura">Data Abertura:</label>
+ <input type="datetime-local" id="dataAbertura" name="dataAbertura" required><br><br>
+ 
+ <label for="taRaiz">TA Raiz:</label>
+ <input type="text" id="taRaiz" name="taRaiz" required><br><br>
+
+
+ <label for="gestorAtual">Gestor Atual:</label>
+<select id="gestorAtual" name="gestorAtual" required>
+  <option value="" hidden>SELECIONAR</option>
+  <option value="N1 - ABILITY">N1 - ABILITY</option>
+  <option value="N1 - TEL">N1 - TEL</option>
+  <option value="REDE - TEL">REDE - TEL</option>
+  <option value="REDE - ICOMON">REDE - ICOMON</option>
+  <option value="NOC">NOC</option>
+  <option value="N2">N2</option>
+  <option value="O&M ACESSO VIVO_N1_SPI">O&M ACESSO VIVO_N1_SPI</option>
+  <option value="SUPORTE">SUPORTE</option>
+  <option value="SWAP">SWAP</option>
+  <option value="CO-N1">CO-N1</option>
+  <option value="SOBRESSALENTE CHAMADO INTERNO">SOBRESSALENTE INTERNO</option>
+  <option value="SOBRESSALENTE FORNECEDOR">SOBRESSALENTE FORNECEDOR</option>
+  <option value="OPERACAO RF">OPERACAO RF</option>
+  <option value="OPERACAO MOVEL BACKHAUL">OPERACAO MOVEL BACKHAUL</option>
+  <option value="OPERAÇÃO BANDA LARGA">OPERAÇÃO BANDA LARGA</option>
+  <option value="OPERAÇÃO DWDM">OPERAÇÃO DWDM</option>
+  <option value="OPERAÇÃO REDE IP">OPERAÇÃO REDE IP</option>
+  <option value="N1 CAPITAL">N1 CAPITAL</option>
+  <option value="N1 SUDESTE">N1 SUDESTE</option>
+  <option value="REDE SUDESTE">REDE SUDESTE</option>
+  <option value="REDE CAPITAL">REDE CAPITAL</option>
+</select><br><br>
+
+
+<label for="tempoNoc">Tempo NOC (horas):</label>
+<input type="text" id="tempoNoc" name="tempoNoc" required pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM"><br><br>
+
+<label for="tempoN1">Tempo N1 (horas):</label>
+<input type="text" id="tempoN1" name="tempoN1" required pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM"><br><br>
+
+<label for="tempoRede">Tempo Rede (horas):</label>
+<input type="text" id="tempoRede" name="tempoRede" required pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM"><br><br>
+
+<!-- Campo para selecionar "Outro" -->
+<label for="outroTipo">Outro:</label>
+<input type="checkbox" id="outroTipo" name="outroTipo" onclick="toggleOutroOptions()">
+<br><br>
+
+<div id="outroOptions" style="display: none;">
+    <label for="outrosOPP"></label>
+    <select id="outrosOPP" name="outrosOPP" onchange="atualizarTituloTempoOutro()">
+      <option value="" hidden>Outros</option>
+      <option value="N2">N2</option>
+      <option value="SUPORTE">SUPORTE</option>
+      <option value="SWAP">SWAP</option>
+      <option value="CO-N1">CO-N1</option>
+      <option value="SOBRESSALENTE CHAMADO INTERNO">SOBRESSALENTE INTERNO</option>
+      <option value="SOBRESSALENTE FORNECEDOR">SOBRESSALENTE FORNECEDOR</option>
+      <option value="OPERACAO RF">OPERACAO RF</option>
+      <option value="OPERACAO MOVEL BACKHAUL">OPERACAO MOVEL BACKHAUL</option>
+      <option value="OPERAÇÃO BANDA LARGA">OPERAÇÃO BANDA LARGA</option>
+      <option value="OPERAÇÃO DWDM">OPERAÇÃO DWDM</option>
+      <option value="OPERAÇÃO REDE IP">OPERAÇÃO REDE IP</option>
+      <option value="N1 CAPITAL">N1 CAPITAL</option>
+      <option value="N1 SUDESTE">N1 SUDESTE</option>
+      <option value="REDE SUDESTE">REDE SUDESTE</option>
+      <option value="REDE CAPITAL">REDE CAPITAL</option>
+    </select>
+    <input type="text" id="tempoOutro" name="tempoOutro" pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM"><br><br>
+  </div>
+  
+  <label for="nivel">Nível:</label>
+  <select id="nivel" name="nivel" required>
+    <option value="" hidden>SELECIONAR</option>
+    <option value="COORDENADOR">COORDENADOR</option>
+    <option value="GERENTE">GERENTE</option>
+    <option value="SENIOR">SENIOR</option>
+    <option value="DIRETOR">DIRETOR</option>
+  </select><br><br>
+  
+  <label for="status">Status:</label>
+  <textarea id="status" name="status" required></textarea><br><br>
+  
+  <input type="hidden" id="envio" name="envio" value="">
+  <button type="submit">Enviar</button>
+  
+  <div class="carimbo" id="carimbo">
+    <div class="carimboTitulo">NT-SPI 🌡️ Escalonamentos 🌡️</div>
+    <table>
+      <tr>
+        <th>Descrição</th>
+        <th>Atualização</th>
+      </tr>
+      <tr>
+        <td>Escalonamento</td>
+        <td><span id="carimboEscalonamento"></span></td>
+      </tr>
+      <tr>
+        <td>Municipio</td>
+        <td><span id="carimboMunicipio"></span></td>
+      </tr>
+      <tr>
+        <td>TA</td>
+        <td><span id="carimboTA"></span></td>
+      </tr>
+      <tr>
+        <td>Data Abertura</td>
+        <td><span id="carimboDataAbertura"></span></td>
+      </tr>
+      <tr>
+        <td>TA Raiz</td>
+        <td><span id="carimboTARaiz"></span></td>
+      </tr>
+      <tr>
+        <td>Gestor Atual</td>
+        <td><span id="carimboGestorAtual"></span></td>
+      </tr>
+      <tr>
+        <td>Tempo NOC</td>
+        <td><span id="carimboTempoNoc"></span></td>
+      </tr>
+      <tr>
+        <td>Tempo N1</td>
+        <td><span id="carimboTempoN1"></span></td>
+      </tr>
+      <tr>
+        <td>Tempo Rede</td>
+        <td><span id="carimboTempoRede"></span></td>
+      </tr>
+      <tr>
+        <td>Tempo Total (NOC, N1, Rede)</td>
+        <td><span id="carimboTempoTotal"></span></td>
+      </tr>
+      <tr id="outroRow" style="display: none;">
+        <td id="tituloTempoOutro">Tempo Outros</td>
+        <td><span id="carimboTempoOutro"></span></td>
+      </tr>
+      <tr>
+        <td>Nível</td>
+        <td><span id="carimboNivel"></span></td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td><span id="carimboStatus"></span></td>
+      </tr>
+      <tr>
+        <td>Envio</td>
+        <td><span id="carimboEnvio"></span></td>
+      </tr>
+      <tr>
+        <td>Tempo TA</td>
+        <td><span id="carimboTempoTA"></span></td>
+      </tr>
+    </table>
+    <div class="botoes">
+      <button id="voltar">Voltar</button>
+    </div>
+  </div>
+</div>
+ <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    function preencherFormulario() {
+        let tabela = document.querySelector("table");
+        if (!tabela) return;
+
+        let linhas = tabela.querySelectorAll("tbody tr");
+        if (linhas.length === 0) return;
+
+        let ultimaLinha = linhas[linhas.length - 1];
+        let colunas = ultimaLinha.querySelectorAll("td");
+
+        if (colunas.length < 4) return; // Garante que tem colunas suficientes antes de preencher
+
+        let ta = colunas[1].textContent.trim(); // Coluna DWDM LINHA
+        let taRaiz = colunas[2].textContent.trim(); // Coluna TA RAIZ (REDE)
+        let dataAbertura = colunas[5].textContent.trim(); // Coluna DATA ALARME
+        let municipioCompleto = colunas[3].textContent.trim(); // Coluna LOCALIDADE (Município)
+
+        // Pegando apenas o que vem antes do "-" no município
+        let municipio = municipioCompleto.split("-")[0].trim();
+
+        // Preenchendo os campos do formulário
+        document.getElementById("ta").value = ta;
+        document.getElementById("taRaiz").value = taRaiz;
+        document.getElementById("dataAbertura").value = formatarData(dataAbertura);
+        document.getElementById("municipio").value = municipio; // Adicionando o município
+    }
+
+    function formatarData(data) {
+        if (!data) return "";
+        let partes = data.split(" ");
+        if (partes.length < 2) return "";
+
+        let [dia, mes, ano] = partes[0].split("/");
+        let horario = partes[1];
+
+        return `${ano}-${mes}-${dia}T${horario}`;
+    }
+
+    let observer = new MutationObserver(preencherFormulario);
+    let tabela = document.querySelector("table");
+
+    if (tabela) {
+        observer.observe(tabela, { childList: true, subtree: true });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+function criarLinha(celulas = 20, valores = []) {
+            let tabela = document.getElementById("tabela-body");
+            let novaLinha = tabela.rows[0];
+
+            if (novaLinha) {
+                for (let i = 0; i < celulas; i++) {
+                    novaLinha.cells[i].textContent = valores[i] || "";
+                }
+            } else {
+                novaLinha = tabela.insertRow();
+                for (let i = 0; i < celulas; i++) {
+                    let celula = novaLinha.insertCell();
+                    celula.contentEditable = "true";
+                    celula.textContent = valores[i] || "";
+                }
+            }
+        }
+
+        function inicializarTabela(linhas = 1) {
+            let tabela = document.getElementById("tabela-body");
+            tabela.innerHTML = "";
+            for (let i = 0; i < linhas; i++) {
+                criarLinha();
+            }
+        }
+
+        document.addEventListener("paste", function(event) {
+    let target = event.target;
+    if (target.tagName.toLowerCase() === 'td') {
+        event.preventDefault();
+        let pasteData = event.clipboardData.getData("text");
+
+        // Substituir quebras de linha dentro de células por espaço para evitar divisão incorreta
+        pasteData = pasteData.replace(/([^\t])\n([^\t])/g, "$1 $2");
+
+        let linhas = pasteData.split("\n").filter(linha => linha.trim() !== "");
+        let tabela = target.closest("table"); // Pega a tabela mais próxima
+        let ultimaLinhaIndex = target.parentNode.rowIndex; // Obtém o índice da linha onde começou a colagem
+
+        linhas.forEach((linha, linhaIndex) => {
+            let colunas = linha.split("\t");
+            let linhaTabela = tabela.rows[ultimaLinhaIndex];
+
+            if (linhaTabela) {
+                if (linhaIndex === 0) {
+                    // Primeira linha: Preencher normalmente
+                    colunas.forEach((valor, colunaIndex) => {
+                        let celula = linhaTabela.cells[colunaIndex];
+                        if (celula) {
+                            celula.innerText = valor;
+                        }
+                    });
+                } else {
+                    // Segunda linha: Adicionar os dados na próxima célula vazia da linha principal
+                    let ultimaCelulaIndex = [...linhaTabela.cells].findIndex(celula => celula.innerText.trim() === "");
+                    let celulaDestino = linhaTabela.cells[ultimaCelulaIndex] || linhaTabela.insertCell(-1);
+                    celulaDestino.innerText = colunas.join(" "); // Junta tudo para evitar separação errada
+                }
+            }
+        });
+    }
+});
+
+
+
+        function limparTabela() {
+            inicializarTabela();
+        }
+
+        // Associar o evento de clique no botão "Limpar"
+        document.querySelector(".limparTabela").addEventListener("click", limparTabela);
+
+        inicializarTabela();
+
+
+function atualizarTituloTempoOutro() {
+    const outrosOPP = document.getElementById("outrosOPP").value;
+    const titulo = document.getElementById("tituloTempoOutro");
+
+    if (escalonamento) {
+      titulo.innerText = `Tempo Outros (${outrosOPP})`;
+    } else {
+      titulo.innerText = "Tempo Outros"; // Caso não tenha nada selecionado
+    }
+  }
+
+function toggleOutroOptions() {
+    var outroDiv = document.getElementById("outroOptions");
+    var outroCheckBox = document.getElementById("outroTipo");
+    
+    if (outroCheckBox.checked) {
+        outroDiv.style.display = "block";
+        document.getElementById("outroRow").style.display = "table-row"; // Mostra a linha de 'Tempo Outros'
+        document.getElementById("carimboTempoOutro").innerText = document.getElementById("tempoOutro").value; // Adiciona o tempo do outro
+    } else {
+        outroDiv.style.display = "none";
+        document.getElementById("outroRow").style.display = "none"; // Oculta a linha de 'Tempo Outros'
+        document.getElementById("carimboTempoOutro").innerText = ''; // Limpa o campo
+    }
+}
+
+ 
+ document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("input[type='text'][name^='tempo']").forEach(input => {
+        input.addEventListener("input", function (event) {
+            let value = this.value.replace(/[^0-9]/g, ""); // Remove caracteres não numéricos
+
+            // Limitar o valor a no máximo 6 caracteres
+            if (value.length > 5) {
+                value = value.slice(0, 5);
+            }
+
+            if (value.length > 3) {
+                let horas = value.slice(0, value.length - 2); // Tudo antes dos últimos 2 dígitos
+                let minutos = value.slice(-2); // Últimos 2 dígitos
+
+                // Ajusta os minutos para 59 se for maior que 59
+                if (parseInt(minutos) > 59) {
+                    minutos = "59";
+                }
+
+                this.value = `${horas}:${minutos}`;
+            } else {
+                this.value = value;
+            }
+        });
+    });
+});
+ document.getElementById('meuFormulario').addEventListener('submit', function(event) {
+ event.preventDefault();
+ var escalonamento = document.getElementById('escalonamento').value;
+ var municipio = document.getElementById('municipio').value;
+ var ta = document.getElementById('ta').value;
+ var dataAbertura = document.getElementById('dataAbertura').value;
+ var taRaiz = document.getElementById('taRaiz').value;
+ var gestorAtual = document.getElementById('gestorAtual').value;
+ var tempoNoc = document.getElementById('tempoNoc').value;
+ var tempoN1 = document.getElementById('tempoN1').value;
+ var tempoRede = document.getElementById('tempoRede').value;
+ var tempoOutro = document.getElementById('tempoOutro').value;
+ var tempoTotal = calcularTempoTotal(tempoNoc, tempoN1, tempoRede);
+ var nivel = document.getElementById('nivel').value;
+ var status = document.getElementById('status').value;
+ var envio = new Date().toISOString();
+ var envioFormatado = formatarDataHora(envio);
+ var tempoTA = calcularTempoTA(dataAbertura, envio);
+
+ function formatarDataHora(dataHora) {
+   if (!dataHora) return '';
+   var data = new Date(dataHora);
+   var dia = String(data.getDate()).padStart(2, '0');
+   var mes = String(data.getMonth() + 1).padStart(2, '0');
+   var ano = data.getFullYear();
+   var horas = String(data.getHours()).padStart(2, '0');
+   var minutos = String(data.getMinutes()).padStart(2, '0');
+   return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
  }
- 
- 
- 
- 
-         // Função para alternar entre as páginas
- function changePage(direction) {
-     if (direction === 'prev') {
-         window.location.href = 'ARVORE DE ESCALONAMENTOS.html'; // Página anterior
-     } else if (direction === 'next') {
-         window.location.href = 'ARVORE DE ESCALONAMENTOS.html'; // Página seguinte
-     }
+
+ function calcularTempoTotal(tempoNoc, tempoN1, tempoRede) {
+   var [horasNoc, minutosNoc] = tempoNoc.split(':').map(Number);
+   var [horasN1, minutosN1] = tempoN1.split(':').map(Number);
+   var [horasRede, minutosRede] = tempoRede.split(':').map(Number);
+   var totalMinutos = (horasNoc * 60 + minutosNoc) + (horasN1 * 60 + minutosN1) + (horasRede * 60 + minutosRede);
+   var totalHoras = Math.floor(totalMinutos / 60);
+   var totalMinutosRestantes = totalMinutos % 60;
+   return `${String(totalHoras).padStart(2, '0')}:${String(totalMinutosRestantes).padStart(2, '0')}`;
  }
- 
-    </script>
+
+ function calcularTempoTA(dataAbertura, envio) {
+   var dataAberturaDate = new Date(dataAbertura);
+   var envioDate = new Date(envio);
+   var diffMs = envioDate - dataAberturaDate;
+   var diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+   var diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+   return `${String(diffHrs).padStart(2, '0')}:${String(diffMins).padStart(2, '0')}`;
+ }
+
+ document.getElementById('carimboEscalonamento').textContent = escalonamento;
+ document.getElementById('carimboMunicipio').textContent = municipio;
+ document.getElementById('carimboTA').textContent = ta;
+ document.getElementById('carimboDataAbertura').textContent = formatarDataHora(dataAbertura);
+ document.getElementById('carimboTARaiz').textContent = taRaiz;
+ document.getElementById('carimboGestorAtual').textContent = gestorAtual;
+ document.getElementById('carimboTempoNoc').textContent = tempoNoc;
+ document.getElementById('carimboTempoN1').textContent = tempoN1;
+ document.getElementById('carimboTempoRede').textContent = tempoRede;
+ document.getElementById('carimboTempoOutro').textContent = tempoOutro;
+ document.getElementById('carimboTempoTotal').textContent = tempoTotal;
+ document.getElementById('carimboNivel').textContent = nivel;
+ document.getElementById('carimboStatus').textContent = status;
+ document.getElementById('carimboEnvio').textContent = envioFormatado;
+ document.getElementById('carimboTempoTA').textContent = tempoTA;
+ document.getElementById('carimbo').style.display = 'block';
+});
+
+document.getElementById('voltar').addEventListener('click', function() {
+ document.getElementById('carimbo').style.display = 'none';
+ document.getElementById('meuFormulario').reset();
+});
+</script>
 </body>
 </html>
 
-
 <div class="sair">
-    <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
-    <span>Sair</span>
+  <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
+  <span>Sair</span>
 </div>
 
 <style>
-    .sair {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        z-index: 9999; /* Fica sempre no topo */
-        background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
-        padding: 5px;
-        border-radius: 8px;
-    }
+  .sair {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      z-index: 9999; /* Fica sempre no topo */
+      background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
+      padding: 5px;
+      border-radius: 8px;
+  }
 
-    .icone-porta {
-        width: 30px;
-        height: 30px;
-        margin-right: 5px;
-    }
+  .icone-porta {
+      width: 30px;
+      height: 30px;
+      margin-right: 5px;
+  }
 
-    .sair span {
-        font-size: 18px;
-        font-weight: bold;
-    }
+  .sair span {
+      font-size: 18px;
+      font-weight: bold;
+  }
 
-    .sair:hover {
-        opacity: 0.8;
-    }
+  .sair:hover {
+      opacity: 0.8;
+  }
 </style>
 
 <script>
-    document.querySelector('.sair').addEventListener('click', function() {
-        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
-    });
+  document.querySelector('.sair').addEventListener('click', function() {
+      window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+  });
 </script>
