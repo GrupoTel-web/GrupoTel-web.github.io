@@ -264,30 +264,42 @@ function forgotPassword() {
 
 
 
-// Evento de submit do formulário de login
-document.getElementById('login-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  var email = document.getElementById('login-email').value;
-  var senha = document.getElementById('login-senha').value;
-  var recaptchaResponse = grecaptcha.getResponse(); // Obtém a resposta do reCAPTCHA
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById('login-form').addEventListener('submit', function (e) {
+    e.preventDefault(); // Impede o envio do formulário antes da verificação
 
-  // Verifica se o reCAPTCHA foi preenchido
-  if (recaptchaResponse.length === 0) {
-    alert("Por favor, complete o CAPTCHA.");
-    return;
-  }
+    console.log("Formulário submetido.");
 
-  // Se o CAPTCHA foi preenchido, realiza o login com Firebase
-  firebase.auth().signInWithEmailAndPassword(email, senha)
-    .then(function(userCredential) {
-      // Login bem-sucedido: redireciona para uma página protegida (ex.: page1.html)
-      window.location.href = "HOME.html";
-    })
-    .catch(function(error) {
-      // Exibe a mensagem de erro se o login falhar
-      document.getElementById('error-message').textContent = 'Email ou senha incorretos. Por favor, tente novamente.';
-    });
+    var email = document.getElementById('login-email').value;
+    var senha = document.getElementById('login-senha').value;
+    var recaptchaResponse = grecaptcha.getResponse(); // Obtém a resposta do reCAPTCHA
+
+    console.log("Email digitado:", email);
+    console.log("Tentando autenticar usuário...");
+
+    // Verifica se o reCAPTCHA foi preenchido
+    if (recaptchaResponse.length === 0) {
+      alert("Por favor, complete o CAPTCHA.");
+      console.log("reCAPTCHA não preenchido.");
+      return;
+    } else {
+      console.log("reCAPTCHA preenchido.");
+    }
+
+    // Autenticação no Firebase
+    firebase.auth().signInWithEmailAndPassword(email, senha)
+      .then(function (userCredential) {
+        console.log("Login bem-sucedido. Redirecionando...");
+        window.location.href = "HOME.html";
+      })
+      .catch(function (error) {
+        console.error("Erro no login:", error);
+        document.getElementById('error-message').textContent =
+          'Email ou senha incorretos. Por favor, tente novamente.';
+      });
+  });
 });
+
 
 
 
