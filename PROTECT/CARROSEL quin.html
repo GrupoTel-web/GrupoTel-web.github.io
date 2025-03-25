@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="icons/nt.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrossel de PDFs</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+            margin: 0;
+            background-color: #c988f1;
+            margin-top: 100px;
+            zoom: 100%;
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .carousel {
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            display: none;
+            transition: opacity 0.5s ease;
+            text-align: center;
+        }
+
+        .carousel-item.active {
+            display: block;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            max-width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0);
+            color: rgb(0, 0, 0);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 40px;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            margin-top: 0px;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #007bff00;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            background-color: #0057b300;
+        }
+
+        h1 {
+            color: #000000;
+            font-size: 20px;
+        }
+
+        #pagination-dots {
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        #pagination-dots span {
+            font-size: 20px;
+            cursor: pointer;
+            margin: 0 5px;
+            opacity: 0.3;
+        }
+
+        #pagination-dots span.active {
+            opacity: 1;
+        }
+
+
+         #popup-balao {
+    position: fixed;
+    top: 10px;
+    left: 30%;
+    transform: translateX(-21%);
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    animation: piscar 0.7s infinite alternate;
+}
+
+/* Mostra o balão */
+#popup-balao.show {
+    opacity: 1;
+}
+
+
+        @keyframes piscar {
+            0% { color: #ff0000; }
+        }
+    </style>
+</head>
+<body>
+    
+
+    <div id="popup-balao">Os links estão disponíveis no PDF da imagem (clicando no título) ou na seção "Acessos Núcleo Técnico" da página inicial. 📥</div>
+    
+    <div class="carousel-container">
+        
+        <button class="carousel-button prev">⯇</button>
+        <div class="carousel">
+            <!-- Itens do Carrossel -->
+            <div class="carousel-item active" id="Validação de TP HL4">
+                <img src="Procedimento/TP (1).png" alt="Validação de TP HL4" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="Procedimento/TP (1).pdf" download="Validação de TP HL4" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Validação de TP HL4</a>
+            </div>
+            
+            <div class="carousel-item active" id="Recebimento dos TP's Programados">
+                <img src="Procedimento/TP (2).png" alt="Recebimento dos TP's Programados" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="Procedimento/TP (2).pdf" download="Recebimento dos TP's Programados" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Recebimento dos TP's Programados</a>
+            </div>
+
+            <div class="carousel-item active" id="Consulta TP's">
+                <img src="Procedimento/TP (3).png" alt="Consulta TP's" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="Procedimento/TP (3).pdf" download="Consulta TP's" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Consulta TP's</a>
+            </div>
+
+            <div class="carousel-item active" id="Verificar se já tem TA SIGTM">
+               <img src="Procedimento/TP (4).png" alt="Verificar se já tem TA SIGTM" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="Procedimento/TP (4).pdf" download="Verificar se já tem TA SIGTM" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Verificar se já tem TA SIGTM</a>
+            </div>
+
+            <div class="carousel-item active" id="Verificar Desvios de BD's">
+                <img src="Procedimento/TP (5).png" alt="Verificar Desvios de BD's" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="Procedimento/TP (5).pdf" download="Verificar Desvios de BD's" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Verificar Desvios de BD's</a>
+            </div>
+
+            <div class="carousel-item active" id="Validação de TP OLT <> Migração HL4">
+                <img src="Procedimento/TP (6).png" alt="Validação de TP OLT <> Migração HL4" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="Procedimento/TP (6).pdf" download="Validação de TP OLT <> Migração HL4" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Validação de TP OLT <> Migração HL4</a>
+            </div>
+
+            <div class="carousel-item active" id="Validação de TP OLT Migração HL4 com Rollback">
+                <img src="Procedimento/TP (7).png" alt="Validação de TP OLT Migração HL4 com Rollback" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="Procedimento/TP (7).pdf" download="Validação de TP OLT Migração HL4 com Rollback" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Validação de TP OLT Migração HL4 com Rollback</a>
+            </div>
+
+            <div class="carousel-item active" id="Validação de TP OLT Migração HL4 OK">
+                <img src="Procedimento/TP (8).png" alt="Validação de TP OLT Migração HL4 OK" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="Procedimento/TP (8).pdf" download="Validação de TP OLT Migração HL4 OK" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Validação de TP OLT Migração HL4 OK</a>
+            </div>
+
+        </div>
+        <button class="carousel-button next">⯈</button>
+        <div id="pagination-dots"></div>
+    </div>
+    <script>
+ const items = document.querySelectorAll('.carousel-item');
+    const totalItems = items.length;
+    let currentIndex = 0;
+
+    // Função para exibir a imagem ativa
+    function showImage(index) {
+        items.forEach((item, idx) => {
+            item.classList.toggle('active', idx === index);
+        });
+        updatePaginationDots(index);
+    }
+
+    // Função para atualizar os pontos de paginação
+    function updatePaginationDots(index) {
+        const dots = document.querySelectorAll('#pagination-dots span');
+        dots.forEach((dot, idx) => {
+            dot.classList.toggle('active', idx === index);
+        });
+    }
+
+    // Função para renderizar os pontos de paginação
+    function renderPaginationDots() {
+        const paginationDots = document.getElementById('pagination-dots');
+        paginationDots.innerHTML = '';
+
+        for (let i = 0; i < totalItems; i++) {
+            const dot = document.createElement('span');
+            dot.textContent = '⬤';
+            dot.classList.toggle('active', i === currentIndex);
+            dot.addEventListener('click', () => {
+                currentIndex = i;
+                showImage(currentIndex);
+            });
+            paginationDots.appendChild(dot);
+        }
+    }
+
+    // Função para mudar a página
+    function changePage(direction) {
+        if (direction === 'prev') {
+            currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+        } else if (direction === 'next') {
+            currentIndex = (currentIndex + 1) % totalItems;
+        }
+        showImage(currentIndex);
+    }
+
+    // Botão Próximo
+    document.querySelector('.next').addEventListener('click', () => changePage('next'));
+
+    // Botão Anterior
+    document.querySelector('.prev').addEventListener('click', () => changePage('prev'));
+
+    // Controle pelas setas do teclado
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowLeft') {
+            changePage('prev');
+        } else if (event.key === 'ArrowRight') {
+            changePage('next');
+        }
+    });
+
+    // Função para mostrar e esconder o balão de aviso
+function showPopup() {
+    const popup = document.getElementById("popup-balao");
+    popup.classList.add("show");
+
+    // Oculta o balão após 10 segundos
+    setTimeout(() => {
+        popup.classList.remove("show");
+    }, 5000);
+}
+
+// Mostra o balão ao carregar a página
+window.addEventListener("load", showPopup);
+
+
+    // Inicializa o carrossel
+    renderPaginationDots();
+    showImage(currentIndex);
+
+
+        function openFullscreen(image) {
+    if (image.requestFullscreen) {
+        image.requestFullscreen();
+    } else if (image.webkitRequestFullscreen) { // Para navegadores Safari
+        image.webkitRequestFullscreen();
+    } else if (image.msRequestFullscreen) { // Para navegadores IE/Edge
+        image.msRequestFullscreen();
+    }
+}
+
+document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && document.fullscreenElement) {
+        document.exitFullscreen();
+    }
+});
+    </script>
+</body>
+</html>
+
+<div class="sair">
+    <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
+    <span>Sair</span>
+</div>
+
+<style>
+    .sair {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        z-index: 9999; /* Fica sempre no topo */
+        background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
+        padding: 5px;
+        border-radius: 8px;
+    }
+
+    .icone-porta {
+        width: 30px;
+        height: 30px;
+        margin-right: 5px;
+    }
+
+    .sair span {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .sair:hover {
+        opacity: 0.8;
+    }
+</style>
+
+<script>
+    document.querySelector('.sair').addEventListener('click', function() {
+        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+    });
+</script>
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Página Protegida 2</title>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <!-- Inclui o arquivo de autenticação -->
+  <script src="auth.js"></script>
+  <script>
+    // Verifica se o usuário está autenticado ao carregar a página.
+    checkAuth();
+  </script>
+</head>
+<body>
+  <script>
+    // Função de logout
+    document.getElementById('logout').addEventListener('click', function() {
+      firebase.auth().signOut().then(function() {
+        window.location.href = "HOME.html";
+      });
+    });
+  </script>
+</body>
+</html>

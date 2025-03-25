@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risco de Isolamento</title>
+    <link rel="icon" type="image/png" href="icons/nt.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffa600c9;
+        }
+        .container {
+            border: 2px solid #000;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+        }
+        .titulo {
+            background-color: #ffa600c9; /* Roxo */
+            color: #fff; /* Branco */
+            padding: 10px;
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .carimbo {
+            border: 2px solid #000;
+            padding: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        .carimboTitulo {
+    background-color: #ffa600c9; /* Cor de fundo */
+    color: #fff; /* Cor do texto */
+    padding: 10px;
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.emoji {
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5); /* Sombra suave nos emojis */
+}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #ffa600c9; /* Roxo */
+            color: #fff; /* Branco */
+        }
+        td {
+            background-color: #fff; /* Branco */
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        .botoes {
+            margin-top: 20px;
+        }
+        .botoes button {
+            margin-right: 10px;
+        }
+        .textoCompleto {
+            margin-top: 20px;
+        }
+        .textoCompleto textarea {
+            text-align: left;
+        }
+        .container-principal {
+        background-color: #fff; /* Fundo branco */
+        border-radius: 15px; /* Bordas arredondadas */
+        padding: 20px; /* Espaçamento interno */
+        margin: 20px auto; /* Centraliza o container */
+        width: 90%; /* Largura responsiva */
+        max-width: 1200px; /* Limita a largura máxima */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
+        }
+    </style>
+</head>
+<body>
+    <div class="container-principal">
+    <div class="container">
+        <div class="carimboTitulo">NT-SPI <span class="emoji">⚠️</span> Avaliação de Risco Isolamento <span class="emoji">⚠️</span></div>
+        <h1>Formulário</h1>
+        <form id="meuFormulario">
+            <label for="acionadoPor">Acionado por:</label>
+            <input type="text" id="acionadoPor" name="acionadoPor" required><br><br>
+            <label for="numeroTA">Numero TA:</label>
+            <input type="text" id="numeroTA" name="numeroTA" required><br><br>
+            <label for="dataCriacao">Data Criação:</label>
+            <input type="datetime-local" id="dataCriacao" name="dataCriacao" required><br><br>
+            <label for="caboRota">Cabo/Rota:</label>
+            <input type="text" id="caboRota" name="caboRota" required><br><br>
+            <label for="taConcorrente">TA Concorrente:</label>
+            <input type="text" id="taConcorrente" name="taConcorrente"><br><br>
+            <label for="dataCriacaoConcorrente">Data Criação Concorrente:</label>
+            <input type="datetime-local" id="dataCriacaoConcorrente" name="dataCriacaoConcorrente"><br><br>
+            <label for="caboRotaConcorrente">Cabo/Rota Concorrente:</label>
+            <input type="text" id="caboRotaConcorrente" name="caboRotaConcorrente"><br><br>
+            <label for="analisadoPor">Analisado por:</label>
+            <select id="analisadoPor" name="analisadoPor" required>
+                <option value="Quinteiro">Quinteiro</option>
+                <option value="Rodrigo">Rodrigo</option>
+                <option value="Alan">Alan</option>
+                <option value="Bruno">Bruno</option>
+                <option value="Leandro">Leandro</option>
+            </select><br><br>
+            <label for="diagnostico">Diagnostico:</label>
+            <textarea id="diagnostico" name="diagnostico" required></textarea><br><br>
+            <label for="autorizado">Autorizado?:</label>
+            <select id="autorizado" name="autorizado" required>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+            </select><br><br>
+            <!-- Campo ENVIO preenchido automaticamente -->
+            <input type="hidden" id="envio" name="envio" value="">
+            <button type="submit">Enviar</button>
+        </form>
+        <div class="carimbo" id="carimbo">
+            <div class="carimboTitulo">NT-SPI ⚠️ Avaliação de Risco Isolamento ⚠️</div>
+            <table>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Atualização</th>
+                </tr>
+                <tr>
+                    <td>Acionado por</td>
+                    <td><span id="carimboAcionadoPor"></span></td>
+                </tr>
+                <tr>
+                    <td>Numero TA</td>
+                    <td><span id="carimboNumeroTA"></span></td>
+                </tr>
+                <tr>
+                    <td>Data Criação</td>
+                    <td><span id="carimboDataCriacao"></span></td>
+                </tr>
+                <tr>
+                    <td>Cabo/Rota</td>
+                    <td><span id="carimboCaboRota"></span></td>
+                </tr>
+                <tr>
+                    <td>TA Concorrente</td>
+                    <td><span id="carimboTAConcorrente"></span></td>
+                </tr>
+                <tr>
+                    <td>Data Criação Concorrente</td>
+                    <td><span id="carimboDataCriacaoConcorrente"></span></td>
+                </tr>
+                <tr>
+                    <td>Cabo/Rota Concorrente</td>
+                    <td><span id="carimboCaboRotaConcorrente"></span></td>
+                </tr>
+                <tr>
+                    <td>Analisado por</td>
+                    <td><span id="carimboAnalisadoPor"></span></td>
+                </tr>
+                <tr>
+                    <td>Diagnostico</td>
+                    <td><span id="carimboDiagnostico"></span></td>
+                </tr>
+                <tr>
+                    <td>Envio</td>
+                    <td><span id="carimboEnvio"></span></td>
+                </tr>
+                <tr>
+                    <td>Autorizado?</td>
+                    <td><span id="carimboAutorizado"></span></td>
+                </tr>
+            </table>
+            <div class="textoCompleto">
+                <label for="conteudoTexto">Carimbo Texto:</label>
+                <textarea id="conteudoTexto" readonly></textarea><br><br>
+                <button id="copiarTexto">Copiar</button>
+            </div>
+            <div class="botoes">
+                <button id="voltar">Voltar</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <script>
+    document.getElementById('meuFormulario').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var acionadoPor = document.getElementById('acionadoPor').value;
+        var numeroTA = document.getElementById('numeroTA').value;
+        var dataCriacao = document.getElementById('dataCriacao').value;
+        var caboRota = document.getElementById('caboRota').value;
+        var taConcorrente = document.getElementById('taConcorrente').value;
+        var dataCriacaoConcorrente = document.getElementById('dataCriacaoConcorrente').value;
+        var caboRotaConcorrente = document.getElementById('caboRotaConcorrente').value;
+        var analisadoPor = document.getElementById('analisadoPor').value;
+        var diagnostico = document.getElementById('diagnostico').value;
+        var envio = new Date().toISOString();
+        var envioFormatado = formatarDataHora(envio);
+        var autorizado = document.getElementById('autorizado').value;
+
+        function formatarDataHora(dataHora) {
+            if (!dataHora) return '';
+            var data = new Date(dataHora);
+            var dia = String(data.getDate()).padStart(2, '0');
+          var mes = String(data.getMonth() + 1).padStart(2, '0');
+        var ano = data.getFullYear();
+        var horas = String(data.getHours()).padStart(2, '0');
+        var minutos = String(data.getMinutes()).padStart(2, '0');
+        return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+    }
+
+    document.getElementById('carimboAcionadoPor').textContent = acionadoPor;
+    document.getElementById('carimboNumeroTA').textContent = numeroTA;
+    document.getElementById('carimboDataCriacao').textContent = formatarDataHora(dataCriacao);
+    document.getElementById('carimboCaboRota').textContent = caboRota;
+    document.getElementById('carimboTAConcorrente').textContent = taConcorrente;
+    document.getElementById('carimboDataCriacaoConcorrente').textContent = formatarDataHora(dataCriacaoConcorrente);
+    document.getElementById('carimboCaboRotaConcorrente').textContent = caboRotaConcorrente;
+    document.getElementById('carimboAnalisadoPor').textContent = analisadoPor;
+    document.getElementById('carimboDiagnostico').textContent = diagnostico;
+    document.getElementById('carimboEnvio').textContent = envioFormatado;
+    document.getElementById('carimboAutorizado').textContent = autorizado;
+    document.getElementById('carimbo').style.display = 'block';
+
+    var conteudoTexto = `
+        Acionado por: ${acionadoPor}
+        Numero TA: ${numeroTA}
+        Data Criação: ${formatarDataHora(dataCriacao)}
+        Cabo/Rota: ${caboRota}
+        TA Concorrente: ${taConcorrente}
+        Data Criação Concorrente: ${formatarDataHora(dataCriacaoConcorrente)}
+        Cabo/Rota Concorrente: ${caboRotaConcorrente}
+        Analisado por: ${analisadoPor}
+        Diagnostico: ${diagnostico}
+        Envio: ${envioFormatado}
+        Autorizado?: ${autorizado}
+    `;
+    document.getElementById('conteudoTexto').value = conteudoTexto.trim();
+});
+
+document.getElementById('voltar').addEventListener('click', function() {
+    document.getElementById('carimbo').style.display = 'none';
+    document.getElementById('meuFormulario').reset();
+});
+
+document.getElementById('copiarTexto').addEventListener('click', function() {
+    var conteudoTexto = document.getElementById('conteudoTexto');
+    conteudoTexto.select();
+    document.execCommand('copy');
+    alert('Conteúdo copiado para a área de transferência!');
+});
+</script>
+</body>
+</html>
+
+<div class="sair">
+    <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
+    <span>Sair</span>
+</div>
+
+<style>
+    .sair {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        z-index: 9999; /* Fica sempre no topo */
+        background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
+        padding: 5px;
+        border-radius: 8px;
+    }
+
+    .icone-porta {
+        width: 30px;
+        height: 30px;
+        margin-right: 5px;
+    }
+
+    .sair span {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .sair:hover {
+        opacity: 0.8;
+    }
+</style>
+
+<script>
+    document.querySelector('.sair').addEventListener('click', function() {
+        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+    });
+</script>
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Página Protegida 2</title>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <!-- Inclui o arquivo de autenticação -->
+  <script src="auth.js"></script>
+  <script>
+    // Verifica se o usuário está autenticado ao carregar a página.
+    checkAuth();
+  </script>
+</head>
+<body>
+  <script>
+    // Função de logout
+    document.getElementById('logout').addEventListener('click', function() {
+      firebase.auth().signOut().then(function() {
+        window.location.href = "HOME.html";
+      });
+    });
+  </script>
+</body>
+</html>

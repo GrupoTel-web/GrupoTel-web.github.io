@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Página de Login e Cadastro Tech Fusion</title>
+  <!-- Importando fontes: Orbitron para títulos e Poppins para o corpo -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Reset e configuração básica */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      /* Background inicial para tela de login */
+      background: linear-gradient(135deg, #000000, #2575fc, #000000);
+      transition: background 1s ease;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif;
+    }
+    /* Estilo comum do container */
+    .container {
+      border-radius: 12px;
+      padding: 40px;
+      width: 360px;
+      position: relative;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+    /* Animação de zoom */
+    .zoom {
+      animation: zoomIn 0.5s ease;
+    }
+    @keyframes zoomIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    /* Tela de Login */
+    .login-container {
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid #6a11cb;
+    }
+    .login-container::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      background: linear-gradient(45deg, transparent, #fff, transparent);
+      z-index: -1;
+      filter: blur(15px);
+      opacity: 0.4;
+      animation: glow 3s linear infinite;
+    }
+    @keyframes glow {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.7; }
+    }
+    /* Tela de Cadastro com efeito Glassmorphism */
+    .signup-container {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+    }
+    /* Imagem */
+    .container .image {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .container .image img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid #6a11cb;
+      transition: transform 0.3s ease;
+    }
+    .container .image img:hover {
+      transform: scale(1.05);
+    }
+    /* Títulos */
+    .container h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-family: 'Orbitron', sans-serif;
+      color: #333;
+    }
+    .signup-container h2 {
+      color: #fff;
+    }
+    /* Inputs e labels */
+    .input-group {
+      margin-bottom: 20px;
+    }
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 5px;
+    }
+    .container input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+    }
+    .container input:focus {
+      outline: none;
+      border-color: #6a11cb;
+      box-shadow: 0 0 8px rgba(106,17,203,0.2);
+    }
+    /* Ajuste para inputs na tela de cadastro */
+    .signup-container input {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .signup-container input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    /* Botões */
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn:hover {
+      background: linear-gradient(135deg, #5e0eb8, #1f66d1);
+      transform: translateY(-2px);
+    }
+    /* Links adicionais */
+    .additional-links, .login-link {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .additional-links a, .login-link a {
+      color: #6a11cb;
+      text-decoration: none;
+      transition: text-decoration 0.3s ease;
+    }
+    .additional-links a:hover, .login-link a:hover {
+      text-decoration: underline;
+    }
+    /* Responsividade */
+    @media (max-width: 400px) {
+      .container {
+        width: 90%;
+        padding: 20px;
+      }
+      .additional-links, .login-link {
+        flex-direction: column;
+        align-items: center;
+      }
+      .additional-links a, .login-link a {
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Tela de Login -->
+  <div id="login-container" class="container login-container zoom">
+    <div class="image">
+      <!-- Imagem de Login -->
+      <img src="https://source.unsplash.com/collection/895539/100x100" alt="Imagem de Login">
+    </div>
+    <h2>Bem-vindo</h2>
+    <form>
+      <div class="input-group">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" placeholder="Digite seu email" required>
+      </div>
+      <div class="input-group">
+        <label for="login-senha">Senha</label>
+        <input type="password" id="login-senha" placeholder="Digite sua senha" required>
+      </div>
+      <button type="submit" class="btn">Entrar</button>
+      <div class="additional-links">
+        <a href="#" class="forgot-password">Esqueceu sua senha?</a>
+        <a href="#" class="request-access" onclick="toggleForms(event)">Solicitar acesso</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tela de Cadastro -->
+  <div id="signup-container" class="container signup-container" style="display: none;">
+    <h2>Crie sua Conta</h2>
+    <form>
+      <div class="input-group">
+        <label for="nome">Nome Completo</label>
+        <input type="text" id="nome" placeholder="Digite seu nome completo" required>
+      </div>
+      <div class="input-group">
+        <label for="signup-email">Email</label>
+        <input type="email" id="signup-email" placeholder="Digite seu email" required>
+      </div>
+      <div class="input-group">
+        <label for="signup-senha">Senha</label>
+        <input type="password" id="signup-senha" placeholder="Crie uma senha" required>
+      </div>
+      <button type="submit" class="btn">Cadastrar</button>
+      <div class="login-link">
+        <a href="#" onclick="toggleForms(event)">Já tem uma conta? Faça login</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function toggleForms(event) {
+      event.preventDefault();
+      const loginContainer = document.getElementById('login-container');
+      const signupContainer = document.getElementById('signup-container');
+      // Se a tela de login estiver visível, alterna para a de cadastro
+      if (loginContainer.style.display !== 'none') {
+        loginContainer.style.display = 'none';
+        signupContainer.style.display = 'block';
+        // Altera o background para a tela de cadastro (ex: tons quentes)
+        document.body.style.background = 'linear-gradient(135deg, #420361, #00562b)';
+        signupContainer.classList.remove('zoom');
+        // Força o reflow para reiniciar a animação
+        void signupContainer.offsetWidth;
+        signupContainer.classList.add('zoom');
+      } else {
+        signupContainer.style.display = 'none';
+        loginContainer.style.display = 'block';
+        // Altera o background para a tela de login (tons frios)
+        document.body.style.background = 'linear-gradient(135deg, #000000, #2575fc, #000000)';
+        loginContainer.classList.remove('zoom');
+        void loginContainer.offsetWidth;
+        loginContainer.classList.add('zoom');
+      }
+    }
+  </script>
+</body>
+</html>

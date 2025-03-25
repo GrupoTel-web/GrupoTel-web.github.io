@@ -22,6 +22,7 @@
     body {
       /* Background inicial para a tela de login */
       background: linear-gradient(135deg, #6a11cb, #2575fc, #a1c4fd);
+      background-image: url('TBG.jpg'); /* Adiciona a imagem de fundo por padrão */
       transition: background 1s ease;
       height: 100vh;
       display: flex;
@@ -70,7 +71,7 @@
     }
     /* Tela de Cadastro (Glassmorphism) */
     .signup-container {
-      background: rgba(65, 62, 62, 0.792);
+      background: #413e3eca;
       border: 1px solid rgba(255, 255, 255, 0.776);
       backdrop-filter: blur(10px);
     }
@@ -148,6 +149,24 @@
       background: linear-gradient(135deg, #5e0eb8, #1f66d1);
       transform: translateY(-2px);
     }
+
+    .btnC {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #1190cb, #1a0768);
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btnC:hover {
+      background: linear-gradient(135deg, #0e78a9, #0d023a);
+      transform: translateY(-2px);
+    }
+
     /* Links adicionais */
     .additional-links, .login-link {
       display: flex;
@@ -161,6 +180,21 @@
       transition: text-decoration 0.3s ease;
     }
     .additional-links a:hover, .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    .additional-links, .sign-link {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .additional-links b, .sign-link a {
+      color: #1190cb;
+      text-decoration: none;
+      transition: text-decoration 0.3s ease;
+    }
+    .additional-links b:hover, .sign-link a:hover {
       text-decoration: underline;
     }
     /* Responsividade */
@@ -216,19 +250,19 @@
     <h2>Crie sua Conta</h2>
     <form id="signup-form">
       <div class="input-group">
-        <label for="nome">Nome Completo</label>
+        <label for="nome" style="color: #dcdcdc;">Nome Completo</label>
         <input type="text" id="nome" placeholder="Digite seu nome completo" required>
       </div>
       <div class="input-group">
-        <label for="signup-email">Email</label>
+        <label for="signup-email" style="color: #dcdcdc;">Email</label>
         <input type="email" id="signup-email" placeholder="Digite seu email" required>
       </div>
       <div class="input-group">
-        <label for="signup-senha">Senha</label>
+        <label for="signup-senha" style="color: #dcdcdc;">Senha</label>
         <input type="password" id="signup-senha" placeholder="Crie uma senha" required>
       </div>
-      <button type="submit" class="btn">Cadastrar</button>
-      <div class="login-link">
+      <button type="submit" class="btnC">Cadastrar</button>
+      <div class="sign-link">
         <a href="#" onclick="toggleForms(event)">Já tem uma conta? Faça login</a>
       </div>
     </form>
@@ -313,7 +347,7 @@ document.addEventListener("DOMContentLoaded", function () {
         loginContainer.style.display = 'none';
         signupContainer.style.display = 'block';
         document.body.style.background = 'none'; // Remove o gradiente
-        document.body.style.backgroundImage = "url('TBG.jpg')"; // Define a imagem de fundo
+        document.body.style.backgroundImage = "url('icons/TBG.jpg')"; // Define a imagem de fundo
         document.body.style.backgroundSize = 'cover'; // Garante que a imagem cubra a tela inteira
         document.body.style.backgroundPosition = 'center'; // Centraliza a imagem
         document.body.style.backgroundRepeat = 'no-repeat'; // Impede repetição
@@ -324,7 +358,7 @@ document.addEventListener("DOMContentLoaded", function () {
         signupContainer.style.display = 'none';
         loginContainer.style.display = 'block';
         document.body.style.background = 'none'; // Remove o gradiente
-        document.body.style.backgroundImage = "url('TBG.jpg')"; // Define a imagem de fundo
+        document.body.style.backgroundImage = "url('icons/TBG.jpg')"; // Define a imagem de fundo
         document.body.style.backgroundSize = 'cover'; // Garante que a imagem cubra a tela inteira
         document.body.style.backgroundPosition = 'center'; // Centraliza a imagem
         document.body.style.backgroundRepeat = 'no-repeat'; // Impede repetição
