@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carimbo AXT Isolada</title>
+    <link rel="icon" type="image/png" href="icons/nt.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #413e3eca;
+        }
+        .container {
+            border: 2px solid #000;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            
+        }
+        .titulo {
+            background-color: #db7099; /* Roxo mais claro */
+            color: #fff; /* Branco */
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .carimbo {
+            border: 2px solid #000;
+            margin-top: 20px;
+            display: none;
+        }
+        .carimboTitulo {
+            background-color: #db7099; /* Roxo mais claro */
+            color: #fff; /* Branco */
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #db7099; /* Roxo mais claro */
+            color: #fff; /* Branco */
+        }
+        td {
+            background-color: #fff; /* Branco */
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        .botoes {
+            margin-top: 20px;
+        }
+        .botoes button {
+            margin-right: 10px;
+        }
+        .container-principal {
+        background-color: #fff; /* Fundo branco */
+        border-radius: 15px; /* Bordas arredondadas */
+        padding: 20px; /* Espaçamento interno */
+        margin: 20px auto; /* Centraliza o container */
+        width: 90%; /* Largura responsiva */
+        max-width: 1200px; /* Limita a largura máxima */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
+        box-shadow: 0 0 30px #db7099;
+    }
+    </style>
+</head>
+<body>
+    <div class="container-principal">
+        
+        <div class="sair">
+            <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
+            <span>Sair</span>
+        </div>
+
+    <div class="container">
+        <div class="titulo">NT - SPI 🏢 CIRCUITO FRANQUIA AXT ISOLADA 🏢</div>
+        <h1>Formulário</h1>
+        <form id="meuFormulario">
+            <label for="franquia">FRANQUIA:</label>
+            <select id="franquia" name="franquia" required>
+                <option value="" hidden>SELECIONE</option>
+                <option value="AXT - AGUAI - PPAL">AXT - AGUAI - PPAL</option>
+                <option value="AXT - AGUAI - BCKP">AXT - AGUAI - BCKP</option>
+                <option value="AXT - ARARAQUARA - PPAL">AXT - ARARAQUARA - PPAL</option>
+                <option value="AXT - ARARAQUARA - BCKP">AXT - ARARAQUARA - BCKP</option>
+                <option value="AXT - CAIEIRAS x FRANCO DA ROCHA - PPAL">AXT - CAIEIRAS x FRANCO DA ROCHA - PPAL</option>
+                <option value="AXT - CAIEIRAS x FRANCO DA ROCHA - BCKP">AXT - CAIEIRAS x FRANCO DA ROCHA - BCKP</option>
+                <option value="AXT - CASA BRANCA PPAL x AGUAI">AXT - CASA BRANCA PPAL x AGUAI</option>
+                <option value="AXT - CASA BRANCA BCKP x PORTO FERREIRA">AXT - CASA BRANCA BCKP x PORTO FERREIRA</option>
+                <option value="AXT - CERQUILHO - PPAL">AXT - CERQUILHO - PPAL</option>
+                <option value="AXT - CERQUILHO - BCKP">AXT - CERQUILHO - BCKP</option>
+                <option value="AXT - FRANCISCO MORATO 1 - PPAL">AXT - FRANCISCO MORATO 1 - PPAL</option>
+                <option value="AXT - FRANCISCO MORATO 1 - BCKP">AXT - FRANCISCO MORATO 1 - BCKP</option>
+                <option value="AXT - FRANCISCO MORATO 2 - PPAL">AXT - FRANCISCO MORATO 2 - PPAL</option>
+                <option value="AXT - FRANCISCO MORATO 2 - BCKP">AXT - FRANCISCO MORATO 2 - BCKP</option>
+                <option value="AXT - FRANCISCO MORATO 3 - PPAL">AXT - FRANCISCO MORATO 3 - PPAL</option>
+                <option value="AXT - FRANCISCO MORATO 3 - BCKP">AXT - FRANCISCO MORATO 3 - BCKP</option>
+                <option value="AXT - FRANCO DA ROCHA 1 - PPAL">AXT - FRANCO DA ROCHA 1 - PPAL</option>
+                <option value="AXT - FRANCO DA ROCHA 1 - BCKP">AXT - FRANCO DA ROCHA 1 - BCKP</option>
+                <option value="AXT - FRANCO DA ROCHA 2 - PPAL">AXT - FRANCO DA ROCHA 2 - PPAL</option>
+                <option value="AXT - FRANCO DA ROCHA 2 - BCKP">AXT - FRANCO DA ROCHA 2 - BCKP</option>
+                <option value="AXT - FRANCO DA ROCHA 3 - PPAL">AXT - FRANCO DA ROCHA 3 - PPAL</option>
+                <option value="AXT - FRANCO DA ROCHA 3 - BCKP">AXT - FRANCO DA ROCHA 3 - BCKP</option>
+                <option value="AXT - FRANCO DA ROCHA 4 - PPAL">AXT - FRANCO DA ROCHA 4 - PPAL</option>
+                <option value="AXT - FRANCO DA ROCHA 4 - BCKP">AXT - FRANCO DA ROCHA 4 - BCKP</option>
+                <option value="AXT - LARANJAL PAULISTA - PPAL">AXT - LARANJAL PAULISTA - PPAL</option>
+                <option value="AXT - LARANJAL PAULISTA - BCKP">AXT - LARANJAL PAULISTA - BCKP</option>
+                <option value="AXT - MONTE ALTO - PPAL">AXT - MONTE ALTO - PPAL</option>
+                <option value="AXT - MONTE ALTO - BCKP">AXT - MONTE ALTO - BCKP</option>
+                <option value="AXT - MONTE MOR 1 - PPAL">AXT - MONTE MOR 1 - PPAL</option>
+                <option value="AXT - MONTE MOR 1 - BCKP">AXT - MONTE MOR 1 - BCKP</option>
+                <option value="AXT - MONTE MOR 2 - PPAL">AXT - MONTE MOR 2 - PPAL</option>
+                <option value="AXT - MONTE MOR 2 - BCKP">AXT - MONTE MOR 2 - BCKP</option>
+                <option value="AXT - MONTE MOR - CENTRO x MONTE MOR - ALVORADA">AXT - MONTE MOR - CENTRO x MONTE MOR - ALVORADA</option>
+                <option value="AXT - NOVO HORIZONTE - PPAL">AXT - NOVO HORIZONTE - PPAL</option>
+                <option value="AXT - NOVO HORIZONTE - BCKP">AXT - NOVO HORIZONTE - BCKP</option>
+                <option value="AXT - PINDORAMA - PPAL">AXT - PINDORAMA - PPAL</option>
+                <option value="AXT - PINDORAMA - BCKP">AXT - PINDORAMA - BCKP</option>
+                <option value="AXT - PINDORAMA x SANTA ADELIA - PPAL">AXT - PINDORAMA x SANTA ADELIA - PPAL</option>
+                <option value="AXT - PINDORAMA x SANTA ADELIA - BCKP">AXT - PINDORAMA x SANTA ADELIA - BCKP</option>
+                <option value="AXT - PITANGUEIRAS PPAL x ARARAQUARA">AXT - PITANGUEIRAS PPAL x ARARAQUARA</option>
+                                   <option value="AXT - PITANGUEIRAS BCKP x ARARAQUARA">AXT - PITANGUEIRAS BCKP x ARARAQUARA</option>
+                                <option value="AXT - PORTO FERREIRA - PPAL">AXT - PORTO FERREIRA - PPAL</option>
+                                <option value="AXT - PORTO FERREIRA - BCKP">AXT - PORTO FERREIRA - BCKP</option>
+                                <option value="AXT - RIO DAS PEDRAS-SP - PPAL x MONTE MOR">AXT - RIO DAS PEDRAS-SP - PPAL x MONTE MOR</option>
+                                <option value="AXT - RIO DAS PEDRAS-SP - BCKP x MONTE MOR">AXT - RIO DAS PEDRAS-SP - BCKP x MONTE MOR</option>
+                                <option value="AXT - STA CRUZ DAS PALMEIRAS - PPAL x AGUAI">AXT - STA CRUZ DAS PALMEIRAS - PPAL x AGUAI</option>
+                                <option value="AXT - STA CRUZ DAS PALMEIRAS - BCKP x PORTO FERREIRA">AXT - STA CRUZ DAS PALMEIRAS - BCKP x PORTO FERREIRA</option>
+                                <option value="AXT - SAO PEDRO - PPAL">AXT - SAO PEDRO - PPAL</option>
+                                <option value="AXT - SAO PEDRO - BCKP">AXT - SAO PEDRO - BCKP</option>
+                                <option value="AXT - STA RITA PASSA QUATRO - BCKP x PORTO FERREIRA">AXT - STA RITA PASSA QUATRO - BCKP x PORTO FERREIRA</option>
+                                <option value="AXT - STA RITA PASSA QUATRO - PPAL x AGUAI">AXT - STA RITA PASSA QUATRO - PPAL x AGUAI</option>
+                                <option value="AXT - TAQUARITINGA - PPAL">AXT - TAQUARITINGA - PPAL</option>
+                                <option value="AXT - TAQUARITINGA - BCKP">AXT - TAQUARITINGA - BCKP</option>
+                                <option value="AXT - VARGEM GRANDE PAULISTA - PPAL">AXT - VARGEM GRANDE PAULISTA - PPAL</option>
+                                <option value="AXT - VARGEM GRANDE PAULISTA - BCKP">AXT - VARGEM GRANDE PAULISTA - BCKP</option>
+                                <option value="AXT - VARGEM GRANDE DO SUL PPAL x AGUAI">AXT - VARGEM GRANDE DO SUL PPAL x AGUAI</option>
+                                <option value="AXT - VARGEM GRANDE DO SUL BCKP x PORTO FERREIRA">AXT - VARGEM GRANDE DO SUL BCKP x PORTO FERREIRA</option>
+                            </select><br><br>
+                            <label for="bdFalha1">BD FALHA 1:</label>
+                            <input type="text" id="bdFalha1" name="bdFalha1" required><br><br>
+                            <label for="taFalha1">TA FALHA 1:</label>
+                            <input type="text" id="taFalha1" name="taFalha1" required><br><br>
+                            <label for="dataTAFalha1">DATA TA FALHA 1:</label>
+                            <input type="datetime-local" id="dataTAFalha1" name="dataTAFalha1" required><br><br>
+                            <label for="status1">STATUS:</label>
+                            <textarea id="status1" name="status1" required></textarea><br><br>
+                             <label for="bdFalha2">BD FALHA 2:</label>
+                            <input type="text" id="bdFalha2" name="bdFalha2" required><br><br>
+                            <label for="taFalha2">TA FALHA 2:</label>
+                            <input type="text" id="taFalha2" name="taFalha2" required><br><br>
+                            <label for="dataTAFalha2">DATA TA FALHA 2:</label>
+                            <input type="datetime-local" id="dataTAFalha2" name="dataTAFalha2" required><br><br>
+                            <label for="status2">STATUS:</label>
+                            <textarea id="status2" name="status2" required></textarea><br><br>
+                            <button type="submit">Enviar</button>
+                        </form>
+                        <div class="carimbo" id="carimbo">
+                            <div class="carimboTitulo">NT-SPI 🏢 CIRCUITO FRANQUIA AXT ISOLADA 🏢</div>
+                            <table>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Atualização</th>
+                                </tr>
+                                <tr>
+                                    <td>FRANQUIA</td>
+                                    <td><span id="carimboFranquia"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>BD FALHA 1</td>
+                                    <td><span id="carimboBDFalha1"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>TA FALHA 1</td>
+                                    <td><span id="carimboTAFalha1"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>DATA TA FALHA 1</td>
+                                    <td><span id="carimboDataTAFalha1"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>STATUS 1</td>
+                                    <td><span id="carimboStatus1"></span></td>
+                                </tr>
+                               <tr>
+                                    <td>BD FALHA 2</td>
+                                    <td><span id="carimboBDFalha2"></span></td>
+                               </tr>
+                               <tr>
+                                    <td>TA FALHA 2</td>
+                                    <td><span id="carimboTAFalha2"></span></td>
+                               </tr>                               
+                                <tr>
+                                    <td>DATA TA FALHA 2</td>
+                                    <td><span id="carimboDataTAFalha2"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>STATUS 2</td>
+                                    <td><span id="carimboStatus2"></span></td>
+                                </tr>
+                            </table>
+                            <div class="botoes">
+                                <button id="voltar">Voltar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <script>
+                        document.getElementById('meuFormulario').addEventListener('submit', function(event) {
+                            event.preventDefault();
+                            var franquia = document.getElementById('franquia').value;
+                            var taFalha1 = document.getElementById('taFalha1').value;
+                            var dataTAFalha1 = document.getElementById('dataTAFalha1').value;
+                            var status1 = document.getElementById('status1').value;
+                            var taFalha2 = document.getElementById('taFalha2').value;
+                            var bdFalha1 = document.getElementById('bdFalha1').value;
+                            var bdFalha2 = document.getElementById('bdFalha2').value;
+                            var dataTAFalha2 = document.getElementById('dataTAFalha2').value;
+                            var status2 = document.getElementById('status2').value;
+                            function formatarDataHora(dataHora) {
+                                if (!dataHora) return '';
+                                var data = new Date(dataHora);
+                                var dia = String(data.getDate()).padStart(2, '0');
+                                var mes = String(data.getMonth() + 1).padStart(2, '0');
+                                var ano = data.getFullYear();
+                                var horas = String(data.getHours()).padStart(2, '0');
+                                var minutos = String(data.getMinutes()).padStart(2, '0');
+                                return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+                            }
+                            document.getElementById('carimboFranquia').textContent = franquia;
+                            document.getElementById('carimboTAFalha1').textContent = taFalha1;
+                            document.getElementById('carimboDataTAFalha1').textContent = formatarDataHora(dataTAFalha1);
+                            document.getElementById('carimboStatus1').textContent = status1;
+                            document.getElementById('carimboTAFalha2').textContent = taFalha2;
+                            document.getElementById('carimboBDFalha1').textContent = bdFalha1;
+                            document.getElementById('carimboBDFalha2').textContent = bdFalha2;
+                            document.getElementById('carimboDataTAFalha2').textContent = formatarDataHora(dataTAFalha2);
+                            document.getElementById('carimboStatus2').textContent = status2;
+                            document.getElementById('carimbo').style.display = 'block';
+                        });
+                        document.getElementById('voltar').addEventListener('click', function() {
+                            document.getElementById('carimbo').style.display = 'none';
+                            document.getElementById('meuFormulario').reset();
+                        });
+                    </script>
+                </body>
+                </html>
+          
+
+                               
+                <style>
+                    .sair {
+                        position: fixed;
+                        top: 10px;
+                        left: 10px;
+                        display: flex;
+                        align-items: center;
+                        cursor: pointer;
+                        z-index: 9999; /* Fica sempre no topo */
+                        background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
+                        padding: 5px;
+                        border-radius: 8px;
+                    }
+                
+                    .icone-porta {
+                        width: 30px;
+                        height: 30px;
+                        margin-right: 5px;
+                    }
+                
+                    .sair span {
+                        font-size: 18px;
+                        font-weight: bold;
+                    }
+                
+                    .sair:hover {
+                        opacity: 0.8;
+                    }
+                </style>
+                
+                <script>
+                    document.querySelector('.sair').addEventListener('click', function() {
+                        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+                    });
+                </script>
+                
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Página Protegida 2</title>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <!-- Inclui o arquivo de autenticação -->
+  <script src="auth.js"></script>
+  <script>
+    // Verifica se o usuário está autenticado ao carregar a página.
+    checkAuth();
+  </script>
+</head>
+<body>
+  <script>
+    // Função de logout
+    document.getElementById('logout').addEventListener('click', function() {
+      firebase.auth().signOut().then(function() {
+        window.location.href = "HOME.html";
+      });
+    });
+  </script>
+</body>
+</html>
