@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="icons/nt.png">
-    <title>Formulário com Carimbo</title>
+    <title>Móvel - Pendencia Rede Externa</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #c0074e;
+            zoom: 80%;
         }
         .container {
             border: 2px solid #000;
@@ -76,13 +77,114 @@
         padding: 20px; /* Espaçamento interno */
         margin: 20px auto; /* Centraliza o container */
         width: 90%; /* Largura responsiva */
-        max-width: 1200px; /* Limita a largura máxima */
+        max-width: 1300px; /* Limita a largura máxima */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
+        }
+
+        
+
+
+
+
+
+
+
+        .tabela-container-1 {
+            width: 95vw;
+            max-width: 120%;
+            overflow-x: auto;
+            border: 1px solid #d3d3d3;
+            background: white;
+            padding: 5px;
+            margin-left: -10px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .tabela-container-1 th {
+        text-align: center; 
+        vertical-align: middle; 
+        }
+
+        .tabela-container {
+            width: 93vw;
+            max-width: 120%;
+            overflow-x: auto;
+            border: 1px solid #d3d3d3;
+            background: white;
+            padding: 5px;
+            margin-left: 40px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        .botoes {
+            margin-top: 9px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .botoes button {
+            background-color: #c0074e;
+            color: #fff;
+            border: none;
+            padding: 6px 40px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .botoes-1 {
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+
+        .botoes button:hover {
+            background-color: #c0074e;
         }
     </style>
 </head>
 <body>
     <div class="container-principal">
+
+        <div class="tabela-container-1">
+            <table id="tabela">
+                <thead>
+                    <tr>
+                        <th style="width: 90px;">TA METRO / OUTRO</th>
+                        <th style="width: 70px;">DWDM LINHA</th>
+                        <th style="width: 70px;">TA RAIZ (REDE)</th>
+                        <th style="width: 100px;">LOCALIDADE</th>
+                        <th style="width: 100px;">ROTA</th>
+                        <th style="width: 100px;">DATA ALARME</th>
+                        <th style="width: 120px;">TEMPO CORRIDO</th>
+                        <th style="width: 90px;">RISCO FTTX</th>
+                        <th style="width: 90px;">RISCO ADSL</th>
+                        <th style="width: 130px;">AFETAÇÃO ERB</th>
+                        <th style="width: 120px;">TOTAL RISCO</th>
+                        <th style="width: 120px;">AFETAÇÃO FTTX</th>
+                        <th style="width: 90px;">AFETAÇÃO ADSL</th>
+                        <th style="width: 90px;">AFETAÇÃO TOTAL</th>
+                        <th style="width: 130px;">RESUMO STATUS</th>
+                        <th style="width: 120px;">AREA RESPONSAVEL</th>
+                        <th style="width: 90px;">EVENTOS ENVOLVIDOS</th>
+                        <th style="width: 90px;">TECNOLOGIA</th>
+                        <th style="width: 130px;">TTMC</th>
+                        <th style="width: 120px;">ADJ, SPC</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-body"></tbody>
+            </table>
+        </div>
+    
+        <div class="botoes">
+            <button class="limparTabela">Limpar</button>
+        </div>
+
+        
     <div class="container">
         <div class="titulo">NT-SPI 🗼 Pendencia Rede Externa - Móvel 🗼</div>
         <h1>Formulário</h1>
@@ -104,7 +206,13 @@
             <input type="datetime-local" id="dataCriacao" name="dataCriacao" required><br><br>
 
             <label for="responsavel">Responsável:</label>
-            <input type="text" id="responsavel" name="responsavel" required><br><br>
+            <select id="responsavel" name="responsavel" required>
+                <option value="" hidden>SELECIONAR</option>
+                <option value="COORDENADOR">COORDENADOR</option>
+                <option value="GERENTE">GERENTE</option>
+                <option value="SENIOR">SENIOR</option>
+                <option value="DIRETOR">DIRETOR</option>
+              </select><br><br>
 
             <button type="submit">Enviar</button>
         </form>
@@ -157,39 +265,129 @@
     </div>
 
     <script>
-        document.getElementById('meuFormulario').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var taRaiz = document.getElementById('taRaiz').value;
-            var cidade = document.getElementById('cidade').value;
-            var erbAfetacao = document.getElementById('erbAfetacao').value;
-            var siteAfetado = document.getElementById('siteAfetado').value;
-            var dataCriacao = document.getElementById('dataCriacao').value.replace('T', ' ');
-            var responsavel = document.getElementById('responsavel').value;
+        document.addEventListener("DOMContentLoaded", function () {
+            const tabelaBody = document.getElementById("tabela-body");
+            const tabela = document.getElementById("tabela");
+            
+            function atualizarFormulario() {
+                let linha = tabelaBody.getElementsByTagName("tr")[0];
+                if (!linha) return;
+        
+                let celulas = linha.getElementsByTagName("td");
+        
+                document.getElementById("taRaiz").value = celulas[2]?.textContent || "";
+                document.getElementById("cidade").value = celulas[3]?.textContent || "";
+                document.getElementById("erbAfetacao").value = celulas[9]?.textContent || "";
+                document.getElementById("siteAfetado").value = celulas[10]?.textContent || "";
+        
+                let dataAlarme = celulas[5]?.textContent || "";
+                if (dataAlarme) {
+                    let dataISO = new Date(dataAlarme).toISOString().slice(0, 16);
+                    document.getElementById("dataCriacao").value = dataISO;
+                
+                }
+        
+            }
+        
+            // Observador para detectar mudanças na tabela
+            const observer = new MutationObserver(atualizarFormulario);
+            observer.observe(tabelaBody, { childList: true, subtree: true, characterData: true });
+        
+            document.getElementById("meuFormulario").addEventListener("submit", function (event) {
+    event.preventDefault();
 
-            // Calcular SLA
-            var dataCriacaoDate = new Date(document.getElementById('dataCriacao').value);
-            var now = new Date();
-            var slaMs = now - dataCriacaoDate;
-            var slaHrs = Math.floor(slaMs / (1000 * 60 * 60));
-            var slaMins = Math.floor((slaMs % (1000 * 60 * 60)) / (1000 * 60));
-            var sla = `${String(slaHrs).padStart(2, '0')}:${String(slaMins).padStart(2, '0')}`;
+    let taRaiz = document.getElementById("taRaiz").value;
+    let cidade = document.getElementById("cidade").value;
+    let erbAfetacao = document.getElementById("erbAfetacao").value;
+    let siteAfetado = document.getElementById("siteAfetado").value;
+    let dataCriacao = document.getElementById("dataCriacao").value.replace("T", " ");
+    let responsavel = document.getElementById("responsavel").value; // O valor do campo select
 
-            document.getElementById('carimboTARaiz').textContent = taRaiz;
-            document.getElementById('carimboCidade').textContent = cidade;
-            document.getElementById('carimboERBAfetacao').textContent = erbAfetacao;
-            document.getElementById('carimboSiteAfetado').textContent = siteAfetado;
-            document.getElementById('carimboDataCriacao').textContent = dataCriacao;
-            document.getElementById('carimboResponsavel').textContent = responsavel;
-            document.getElementById('carimboSLA').textContent = sla;
+    // Formatar a data para dd/mm/aaaa hh:mm
+    let dataCriacaoDate = new Date(document.getElementById("dataCriacao").value);
+    let dataFormatada = `${String(dataCriacaoDate.getDate()).padStart(2, "0")}/${
+        String(dataCriacaoDate.getMonth() + 1).padStart(2, "0")}/${dataCriacaoDate.getFullYear()} ${
+        String(dataCriacaoDate.getHours()).padStart(2, "0")}:${
+        String(dataCriacaoDate.getMinutes()).padStart(2, "0")}`;
 
-            document.getElementById('carimbo').style.display = 'block';
+    // Calcular SLA
+    let now = new Date();
+    let slaMs = now - dataCriacaoDate;
+    let slaHrs = Math.floor(slaMs / (1000 * 60 * 60));
+    let slaMins = Math.floor((slaMs % (1000 * 60 * 60)) / (1000 * 60));
+    let sla = `${String(slaHrs).padStart(2, "0")}:${String(slaMins).padStart(2, "0")}`;
+
+    // Preencher os campos do carimbo
+    document.getElementById("carimboTARaiz").textContent = taRaiz;
+    document.getElementById("carimboCidade").textContent = cidade;
+    document.getElementById("carimboERBAfetacao").textContent = erbAfetacao;
+    document.getElementById("carimboSiteAfetado").textContent = siteAfetado;
+    document.getElementById("carimboDataCriacao").textContent = dataFormatada; // Agora no formato correto!
+    document.getElementById("carimboResponsavel").textContent = responsavel; // Agora vem do select
+    document.getElementById("carimboSLA").textContent = sla;
+
+    document.getElementById("carimbo").style.display = "block";
+});
+        
+            document.getElementById("voltar").addEventListener("click", function () {
+                document.getElementById("carimbo").style.display = "none";
+                document.getElementById("meuFormulario").reset();
+            });
+        
+            function criarLinha(celulas = 20, valores = []) {
+                let tabela = document.getElementById("tabela-body");
+                tabela.innerHTML = ""; // Garante que sempre exista apenas uma linha
+                let novaLinha = tabela.insertRow();
+        
+                for (let i = 0; i < celulas; i++) {
+                    let celula = novaLinha.insertCell();
+                    celula.contentEditable = "true";
+                    celula.textContent = valores[i] || "";
+                }
+            }
+        
+            function inicializarTabela() {
+                criarLinha(20, []);
+            }
+        
+            document.addEventListener("paste", function (event) {
+                let target = event.target;
+                if (target.tagName.toLowerCase() === "td") {
+                    event.preventDefault();
+                    let pasteData = event.clipboardData.getData("text");
+        
+                    pasteData = pasteData.replace(/([^\t])\n([^\t])/g, "$1 $2");
+                    let linhas = pasteData.split("\n").filter((linha) => linha.trim() !== "");
+        
+                    let tabela = document.getElementById("tabela-body");
+                    let linhaTabela = tabela.rows[0];
+        
+                    if (!linhaTabela) return;
+        
+                    let colunas = linhas[0].split("\t");
+        
+                    colunas.forEach((valor, colunaIndex) => {
+                        let celula = linhaTabela.cells[colunaIndex];
+                        if (celula) {
+                            celula.innerText = valor;
+                        }
+                    });
+        
+                    atualizarFormulario(); // Garante que o formulário seja atualizado após o paste
+                }
+            });
+        
+            function limparTabela() {
+                inicializarTabela();
+            }
+        
+            document.querySelector(".limparTabela").addEventListener("click", limparTabela);
+        
+            inicializarTabela();
         });
-
-        document.getElementById('voltar').addEventListener('click', function() {
-            document.getElementById('carimbo').style.display = 'none';
-            document.getElementById('meuFormulario').reset();
-        });
-    </script>
+        </script>
+        
+        
 </body>
 </html>
 
