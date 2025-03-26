@@ -485,7 +485,6 @@ document.getElementById('botaoLimpar').addEventListener('click', function() {
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Página Protegida 2</title>
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -501,9 +500,10 @@ document.getElementById('botaoLimpar').addEventListener('click', function() {
     // Função de logout
     document.getElementById('logout').addEventListener('click', function() {
       firebase.auth().signOut().then(function() {
-        window.location.href = "HOME.html";
+        window.location.href = "login.html";
       });
     });
   </script>
 </body>
 </html>
+
