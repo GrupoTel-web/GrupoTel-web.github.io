@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="nt.png">
+    <link rel="icon" type="image/png" href="icons/nt.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Carimbos</title>
     <style>
@@ -13,7 +13,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #d1d1d1;
+            background-color: #949494;
             margin-top: 90px;
             zoom: 80%;
         }
@@ -73,11 +73,31 @@
         .hidden-buttons {
             display: none;
         }
+        .button-grid button {
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            position: relative;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .button-grid button.hover-bg {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: transparent;
+        }
+
+        .button-grid button.hover-color {
+            background-color: #1c9850;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="container" readonly>
         <h1 id="title">
             <span class="scroll-button" id="prev-btn" onclick="changePage('prev')">⯇</span>
             <span id="page-title">Gestão de Carimbos NT - SPI</span>
@@ -86,42 +106,42 @@
         
         <div class="button-grid" id="buttons">
             <!-- Botões da primeira página (arquivos locais) -->
-            <button onclick="location.href='CARIMBO_OLT_ISOLADA_FINAL.html'">CARIMBO OLT ISOLADA</button>
-            <button onclick="location.href='CARIMBO_UPLINK_OLT_SWD_HL4.html'">ADJACÊNCIA (OLT, SWD, HL4)</button>
-            <button onclick="location.href='CARIMBO_ESCALONAMENTO.html'">CARIMBO ESCALONAMENTO</button>
-            <button onclick="location.href='DUPLA_FALHA.html'">CARIMBO DUPLA FALHA</button>
-            <button onclick="location.href='ESCALONAMENTO_INFRA.html'">CARIMBO INFRA</button>
-            <button onclick="location.href='CARIMBO_RISCO_ISOLAMENTO.html'">RISCO ISOLAMENTO</button>
-            <button onclick="location.href='Gestao_OLT_UPLINK.html'">GESTÃO OLT UPLINK</button>
-            <button onclick="location.href='Gestao_OLT_ISOLADA.html'">GESTÃO OLT ISOLADA</button>
-            <button onclick="location.href='CARIMBO_AXT_LINK.html'">AXT FRANQUIA LINK</button>
-            <button onclick="location.href='CARIMBO_AXT_DOWN.html'">AXT FRANQUIA ISOLADA</button>
-            <button onclick="location.href='ESCALONAMENTO_MOVEL_PENDENCIA_REDE.html'">PENDENCIA REDE EXTERNA MÓVEL</button>
-            <button onclick="location.href='MUNICIPIO_ISOLADO_MOVEL.html'">CARIMBO MUNI ISOLADO MOVEL</button>
+            <button onclick="location.href='CARIMBO_OLT_ISOLADA_FINAL.html'" data-image="BTNBG/Pag1 - OLT ISOLADA.png">CARIMBO OLT ISOLADA</button>
+            <button onclick="location.href='CARIMBO_UPLINK_OLT_SWD_HL4.html'" data-image="BTNBG/Pag1 - ADJ.png">ADJACÊNCIA (OLT, SWD, HL4)</button>
+            <button onclick="location.href='CARIMBO_ESCALONAMENTO.html'" data-image="BTNBG/Pag1 - ESCAL.png">CARIMBO ESCALONAMENTO</button>
+            <button onclick="location.href='DUPLA_FALHA.html'" data-image="BTNBG/Pag1 - 2FALHA.png">CARIMBO DUPLA FALHA</button>
+            <button onclick="location.href='ESCALONAMENTO_INFRA.html'" data-image="BTNBG/Pag1 - INFRA.png">CARIMBO INFRA</button>
+            <button onclick="location.href='CARIMBO_RISCO_ISOLAMENTO.html'" data-image="BTNBG/Pag1 - RISCO.png">RISCO ISOLAMENTO</button>
+            <button onclick="location.href='Gestao_OLT_UPLINK.html'" data-image="BTNBG/Pag1 - GLINK.png">GESTÃO OLT UPLINK</button>
+            <button onclick="location.href='Gestao_OLT_ISOLADA.html'" data-image="BTNBG/Pag1 - GDOWN.png">GESTÃO OLT ISOLADA</button>
+            <button onclick="location.href='CARIMBO_AXT_LINK.html'" data-image="BTNBG/Pag1 - AXTLK.png">AXT FRANQUIA LINK</button>
+            <button onclick="location.href='CARIMBO_AXT_DOWN.html'" data-image="BTNBG/Pag1 - AXTDW.png">AXT FRANQUIA ISOLADA</button>
+            <button onclick="location.href='ESCALONAMENTO_MOVEL_PENDENCIA_REDE.html'" data-image="BTNBG/Pag1 - RDMOV.png">PENDENCIA REDE EXTERNA MÓVEL</button>
+            <button onclick="location.href='MUNICIPIO_ISOLADO_MOVEL.html'" data-image="BTNBG/Pag1 - MUNIDW.png">CARIMBO MUNI ISOLADO MOVEL</button>
         </div>
         
         <div class="button-grid hidden-buttons" id="hidden-buttons-2">
             <!-- Botões da segunda página (links para páginas da web) -->
-            <button onclick="window.open('http://10.26.35.126/dash-dwdm_ocorrencia', '_blank')">PORTAL DWDM</button>
-            <button onclick="window.open('http://10.26.35.126/dash-metro_alta_ocorrencia', '_blank')">PORTAL METRO</button>
-            <button onclick="window.open('http://10.26.35.126/dash-mun_isolados_ocorrencia', '_blank')">PORTAL MUNI ISOLADOS</button>
-            <button onclick="window.open('http://10.215.39.31:7772/portal_hl4/inicio.php', '_blank')">ACOMPANHAMENTO HL4</button>
-            <button onclick="window.open('http://10.26.35.126/dash-geo_oper_ocor/principal-pagina', '_blank')">GESTÃO HL4 </button>
-            <button onclick="window.open('http://10.124.100.13:9091/', '_blank')">4FIELD</button>
-            <button onclick="window.open('https://10.200.36.116/cactiFusion/plugins/weathermap/weathermap-cacti-plugin.php', '_blank')">CACTI FUSION</button>
-            <button onclick="window.open('https://cactiagregador.telesp.net.br/cacti/graph_view.php?action=tree&node=tree_anchor-3&site_id=-1&host_id=-1&host_template_id=-1&hgd=&hyper=true', '_blank')">CACTI AGREGADOR</button>
-            <button onclick="window.open('https://vivosmart.tdata.com.br/Orion/Login.aspx?sessionTimeout=yes&ReturnUrl=%2fOrion%2fSummaryView.aspx%3fViewID%3d97', '_blank')">AXT</button>
-            <button onclick="window.open('https://sigitm.vivo.com.br/app/index.jsp', '_blank')">SIGITM</button>
-            <button onclick="window.open('http://sigitm.redecorp.br/SIGITMWeb/index.jsf;jsessionid=btCU-Fco7trqzWzIdkee-j1sVwj580ciDn07Nx4NtlmJzqgkSmUU!1842956776!1395024305', '_blank')">SIGITM BD</button>
-            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/_layouts/15/Doc.aspx?sourcedoc=%7B3ca09476-ad3a-4fbe-b9d5-c58ac0f3900e%7D&action=default&CID=57f4946a-1f28-40ad-bc73-b29e1228ceeb&_SRM=2%3AS%3A560', '_blank')">RELATÓRIO MUNI ISOLADOS</button>
+            <button onclick="window.open('http://10.26.35.126/dash-dwdm_ocorrencia', '_blank')"  data-image="BTNBG/Pag2 - PDWDM.png">PORTAL DWDM</button>
+            <button onclick="window.open('http://10.26.35.126/dash-metro_alta_ocorrencia', '_blank')" data-image="BTNBG/Pag2 - PMETRO.png">PORTAL METRO</button>
+            <button onclick="window.open('http://10.26.35.126/dash-mun_isolados_ocorrencia', '_blank')" data-image="BTNBG/Pag2 - PMUNIDW.png">PORTAL MUNI ISOLADOS</button>
+            <button onclick="window.open('http://10.215.39.31:7772/portal_hl4/inicio.php', '_blank')" data-image="BTNBG/Pag2 - PAHL4.png">ACOMPANHAMENTO HL4</button>
+            <button onclick="window.open('http://10.26.35.126/dash-geo_oper_ocor/principal-pagina', '_blank')" data-image="BTNBG/Pag2 - GHL4.png">GESTÃO HL4 </button>
+            <button onclick="window.open('http://10.124.100.13:9091/', '_blank')" data-image="BTNBG/Pag2 - 4FIELD.png">4FIELD</button>
+            <button onclick="window.open('https://10.200.36.116/cactiFusion/plugins/weathermap/weathermap-cacti-plugin.php', '_blank')" data-image="BTNBG/Pag2 - CACTIF.png">CACTI FUSION</button>
+            <button onclick="window.open('https://cactiagregador.telesp.net.br/cacti/graph_view.php?action=tree&node=tree_anchor-3&site_id=-1&host_id=-1&host_template_id=-1&hgd=&hyper=true', '_blank')" data-image="BTNBG/Pag2 - CACTIA.png">CACTI AGREGADOR</button>
+            <button onclick="window.open('https://vivosmart.tdata.com.br/Orion/Login.aspx?sessionTimeout=yes&ReturnUrl=%2fOrion%2fSummaryView.aspx%3fViewID%3d97', '_blank')" data-image="BTNBG/Pag2 - AXTSM.png">AXT</button>
+            <button onclick="window.open('https://sigitm.vivo.com.br/app/index.jsp', '_blank')" data-image="BTNBG/Pag2 - SIGITM.png">SIGITM</button>
+            <button onclick="window.open('http://sigitm.redecorp.br/SIGITMWeb/index.jsf;jsessionid=btCU-Fco7trqzWzIdkee-j1sVwj580ciDn07Nx4NtlmJzqgkSmUU!1842956776!1395024305', '_blank')" data-image="BTNBG/Pag2 - SIGBD.png">SIGITM BD</button>
+            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/_layouts/15/Doc.aspx?sourcedoc=%7B3ca09476-ad3a-4fbe-b9d5-c58ac0f3900e%7D&action=default&CID=57f4946a-1f28-40ad-bc73-b29e1228ceeb&_SRM=2%3AS%3A560', '_blank')" data-image="BTNBG/Pag2 - RELATHL4.png">RELATÓRIO MUNI ISOLADOS</button>
         </div>
 
         <div class="button-grid hidden-buttons" id="hidden-buttons-3">
             <!-- Botões da terceira página (mais links) -->
-            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/g/personal/aldo_stoffel_telefonica_com/EUJUyKe_Yn1GnWZlW9lup6sBGfW14Fti_q4KjmfA90UwkA?e=4%3AjxcgGa&at=9', '_blank')">RELATÓRIO NÚCLEO TÉCNICO</button>
-            <button onclick="window.open('https://10.18.77.200/index.php', '_blank')">GEO FIBRA</button>
-            <button onclick="location.href='CABOS_OP_Mapa.pdf'">MAPA DE CABOS</button>
-            <button onclick="location.href='Verificador de DDD.html'">VERIFICADOR DE DDD</button>
+            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/g/personal/aldo_stoffel_telefonica_com/EUJUyKe_Yn1GnWZlW9lup6sBGfW14Fti_q4KjmfA90UwkA?e=4%3AjxcgGa&at=9', '_blank')" data-image="BTNBG/Pag3 - RELNT.png">RELATÓRIO NÚCLEO TÉCNICO</button>
+            <button onclick="window.open('https://10.18.77.200/index.php', '_blank')" data-image="BTNBG/Pag3 - GEOF.png">GEO FIBRA</button>
+            <button onclick="location.href='CABOS_OP_Mapa.pdf'" data-image="BTNBG/Pag3 - MPFO.png">MAPA DE CABOS</button>
+            <button onclick="location.href='Verificador de DDD.html'" data-image="BTNBG/Pag3 - DDD.png">VERIFICADOR DE DDD</button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
@@ -133,11 +153,11 @@
         </div>
         <div class="button-grid hidden-buttons" id="hidden-buttons-3">
             <!-- Botões da terceira página (mais links) -->
-            <button onclick="location.href='ARVORE DE ESCALONAMENTOS.html'">ESCALONAMENTOS</button>
-            <button onclick="location.href='CARROSEL TP.html'">PROCEDIMENTO DAS TP's</button>
-            <button onclick="location.href='CARROSEL AXT.html'">ROTAS AXT</button>
-            <button onclick="location.href='CARROSEL COREIP.html'">ROTAS CORE-IP</button>
-            <button onclick="location.href='CARROSEL TOPO.html'">TOPOLOGIAS DE REDE</button>
+            <button onclick="location.href='ARVORE DE ESCALONAMENTOS.html'" data-image="BTNBG/Pag4 - TESCAL.png">ESCALONAMENTOS</button>
+            <button onclick="location.href='CARROSEL TP.html'" data-image="BTNBG/Pag4 - PRTP.png">PROCEDIMENTO DAS TP's</button>
+            <button onclick="location.href='CARROSEL AXT.html'" data-image="BTNBG/Pag4 - RAXT.png">ROTAS AXT</button>
+            <button onclick="location.href='CARROSEL COREIP.html'" data-image="BTNBG/Pag4 - CORIP.png">ROTAS CORE-IP</button>
+            <button onclick="location.href='CARROSEL TOPO.html'" data-image="BTNBG/Pag4 - TOPO.png">TOPOLOGIAS DE REDE</button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
@@ -150,6 +170,76 @@
     </div>
 
     <script>
+
+let shiftPressed = false;
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Shift") {
+                shiftPressed = true;
+                updateHoverEffects();
+            }
+        });
+
+        document.addEventListener("keyup", function(event) {
+            if (event.key === "Shift") {
+                shiftPressed = false;
+                clearHoverEffects();
+            }
+        });
+
+        document.querySelectorAll(".button-grid button").forEach(button => {
+            button.addEventListener("mouseenter", baseHoverEffect);
+            button.addEventListener("mouseleave", removeBaseHoverEffect);
+        });
+
+        function updateHoverEffects() {
+            document.querySelectorAll(".button-grid button").forEach(button => {
+                button.addEventListener("mouseenter", hoverEffect);
+                button.addEventListener("mouseleave", removeHoverEffect);
+            });
+        }
+
+        function clearHoverEffects() {
+            document.querySelectorAll(".button-grid button").forEach(button => {
+                button.removeEventListener("mouseenter", hoverEffect);
+                button.removeEventListener("mouseleave", removeHoverEffect);
+                button.style.backgroundImage = "none";
+                button.classList.remove("hover-bg");
+            });
+        }
+
+        function baseHoverEffect(event) {
+            const button = event.currentTarget;
+            if (!shiftPressed) {
+                button.classList.add("hover-color");
+            }
+        }
+
+        function removeBaseHoverEffect(event) {
+            const button = event.currentTarget;
+            button.classList.remove("hover-color");
+        }
+
+        function hoverEffect(event) {
+            if (shiftPressed) {
+                const button = event.currentTarget;
+                const imageUrl = button.getAttribute("data-image");
+                if (imageUrl) {
+                    button.style.backgroundImage = `url('${imageUrl}')`;
+                    button.classList.add("hover-bg");
+                }
+            }
+        }
+
+        function removeHoverEffect(event) {
+            const button = event.currentTarget;
+            button.style.backgroundImage = "none";
+            button.classList.remove("hover-bg");
+        }
+
+
+    
+
        let currentPage = 1;
     const totalPages = 4;
 
