@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pesquisa de OLTs - Interface Dinâmica</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .scrollable-table {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container my-5">
+    <h1 class="mb-4 text-center">Pesquisa de OLTs</h1>
+
+    <!-- Filtros: campo de busca e dropdowns -->
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <input type="text" id="searchInput" class="form-control" placeholder="Digite o nome da OLT" oninput="applyFilters()">
+      </div>
+      <div class="col-md-3">
+        <select id="tpFilter" class="form-select" onchange="applyFilters()">
+          <option value="">Filtrar por TP</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select id="equipFilter" class="form-select" onchange="applyFilters()">
+          <option value="">Filtrar por Equipamento</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-secondary w-100" onclick="clearFilters()">Limpar Filtros</button>
+      </div>
+    </div>
+
+    <!-- Tabela com rolagem para exibir os 20 primeiros registros -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="table-responsive scrollable-table">
+          <table class="table table-striped" id="tableOLTs">
+            <thead class="table-dark">
+              <tr>
+                <th>NOME_REDE_OLT</th>
+                <th>Clientes</th>
+                <th>TP</th>
+                <th>tipo_equip_olt</th>
+                <th>NOME_REDE_SWD</th>
+                <th>at</th>
+                <th>CONTRATO</th>
+                <th>MUNI</th>
+                <th>ABORDAGEM</th>
+                <th>CONDOMINIO</th>
+                <th>CABO</th>
+                <th>TX</th>
+                <th>Abordagem</th>
+                <th>Condominio</th>
+                <th>CABO</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Linhas serão inseridas dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let dadosOLT = [];
+
+    // Função para carregar os dados do arquivo JSON externo
+    async function carregarDados() {
+      try {
+        const response = await fetch('DADOS_OLT.json'); // Certifique-se que o arquivo esteja na mesma pasta ou ajuste o caminho
+        if (!response.ok) throw new Error('Erro ao carregar o arquivo JSON');
+        dadosOLT = await response.json();
+        populateDropdowns();
+        populateTable(dadosOLT);
+      } catch (error) {
+        console.error('Erro:', error);
+      }
+    }
+
+    // Preenche os dropdowns com valores únicos dos campos TP e tipo_equip_olt
+    function populateDropdowns() {
+      const tpSet = new Set();
+      const equipSet = new Set();
+      dadosOLT.forEach(olt => {
+        if (olt.TP) tpSet.add(olt.TP);
+        if (olt.tipo_equip_olt) equipSet.add(olt.tipo_equip_olt);
+      });
+      const tpFilter = document.getElementById('tpFilter');
+      const equipFilter = document.getElementById('equipFilter');
+      tpSet.forEach(tp => {
+        const option = document.createElement('option');
+        option.value = tp;
+        option.text = tp;
+        tpFilter.appendChild(option);
+      });
+      equipSet.forEach(equip => {
+        const option = document.createElement('option');
+        option.value = equip;
+        option.text = equip;
+        equipFilter.appendChild(option);
+      });
+    }
+
+    // Popula a tabela com os dados filtrados (limitando a 20 registros)
+    function populateTable(data) {
+      const tbody = document.querySelector('#tableOLTs tbody');
+      tbody.innerHTML = "";
+      data.slice(0, 20).forEach(olt => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${olt.NOME_REDE_OLT}</td>
+          <td>${olt.Clientes}</td>
+          <td>${olt.TP}</td>
+          <td>${olt.tipo_equip_olt}</td>
+          <td>${olt.NOME_REDE_SWD}</td>
+          <td>${olt.at}</td>
+          <td>${olt.CONTRATO}</td>
+          <td>${olt.MUNI}</td>
+          <td>${olt.ABORDAGEM}</td>
+          <td>${olt.CONDOMINIO}</td>
+          <td>${olt.CABO}</td>
+          <td>${olt.TX}</td>
+          <td>${olt.Abordagem}</td>
+          <td>${olt.Condominio}</td>
+          <td>${olt.CABO}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Aplica os filtros com base nos inputs e dropdowns
+    function applyFilters() {
+      const searchTerm = document.getElementById('searchInput').value.trim().toUpperCase();
+      const selectedTP = document.getElementById('tpFilter').value;
+      const selectedEquip = document.getElementById('equipFilter').value;
+
+      const filteredData = dadosOLT.filter(olt => {
+        const matchesSearch = olt.NOME_REDE_OLT.toUpperCase().includes(searchTerm);
+        const matchesTP = selectedTP ? olt.TP === selectedTP : true;
+        const matchesEquip = selectedEquip ? olt.tipo_equip_olt === selectedEquip : true;
+        return matchesSearch && matchesTP && matchesEquip;
+      });
+      populateTable(filteredData);
+    }
+
+    // Limpa os filtros e restaura a tabela com todos os dados
+    function clearFilters() {
+      document.getElementById('searchInput').value = "";
+      document.getElementById('tpFilter').value = "";
+      document.getElementById('equipFilter').value = "";
+      populateTable(dadosOLT);
+    }
+
+    // Carrega os dados ao carregar a página
+    window.onload = carregarDados;
+  </script>
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
