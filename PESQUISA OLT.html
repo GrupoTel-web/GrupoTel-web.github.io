@@ -50,7 +50,7 @@
       background-color: #fff;
       border-radius: 10px;
       padding: 25px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px #0019335a;
       margin-top: -40px;
       z-index: 2;
       position: relative;
@@ -72,7 +72,7 @@
     margin-top: 40px;
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px #0019335a;
     overflow-x: auto;
 }
 
@@ -115,24 +115,29 @@ table.dataTable thead th {
       padding: 12px 15px;
       border: none;
       vertical-align: middle;
+    
     }
     /* DataTables Filtros customizados */
     .dataTables_wrapper .dataTables_filter input {
-      border: 1px solid #ced4da;
+      border: none;
+      color: #fff;
       border-radius: 4px;
       padding: 5px;
       margin-left: 5px;
+      display: none;
     }
     .dataTables_wrapper .dataTables_paginate .paginate_button {
-      background-color: #004488 !important;
+      background-color: #001933 !important;
       color: #fff !important;
       border: none;
       border-radius: 5px;
       margin: 0 2px;
     }
     .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-      background-color: #003d80 !important;
+      background-color: #001933 !important;
     }
+
+    
   </style>
 </head>
 <body>
@@ -146,7 +151,7 @@ table.dataTable thead th {
   <!-- Seção Hero -->
   <section class="hero">
     <div class="container">
-      <h1>Pesquisa de OLTs</h1>
+      <h1>Consultade OLTs</h1>
       <br>
     </div>
   </section>
@@ -11112,23 +11117,25 @@ table.dataTable thead th {
       
       // Inicializa o DataTable com scroll horizontal interno
       const table = $('#oltTable').DataTable({
-        paging: true,
-        pageLength: 20,
-        lengthChange: false,
-        ordering: true,
-        order: [[0, 'asc']],
-        scrollX: true,
-        language: {
-          search: "Pesquisar:",
-          paginate: {
+    paging: true,
+    pageLength: 20,
+    lengthChange: false,
+    ordering: true,
+    order: [[0, 'asc']],
+    scrollX: true,
+    searching: true, 
+    language: {
+        search: "", 
+        paginate: {
             previous: "Anterior",
             next: "Próximo"
-          },
-          info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
-          infoEmpty: "Mostrando 0 a 0 de 0 registros",
-          zeroRecords: "Nenhum registro encontrado"
-        }
-      });
+        },
+        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+        infoEmpty: "Mostrando 0 a 0 de 0 registros",
+        zeroRecords: "Nenhum registro encontrado"
+    }
+});
+
       
       // Preenche os dropdowns para filtros específicos
       const tpSet = new Set(dadosOLT.map(item => item.TP));
