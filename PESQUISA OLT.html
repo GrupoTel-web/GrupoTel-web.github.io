@@ -12,6 +12,7 @@
   <style>
     /* Corpo e fontes */
     body {
+      zoom: 95%;
       background-color: #f5f7fa;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #333;
@@ -59,14 +60,22 @@
       font-size: 1rem;
     }
     /* Container da Tabela */
-    .table-container {
-      margin-top: 30px;
-      background-color: #fff;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      overflow-x: auto;
-    }
+    .center-container {
+    display: flex;
+    justify-content: center;
+}
+
+.table-container {
+    zoom: 70%;
+    width: auto;
+    background-color: #fff;
+    margin-top: 40px;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
     /* Estilização Customizada para a Tabela */
     table.dataTable {
       border-collapse: separate;
@@ -82,6 +91,7 @@ table.dataTable thead th {
     color: #333;
     border: none;
     padding: 12px 15px;
+    font-size: 15px;
     font-weight: 500;
     white-space: nowrap; /* Impede a quebra de linha */
 }
@@ -91,9 +101,12 @@ table.dataTable thead th {
     table.dataTable tbody tr {
       background-color: #ffffff;
       border-radius: 8px;
+      width: auto;
+      font-size: 15px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.08);
       transition: background-color 0.3s ease;
       margin-bottom: 10px;
+      white-space: nowrap; /* Impede a quebra de linha */
     }
     table.dataTable tbody tr:hover {
       background-color: #f1f1f1;
@@ -133,7 +146,7 @@ table.dataTable thead th {
   <!-- Seção Hero -->
   <section class="hero">
     <div class="container">
-      <h1>Consulta de OLTs</h1>
+      <h1>Pesquisa de OLTs</h1>
       <br>
     </div>
   </section>
@@ -11193,46 +11206,44 @@ table.dataTable thead th {
 </body>
 </html>
 
+<div class="sair">
+    <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
+    <span>Sair</span>
+</div>
 
-    <div class="sair">
-        <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
-        <span>Sair</span>
-    </div>
-    
-    <style>
-        .sair {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            z-index: 9999; /* Fica sempre no topo */
-            background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
-            padding: 5px;
-            border-radius: 8px;
-        }
-    
-        .icone-porta {
-            width: 30px;
-            height: 30px;
-            margin-right: 5px;
-        }
-    
-        .sair span {
-            font-size: 18px;
-            font-weight: bold;
-        }
-    
-        .sair:hover {
-            opacity: 0.8;
-        }
-    </style>
-    
-    <script>
-        document.querySelector('.sair').addEventListener('click', function() {
-            window.location.href = "HOME.html"; // Substitua com o caminho da sua página
-        });
-    </script>
-</body>
-</html>
+<style>
+    .sair {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        z-index: 9999; /* Fica sempre no topo */
+        background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
+        padding: 5px;
+        border-radius: 8px;
+    }
+  
+    .icone-porta {
+        width: 30px;
+        height: 30px;
+        margin-right: 5px;
+    }
+  
+    .sair span {
+        font-size: 18px;
+        font-weight: bold;
+    }
+  
+    .sair:hover {
+        opacity: 0.8;
+    }
+  </style>
+  
+  <script>
+    document.querySelector('.sair').addEventListener('click', function() {
+        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+    });
+  </script>
+  
