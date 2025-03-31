@@ -180,7 +180,8 @@
             <label for="statusFalha1">Status Falha 1:</label>
             <textarea id="statusFalha1" name="statusFalha1" required></textarea><br><br>
 
-            <button onclick="desocultarFalha2()">Desocultar Falha 2</button><br><br>
+
+            <button onclick="alternarFalha2()">Alternar Falha 2</button><br><br>
             
             <label for="taF2">TA Falha 2:</label>
             <input type="text" id="taF2" name="ta"><br><br>
@@ -312,6 +313,83 @@
 
 
     <script>
+
+
+
+
+
+
+// Função para alternar entre ocultar e desocultar os campos de Falha 2
+function alternarFalha2() {
+    // Lista de IDs dos campos de Falha 2 no formulário
+    const elementosFalha2 = ["taF2", "horarioFalha2", "statusFalha2"];
+
+    // Verificar se algum dos campos de Falha 2 está visível
+    const camposVisiveis = elementosFalha2.some(id => {
+        let elemento = document.getElementById(id);
+        return elemento && elemento.style.display !== "none"; // Verifica se o campo não está oculto
+    });
+
+    // Se os campos estão visíveis, chamar a função para ocultar
+    if (camposVisiveis) {
+        ocultarF2();
+    } else {
+        desocultarF2();
+    }
+}
+
+// Função para desocultar os campos
+function desocultarF2() {
+    const elementosFalha2 = ["taF2", "horarioFalha2", "statusFalha2"];
+    const elementosCarimboFalha2 = ["carimboTAF2", "carimboHorarioFalha2", "carimboStatusFalha2"];
+
+    // Mostrar os campos do formulário
+    elementosFalha2.forEach(id => {
+        let elemento = document.getElementById(id);
+        if (elemento) {
+            elemento.style.display = "inline-block"; // Garantir que o campo seja exibido ao lado de outros
+            elemento.style.marginRight = "10px"; // Adiciona espaço entre os campos
+            let label = document.querySelector(`label[for=${id}]`);
+            if (label) label.style.display = "inline-block"; // Exibe o label ao lado do campo
+        }
+    });
+
+    // Mostrar as linhas no carimbo
+    elementosCarimboFalha2.forEach(id => {
+        let elemento = document.getElementById(id);
+        if (elemento) {
+            elemento.closest("tr").style.display = "table-row"; // Desoculta a linha do carimbo
+        }
+    });
+}
+
+// Função para ocultar os campos
+function ocultarF2() {
+    const elementosFalha2 = ["taF2", "horarioFalha2", "statusFalha2"];
+    const elementosCarimboFalha2 = ["carimboTAF2", "carimboHorarioFalha2", "carimboStatusFalha2"];
+
+    // Ocultar os campos do formulário
+    elementosFalha2.forEach(id => {
+        let elemento = document.getElementById(id);
+        if (elemento) {
+            elemento.style.display = "none"; // Oculta o campo
+            let label = document.querySelector(`label[for=${id}]`);
+            if (label) label.style.display = "none"; // Oculta o label
+        }
+    });
+
+    // Ocultar as linhas no carimbo
+    elementosCarimboFalha2.forEach(id => {
+        let elemento = document.getElementById(id);
+        if (elemento) {
+            elemento.closest("tr").style.display = "none"; // Oculta a linha do carimbo
+        }
+    });
+}
+
+
+
+
 
 
 
@@ -514,15 +592,15 @@ function desocultarFalha2() {
     // Lista de IDs dos campos de Falha 2 no carimbo
     const elementosCarimboFalha2 = ["carimboTAF2", "carimboHorarioFalha2", "carimboStatusFalha2"];
 
-    // Mostrar os campos do formulário mantendo o layout lado a lado
+    // Mostrar os campos do formulário
     elementosFalha2.forEach(id => {
         let elemento = document.getElementById(id);
         if (elemento) {
-            elemento.style.display = "inline-block"; // Mantém os elementos lado a lado
+            elemento.style.display = "inline-block"
 
             // Mostrar também o label associado
             let label = document.querySelector(`label[for=${id}]`);
-            if (label) label.style.display = "inline-block"; // Mantém o label no mesmo layout
+            if (label) label.style.display = "inline-block"
         }
     });
 
@@ -534,7 +612,6 @@ function desocultarFalha2() {
         }
     });
 }
-
 
 // Associar o evento de clique no botão "Limpar"
 document.querySelector(".limparTabela").addEventListener("click", limparTabela);
