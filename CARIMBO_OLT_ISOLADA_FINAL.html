@@ -180,6 +180,7 @@
             <label for="statusFalha1">Status Falha 1:</label>
             <textarea id="statusFalha1" name="statusFalha1" required></textarea><br><br>
 
+            <button onclick="desocultarFalha2()">Desocultar Falha 2</button><br><br>
             
             <label for="taF2">TA Falha 2:</label>
             <input type="text" id="taF2" name="ta"><br><br>
@@ -513,15 +514,15 @@ function desocultarFalha2() {
     // Lista de IDs dos campos de Falha 2 no carimbo
     const elementosCarimboFalha2 = ["carimboTAF2", "carimboHorarioFalha2", "carimboStatusFalha2"];
 
-    // Mostrar os campos do formulário
+    // Mostrar os campos do formulário mantendo o layout lado a lado
     elementosFalha2.forEach(id => {
         let elemento = document.getElementById(id);
         if (elemento) {
-            elemento.style.display = "block";
+            elemento.style.display = "inline-block"; // Mantém os elementos lado a lado
 
             // Mostrar também o label associado
             let label = document.querySelector(`label[for=${id}]`);
-            if (label) label.style.display = "block";
+            if (label) label.style.display = "inline-block"; // Mantém o label no mesmo layout
         }
     });
 
@@ -533,6 +534,7 @@ function desocultarFalha2() {
         }
     });
 }
+
 
 // Associar o evento de clique no botão "Limpar"
 document.querySelector(".limparTabela").addEventListener("click", limparTabela);
