@@ -13,8 +13,9 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #949494;
+            background-color: #9e9e9e;
             margin-top: 90px;
+            margin-bottom: 70px;
             zoom: 80%;
         }
         .container {
@@ -22,17 +23,17 @@
             background-color: #fff;
             padding: 60px;
             border-radius: 40px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 1);
+            box-shadow: 0 0 30px rgb(0, 0, 0);
             height: 400px;
             width: 1300px;
         }
         h1 {
-            color: #333;
-            font-size: 20px;
+            color: #252525;
+            font-size: 25px;
             margin-bottom: 10px;
         }
         button {
-           background-color: #4CAF50;
+           background-color: #4caf50;
            color: white;
            padding: 25px;
            margin: 10px 0;
@@ -48,7 +49,7 @@
         }
         button:hover {
             font-size: 15px;
-            background-color: #1c9850;
+            background-color: #4caf50;
             font-weight: bold;
         }
         .button-grid {
@@ -77,8 +78,8 @@
             padding: 10px;
             border: none;
             cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
+            background: linear-gradient(210deg, #4caf4f,  #318634, #4CAF50);
+            color: rgb(255, 255, 255);
             position: relative;
             transition: background 0.3s ease, color 0.3s ease;
         }
@@ -142,7 +143,7 @@
             <button onclick="window.open('https://10.18.77.200/index.php', '_blank')" data-image="BTNBG/Pag3 - GEOF.png">GEO FIBRA</button>
             <button onclick="location.href='CABOS_OP_Mapa.pdf'" data-image="BTNBG/Pag3 - MPFO.png">MAPA DE CABOS</button>
             <button onclick="location.href='Verificador de DDD.html'" data-image="BTNBG/Pag3 - DDD.png">VERIFICADOR DE DDD</button>
-            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="location.href='PESQUISA OLT.html'" data-image="BTNBG/Pag4 - PSOLT.png">CONSULTA DE OLT</button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
@@ -158,7 +159,7 @@
             <button onclick="location.href='CARROSEL AXT.html'" data-image="BTNBG/Pag4 - RAXT.png">ROTAS AXT</button>
             <button onclick="location.href='CARROSEL COREIP.html'" data-image="BTNBG/Pag4 - CORIP.png">ROTAS CORE-IP</button>
             <button onclick="location.href='CARROSEL TOPO.html'" data-image="BTNBG/Pag4 - TOPO.png">TOPOLOGIAS DE REDE</button>
-            <button onclick="location.href='PESQUISA OLT.html'" data-image="BTNBG/Pag4 - PSOLT.png">CONSULTA DE OLT</button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
@@ -171,71 +172,26 @@
 
     <script>
 
-let shiftPressed = false;
 
-        document.addEventListener("keydown", function(event) {
-            if (event.key === "Shift") {
-                shiftPressed = true;
-                updateHoverEffects();
-            }
-        });
+document.addEventListener("DOMContentLoaded", function () {
+        const buttons = document.querySelectorAll(".button-grid button");
 
-        document.addEventListener("keyup", function(event) {
-            if (event.key === "Shift") {
-                shiftPressed = false;
-                clearHoverEffects();
-            }
-        });
+        buttons.forEach(button => {
+            const bgImage = button.getAttribute("data-image");
 
-        document.querySelectorAll(".button-grid button").forEach(button => {
-            button.addEventListener("mouseenter", baseHoverEffect);
-            button.addEventListener("mouseleave", removeBaseHoverEffect);
-        });
-
-        function updateHoverEffects() {
-            document.querySelectorAll(".button-grid button").forEach(button => {
-                button.addEventListener("mouseenter", hoverEffect);
-                button.addEventListener("mouseleave", removeHoverEffect);
+            button.addEventListener("mouseover", function () {
+                button.style.backgroundImage = `url('${bgImage}')`;
+                button.style.backgroundSize = "cover";
+                button.style.backgroundPosition = "center";
+                button.style.color = "transparent"; // Esconde o texto do botão
             });
-        }
 
-        function clearHoverEffects() {
-            document.querySelectorAll(".button-grid button").forEach(button => {
-                button.removeEventListener("mouseenter", hoverEffect);
-                button.removeEventListener("mouseleave", removeHoverEffect);
-                button.style.backgroundImage = "none";
-                button.classList.remove("hover-bg");
+            button.addEventListener("mouseout", function () {
+                button.style.backgroundImage = "";
+                button.style.color = "white"; // Retorna a cor do texto ao normal
             });
-        }
-
-        function baseHoverEffect(event) {
-            const button = event.currentTarget;
-            if (!shiftPressed) {
-                button.classList.add("hover-color");
-            }
-        }
-
-        function removeBaseHoverEffect(event) {
-            const button = event.currentTarget;
-            button.classList.remove("hover-color");
-        }
-
-        function hoverEffect(event) {
-            if (shiftPressed) {
-                const button = event.currentTarget;
-                const imageUrl = button.getAttribute("data-image");
-                if (imageUrl) {
-                    button.style.backgroundImage = `url('${imageUrl}')`;
-                    button.classList.add("hover-bg");
-                }
-            }
-        }
-
-        function removeHoverEffect(event) {
-            const button = event.currentTarget;
-            button.style.backgroundImage = "none";
-            button.classList.remove("hover-bg");
-        }
+        });
+    });
 
 
     
