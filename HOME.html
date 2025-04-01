@@ -24,7 +24,7 @@
             padding: 60px;
             border-radius: 40px;
             box-shadow: 0 0 30px rgb(0, 0, 0);
-            height: 400px;
+            height: auto;
             width: 1300px;
         }
         h1 {
@@ -52,13 +52,53 @@
             background-color: #4caf50;
             font-weight: bold;
         }
+
+
         .button-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
-            max-width: 1000px;
-            margin-left: 30px;
-        }
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* Padrão: 6 colunas */
+    grid-template-rows: repeat(2, auto); /* 2 linhas ajustáveis */
+    gap: 15px; /* Espaçamento fixo */
+    max-width: 80%; /* Mantém os botões centralizados */
+    margin: 0 auto;
+    justify-content: center;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 1200px) {
+    .button-grid {
+        grid-template-columns: repeat(4, 1fr); /* Reduz para 4 colunas */
+    }
+}
+
+@media (max-width: 900px) {
+    .button-grid {
+        grid-template-columns: repeat(3, 1fr); /* Reduz para 3 colunas */
+        max-width: 90%; /* Acompanha a tela */
+        gap: 10px; /* Diminui o espaçamento */
+    }
+}
+
+@media (max-width: 600px) {
+    .button-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 colunas em telas menores */
+        max-width: 100%;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 400px) {
+    .button-grid {
+        grid-template-columns: repeat(1, 1fr); /* Empilha os botões em telas bem pequenas */
+        max-width: 100%;
+        gap: 5px;
+    }
+}
+
+
+     
+
+
         .scroll-button {
             cursor: pointer;
             font-size: 24px;
@@ -134,17 +174,17 @@
             <button onclick="window.open('https://vivosmart.tdata.com.br/Orion/Login.aspx?sessionTimeout=yes&ReturnUrl=%2fOrion%2fSummaryView.aspx%3fViewID%3d97', '_blank')" data-image="BTNBG/Pag2 - AXTSM.png">AXT</button>
             <button onclick="window.open('https://sigitm.vivo.com.br/app/index.jsp', '_blank')" data-image="BTNBG/Pag2 - SIGITM.png">SIGITM</button>
             <button onclick="window.open('http://sigitm.redecorp.br/SIGITMWeb/index.jsf;jsessionid=btCU-Fco7trqzWzIdkee-j1sVwj580ciDn07Nx4NtlmJzqgkSmUU!1842956776!1395024305', '_blank')" data-image="BTNBG/Pag2 - SIGBD.png">SIGITM BD</button>
-            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/_layouts/15/Doc.aspx?sourcedoc=%7B3ca09476-ad3a-4fbe-b9d5-c58ac0f3900e%7D&action=default&CID=57f4946a-1f28-40ad-bc73-b29e1228ceeb&_SRM=2%3AS%3A560', '_blank')" data-image="BTNBG/Pag2 - RELATHL4.png">RELATÓRIO HL4</button>
+            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/_layouts/15/Doc.aspx?sourcedoc=%7B3ca09476-ad3a-4fbe-b9d5-c58ac0f3900e%7D&action=default&CID=57f4946a-1f28-40ad-bc73-b29e1228ceeb&_SRM=2%3AS%3A560', '_blank')" data-image="BTNBG/Pag2 - RELATHL4.png">RELATÓRIO MUNI ISOLADOS</button>
         </div>
 
         <div class="button-grid hidden-buttons" id="hidden-buttons-3">
             <!-- Botões da terceira página (mais links) -->
-            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/Documents/Municipios%20Isolados.xlsx?d=w48c64fb99b8944e29d240284041dd03b&csf=1&web=1&e=B928MX', '_blank')" data-image="BTNBG/Pag3 - MUNIISO.png">RELATÓRIO MUNI ISOLADO</button>
             <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/g/personal/aldo_stoffel_telefonica_com/EUJUyKe_Yn1GnWZlW9lup6sBGfW14Fti_q4KjmfA90UwkA?e=4%3AjxcgGa&at=9', '_blank')" data-image="BTNBG/Pag3 - RELNT.png">RELATÓRIO NÚCLEO TÉCNICO</button>
             <button onclick="window.open('https://10.18.77.200/index.php', '_blank')" data-image="BTNBG/Pag3 - GEOF.png">GEO FIBRA</button>
             <button onclick="location.href='CABOS_OP_Mapa.pdf'" data-image="BTNBG/Pag3 - MPFO.png">MAPA DE CABOS</button>
             <button onclick="location.href='Verificador de DDD.html'" data-image="BTNBG/Pag3 - DDD.png">VERIFICADOR DE DDD</button>
             <button onclick="location.href='PESQUISA OLT.html'" data-image="BTNBG/Pag4 - PSOLT.png">CONSULTA DE OLT</button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
