@@ -26,6 +26,8 @@
             box-shadow: 0 0 30px rgb(0, 0, 0);
             height: auto;
             width: 1300px;
+            user-select: none; 
+            cursor: default; 
         }
         h1 {
             color: #252525;
@@ -332,13 +334,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Adiciona controle pelas setas do teclado
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'ArrowLeft') {
-            changePage('prev');
-        } else if (event.key === 'ArrowRight') {
-            changePage('next');
+    document.addEventListener("keydown", (e) => {
+    if (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
+        if (e.key === "ArrowRight") {
+            document.getElementById("next-btn").click();
+        } else if (e.key === "ArrowLeft") {
+            document.getElementById("prev-btn").click();
         }
-    });
+    }
+});
 
     // Inicializa a página
     updateButtons();
