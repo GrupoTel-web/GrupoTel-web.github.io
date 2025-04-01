@@ -213,6 +213,33 @@
     <script>
 
 
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+});
+
+document.addEventListener("touchend", (e) => {
+    touchEndX = e.changedTouches[0].clientX;
+    handleSwipe();
+});
+
+function handleSwipe() {
+    const swipeThreshold = 50; // Distância mínima para considerar um swipe
+
+    if (touchStartX - touchEndX > swipeThreshold) {
+        // Swipe para a esquerda (próxima página de botões)
+        document.getElementById("next-btn").click();
+    } else if (touchEndX - touchStartX > swipeThreshold) {
+        // Swipe para a direita (página anterior de botões)
+        document.getElementById("prev-btn").click();
+    }
+}
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
         const buttons = document.querySelectorAll(".button-grid button");
 
