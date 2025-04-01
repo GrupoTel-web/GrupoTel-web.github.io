@@ -96,9 +96,6 @@
             <label for="cidade">Cidade:</label>
             <input type="text" id="cidade" name="cidade" required><br><br>
 
-            <label for="erbPlanta">ERB Planta:</label>
-            <input type="text" id="erbPlanta" name="erbPlanta" required><br><br>
-
             <label for="erbAfetacao">ERB Afetação:</label>
             <input type="text" id="erbAfetacao" name="erbAfetacao" required><br><br>
 
@@ -131,10 +128,6 @@
                     <td><span id="carimboCidade"></span></td>
                 </tr>
                 <tr>
-                    <td>ERB Planta</td>
-                    <td><span id="carimboERBPlanta"></span></td>
-                </tr>
-                <tr>
                     <td>ERB Afetação</td>
                     <td><span id="carimboERBAfetacao"></span></td>
                 </tr>
@@ -165,7 +158,6 @@
             event.preventDefault();
             var taRaiz = document.getElementById('taRaiz').value;
             var cidade = document.getElementById('cidade').value;
-            var erbPlanta = document.getElementById('erbPlanta').value;
             var erbAfetacao = document.getElementById('erbAfetacao').value;
             var indisponibilidade = document.getElementById('indisponibilidade').value + '%';
             var siteAfetado = document.getElementById('siteAfetado').value;
@@ -173,7 +165,6 @@
 
             document.getElementById('carimboTARaiz').textContent = taRaiz;
             document.getElementById('carimboCidade').textContent = cidade;
-            document.getElementById('carimboERBPlanta').textContent = erbPlanta;
             document.getElementById('carimboERBAfetacao').textContent = erbAfetacao;
             document.getElementById('carimboIndisponibilidade').textContent = indisponibilidade;
             document.getElementById('carimboSiteAfetado').textContent = siteAfetado;
