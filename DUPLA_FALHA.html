@@ -87,9 +87,11 @@
     <div class="container">
         <div class="titulo"> NT-SPI ‼️ DUPLA FALHA ‼️</div>
         <form id="afectacao-form">
+            
             <div class="form-section">
+                <p>EQUIPAMENTO: <input type="text" id="equipamento"></p>
                 <p>AFETAÇÃO FTTX: <input type="text" id="afectacao-fttx"></p>
-                <p>AFETAÇÃO MOVEL: <input type="text" id="afectacao-movel"></p>
+                <p>AFETAÇÃO MOVEL: <input type="text" id="afectacao-movel"></p>               
             </div><br style="line-height: 0.2;">
             <div class="form-section">
                 <h2>Falha 01:</h2>
@@ -97,6 +99,7 @@
                 <p>Local: <input type="text" id="local-falha1"></p>
                 <p>TA: <input type="text" id="ta-falha1"></p>
                 <p>ROTA E CABO: <input type="text" id="rota-cabo-falha1"></p>
+              
                 <p>STATUS: <textarea id="status-falha1"></textarea></p>
             </div><br style="line-height: 0.2;">
             <div class="form-section">
@@ -118,6 +121,10 @@
                     <th>Atualização</th>
                 </tr>
                 <tr>
+                    <td>EQUIPAMENTO</td>
+                    <td><span id="result-equipamento"></span></td>
+                </tr>
+                <tr>
                     <td>AFETAÇÃO FTTX</td>
                     <td><span id="result-afectacao-fttx"></span></td>
                 </tr>
@@ -129,7 +136,10 @@
                     <td colspan="2"></td>
                 </tr>
                 <tr>
-                    <td><strong>Data Falha1</strong></td>
+                    <td><strong>Falha 1</strong></td>
+                </tr>
+                <tr>
+                    <td><span>Data Falha</span></td>
                     <td><span id="result-data-falha1"></span></td>
                 </tr>
                 <tr>
@@ -152,7 +162,10 @@
                     <td colspan="2"></td>
                 </tr>
                 <tr>
-                    <td><strong>Data Falha2</strong></td>
+                    <td><strong>Falha 2</strong></td>
+                </tr>
+                <tr>
+                    <td><span>Data Falha</span></td>
                     <td><span id="result-data-falha2"></span></td>
                 </tr>
                 <tr>
@@ -181,6 +194,7 @@
 
     <script>
         function gerarCarimbo() {
+            document.getElementById('result-equipamento').textContent = document.getElementById('equipamento').value;
             document.getElementById('result-afectacao-fttx').textContent = document.getElementById('afectacao-fttx').value;
             document.getElementById('result-afectacao-movel').textContent = document.getElementById('afectacao-movel').value;
 
@@ -189,7 +203,6 @@
             document.getElementById('result-ta-falha1').textContent = document.getElementById('ta-falha1').value;
             document.getElementById('result-rota-cabo-falha1').textContent = document.getElementById('rota-cabo-falha1').value;
             document.getElementById('result-status-falha1').textContent = document.getElementById('status-falha1').value;
-
             document.getElementById('result-data-falha2').textContent = formatarDataHora(document.getElementById('data-falha2').value);
             document.getElementById('result-local-falha2').textContent = document.getElementById('local-falha2').value;
             document.getElementById('result-ta-falha2').textContent = document.getElementById('ta-falha2').value;
