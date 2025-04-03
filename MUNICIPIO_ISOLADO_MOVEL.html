@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="icons/nt.png">
-    <title>Móvel - Municipio Isolado</title>
+    <title>Formulário com Carimbo</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -93,6 +93,15 @@
             <label for="taRaiz">TA Raiz:</label>
             <input type="text" id="taRaiz" name="taRaiz" required><br><br>
 
+            <label for="causa" style="margin-top: 5px;">Causa:</label>
+        <select id="causa" name="causa" required>
+          <option value="" hidden>SELECIONAR</option>
+          <option value="HL5">HL5</option>
+          <option value="HL4">HL4</option>
+          <option value="DWDM">DWDM</option>
+          <option value="GWD">GWD</option>
+        </select><br><br>
+
             <label for="cidade">Cidade:</label>
             <input type="text" id="cidade" name="cidade" required><br><br>
 
@@ -122,6 +131,10 @@
                 <tr>
                     <td>TA Raiz</td>
                     <td><span id="carimboTARaiz"></span></td>
+                </tr>
+                <tr>
+                    <td>Causas</td>
+                    <td><span id="carimboCausa"></span></td>
                 </tr>
                 <tr>
                     <td>Cidade</td>
@@ -157,6 +170,7 @@
         document.getElementById('meuFormulario').addEventListener('submit', function(event) {
             event.preventDefault();
             var taRaiz = document.getElementById('taRaiz').value;
+            var causa = document.getElementById('causa').value;
             var cidade = document.getElementById('cidade').value;
             var erbAfetacao = document.getElementById('erbAfetacao').value;
             var indisponibilidade = document.getElementById('indisponibilidade').value + '%';
@@ -164,6 +178,7 @@
             var dataCriacao = document.getElementById('dataCriacao').value.replace('T', ' ');
 
             document.getElementById('carimboTARaiz').textContent = taRaiz;
+            document.getElementById('carimboCausa').textContent = causa;
             document.getElementById('carimboCidade').textContent = cidade;
             document.getElementById('carimboERBAfetacao').textContent = erbAfetacao;
             document.getElementById('carimboIndisponibilidade').textContent = indisponibilidade;
