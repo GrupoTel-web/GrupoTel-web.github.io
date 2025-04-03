@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="icon" type="image/png" href="icons/nt.png">
+ <title>OUTLIER AST</title>
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+ <style>
+ body {
+ font-family: 'Poppins', sans-serif;
+ background-color: #2d3682;
+ }
+ .container {
+ border: 2px solid #000;
+ padding: 20px;
+ max-width: 600px;
+ margin: 0 auto;
+ background-color: #f9f9f9;
+ }
+ .titulo {
+ background-color: #2d3682; /* Roxo mais claro */
+ color: #fff; /* Branco */
+ padding: 10px;
+ text-align: center;
+ font-size: 1.5em;
+ margin-bottom: 20px;
+ }
+ .carimbo {
+ border: 2px solid #000;
+ padding: 10px;
+ margin-top: 20px;
+ display: none;
+ }
+ .carimboTitulo {
+ background-color: #2d3682; /* Roxo mais claro */
+ color: #fff; /* Branco */
+ padding: 10px;
+ text-align: center;
+ font-size: 1.2em;
+ margin-bottom: 10px;
+ }
+ table {
+ width: 100%;
+ border-collapse: collapse;
+ }
+ table, th, td {
+ border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+ }
+ th, td {
+ padding: 8px;
+ text-align: left;
+ }
+ th {
+ background-color: #2d3682; /* Roxo mais claro */
+ color: #fff; /* Branco */
+ }
+ td {
+ background-color: #fff; /* Branco */
+ }
+ textarea {
+ width: 100%;
+ height: 100px;
+ }
+ .botoes {
+ margin-top: 20px;
+ }
+ .botoes button {
+ margin-right: 10px;
+ }
+ .container-principal {
+        background-color: #fff; /* Fundo branco */
+        border-radius: 15px; /* Bordas arredondadas */
+        padding: 20px; /* Espaçamento interno */
+        margin: 20px auto; /* Centraliza o container */
+        width: 90%; /* Largura responsiva */
+        max-width: 1200px; /* Limita a largura máxima */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
+        }
+ </style>
+</head>
+<body>
+    <div class="container-principal">
+ <div class="container">
+ <div class="titulo">NT - SPI 🌐 OUTLIER AST (BANDA, IPTV, VOIP) 🌐</div>
+ <h1>Formulário</h1>
+ <form id="meuFormulario">
+ <label for="servico">Serviço:</label>
+<select id="servico" name="servico" required>
+<option value="BANDA">BANDA</option>
+<option value="VOIP">VOIP</option>
+<option value="IPTV">IPTV</option>
+</select><br><br>
+<label for="cluster">Cluster:</label>
+<input type="text" id="cluster" name="cluster" required><br><br>
+<label for="bds">BD's:</label>
+<input type="text" id="bds" name="bds" required><br><br>
+<label for="afetacao">Afetação:</label>
+<input type="text" id="afetacao" name="afetacao" required><br><br>
+ <label for="ta">TA/TU:</label>
+ <input type="text" id="ta" name="ta" required><br><br>
+ <label for="municipio">Municipio:</label>
+ <input type="text" id="municipio" name="municipio" required><br><br>
+ <label for="hostname">Hostname:</label>
+ <input type="text" id="hostname" name="hostname" required><br><br>
+ <label for="dataFalha">Data da Falha:</label>
+ <input type="datetime-local" id="dataFalha" name="dataFalha" required><br><br>
+ <label for="status">Status:</label>
+ <textarea id="status" name="status" required></textarea><br><br>
+ <button type="submit">Enviar</button>
+ </form>
+ <div class="carimbo" id="carimbo">
+ <div class="carimboTitulo">NT - SPI 🌐 OUTLIER AST (BANDA, IPTV, VOIP) 🌐</div>
+ <table>
+ <tr>
+ <th>Descrição</th>
+ <th>Atualização</th>
+ </tr>
+ <tr>
+ <td>Serviço</td>
+ <td><span id="carimboServico"></span></td>
+ </tr>
+ <tr>
+ <td>Cluster</td>
+ <td><span id="carimboCluster"></span></td>
+ </tr>
+ <tr>
+ <td>BD's</td>
+ <td><span id="carimboBds"></span></td>
+ </tr>
+ <tr>
+ <td>Afetação</td>
+ <td><span id="carimboAfetacao"></span></td>
+ </tr>
+ <tr>
+ <td>TA/TU</td>
+ <td><span id="carimboTA"></span></td>
+ </tr>
+ <tr>
+ <td>Municipio</td>
+ <td><span id="carimboMunicipio"></span></td>
+ </tr>
+ <tr>
+ <td>Hostname</td>
+ <td><span id="carimboHostname"></span></td>
+ </tr>
+ <tr>
+ <td>Data da Falha</td>
+ <td><span id="carimboDataFalha"></span></td>
+ </tr>
+ <tr>
+ <td>Status</td>
+ <td><span id="carimboStatus"></span></td>
+ </tr>
+ </table>
+ <div class="botoes">
+ <button id="voltar">Voltar</button>
+ </div>
+ </div>
+ </div>
+</div>
+ <script>
+ document.getElementById('meuFormulario').addEventListener('submit', function(event) {
+ event.preventDefault();
+ var servico = document.getElementById('servico').value;
+ var cluster = document.getElementById('cluster').value;
+ var bds = document.getElementById('bds').value;
+ var afetacao = document.getElementById('afetacao').value;
+ var ta = document.getElementById('ta').value;
+ var municipio = document.getElementById('municipio').value;
+ var hostname = document.getElementById('hostname').value;
+ var dataFalha = document.getElementById('dataFalha').value;
+ var status = document.getElementById('status').value;
+ function formatarDataHora(dataHora) {
+ if (!dataHora) return '';
+ var data = new Date(dataHora);
+ var dia = String(data.getDate()).padStart(2, '0');
+ var mes = String(data.getMonth() + 1).padStart(2, '0');
+ var ano = data.getFullYear();
+ var horas = String(data.getHours()).padStart(2, '0');
+ var minutos = String(data.getMinutes()).padStart(2, '0');
+ return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+ }
+ document.getElementById('carimboServico').textContent = servico;
+ document.getElementById('carimboCluster').textContent = cluster;
+ document.getElementById('carimboBds').textContent = bds;
+ document.getElementById('carimboAfetacao').textContent = afetacao;
+ document.getElementById('carimboTA').textContent = ta;
+ document.getElementById('carimboMunicipio').textContent = municipio;
+ document.getElementById('carimboHostname').textContent = hostname;
+ document.getElementById('carimboDataFalha').textContent = formatarDataHora(dataFalha);
+ document.getElementById('carimboStatus').textContent = status;
+ document.getElementById('carimbo').style.display = 'block';
+ });
+ document.getElementById('voltar').addEventListener('click', function() {
+ document.getElementById('carimbo').style.display = 'none';
+ document.getElementById('meuFormulario').reset();
+ });
+ </script>
+</body>
+</html>
+
+<div class="sair">
+    <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
+    <span>Sair</span>
+</div>
+
+<style>
+    .sair {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        z-index: 9999; /* Fica sempre no topo */
+        background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
+        padding: 5px;
+        border-radius: 8px;
+    }
+
+    .icone-porta {
+        width: 30px;
+        height: 30px;
+        margin-right: 5px;
+    }
+
+    .sair span {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .sair:hover {
+        opacity: 0.8;
+    }
+</style>
+
+<script>
+    document.querySelector('.sair').addEventListener('click', function() {
+        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+    });
+</script>
