@@ -2,362 +2,435 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Escalonamento</title>
- <link rel="icon" type="image/png" href="icons/nt.png">
- <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
- <style>
- body {
- font-family: 'Poppins', sans-serif;
- background-color: #ff6f00;
- }
- .container {
- border: 2px solid #000;
- padding: 20px;
- max-width: 600px;
- margin: 0 auto;
- background-color: #f9f9f9;
- }
- .titulo {
- background-color: #ff6f00; /* Roxo */
- color: #fff; /* Branco */
- padding: 10px;
- text-align: center;
- font-size: 1.5em;
- margin-bottom: 20px;
- }
- .carimbo {
- border: 2px solid #000;
- padding: 10px;
- margin-top: 20px;
- display: none;
- 
- }
- .carimboTitulo {
- background-color: #ff6f00; /* Roxo */
- color: #fff; /* Branco */
- padding: 10px;
- text-align: center;
- font-size: 1.2em;
- margin-bottom: 10px;
- }
- table {
- width: 100%;
- border-collapse: collapse;
- }
- table, th, td {
- border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
- }
- th, td {
- padding: 8px;
- text-align: left;
- }
- th {
- background-color: #ff6f00; /* Roxo */
- color: #fff; /* Branco */
- }
- td {
- background-color: #fff; /* Branco */
- }
- textarea {
- width: 100%;
- height: 100px;
- }
- .botoes {
- margin-top: 20px;
- }
- .botoes button {
- margin-right: 10px;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escalonamento</title>
+  <link rel="icon" type="image/png" href="icons/nt.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to left, #ff6f00,  #dfb343, #ff6f00);
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* Container principal com cantos arredondados e sombra */
+    .container-principal {
+      background-color: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 1000px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      zoom: 85%;
+      user-select: none; 
+    }
+
+    /* Estilo do cabeçalho da seção */
+    .titulo {
+      background-color: #ff6f00;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      border-radius: 8px 8px 0 0;
+    }
+
+    /* Container do formulário (exceto carimbo) */
+    .container {
+      border: none;
+      padding: 0px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      margin: 10px 40px 40px 40px;
+    }
+
+    /* Estilos para inputs, selects e textarea */
+    input[type="text"],
+    input[type="datetime-local"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 15px 0;
+      border: 1px solid #be6f00f0;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+      
+      
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #00a61e;
+      outline: none;
+    }
+
+    /* Botões */
+    .botoes, .botoes-1 {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .botoes button,
+    .botoes-1 button,
+    button[type="submit"] {
+      background-color: #ff6f00;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+    .botoes button:hover,
+    .botoes-1 button:hover,
+    button[type="submit"]:hover {
+      background-color: #e65c00;
+    }
+
+    /* Estilização da tabela principal */
+    .tabela-container-1 {
+      width: 135vw;
+      max-width: 97%;
+      min-width: 97%;
+      overflow-x: auto;
+      background: white;
+      padding: 0px;
+      margin:  auto 20px;
+      border-radius: 8px;
+      box-shadow: 0 9px 10px rgba(255, 157, 0, 0.585);
+      font-size: 17px;
+      border: 2px solid #dbdbdb;
+      zoom: 55%;
+    }
+    .tabela-container-1 table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .tabela-container-1 th, 
+    .tabela-container-1 td {
+      padding: 10px;
+      text-align: left;
+      height: 50px;
+      padding: 8px;
+      text-align: center;
+    }
+    .tabela-container-1 td {
+     white-space: nowrap; /* Impede que o texto quebre para a próxima linha */
+  overflow: hidden; /* Esconde qualquer conteúdo que ultrapasse o tamanho da célula */
+  max-width: 50px; /* Define um tamanho máximo para as células (ajuste conforme necessário) */
+    }
+    .tabela-container-1 th {
+      background-color: #ff6f00;
+      color: #fff;
+    }
+    /* Separação sutil entre linhas */
+    .tabela-container-1 tr {
+      border-bottom: 1px solid #eee;
+    }
+    .tabela-container-1 tr:last-child {
+      border-bottom: none;
+    }
+
+    /* Estilos para a segunda tabela */
+    .tabela-container {
+      width: 93vw;
+      max-width: 100%;
+      overflow-x: auto;
+      background: white;
+      padding: 5px;
+      margin-left: 90px;
+      border-radius: 8px;
+      border: 1px solid #d3d3d3;
+    }
+
+    /* ============================ */
+    /* Estilos do CARIMBO - manter inalterado */
+    /* ============================ */
+    .carimbo {
+  border: 4px solid #9f4500ce;
+  padding: 10px;
+  margin: 20px auto;
+  display: none;
+  width: 600px;
+  border-radius: 14px;
+  background: linear-gradient(#ff6f00fa, #d75a06);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.carimboTitulo {
+  background-color: #ff6f00;
+  color: #000000;
+  padding: 10px;
+  text-align: center;
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 0px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+/* Para permitir bordas arredondadas em células, usamos 'separate' com espaçamento */
+.carimbo table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 3px;
+}
+
+.carimbo th,
+.carimbo td {
+  padding: 8px;
+  text-align: left;
+  border: 3px solid #ff6f00;
+  border-radius: 14px;
+  font-weight: 200;
+  
+}
+
+.carimbo th {
+  background-color: #ff6f00;
+  color: #000000;
+  font-weight: bold;
  }
 
- .tabela-container-1 {
-            width: 90vw;
-            max-width: 100%;
-            overflow-x: auto;
-            border: 1px solid #d3d3d3;
-            background: white;
-            padding: 0px;
-            margin-left: 0px;
-            font-size: 9px;
-            font-weight: bold;
-        }
+.carimbo td {
+  background-color: #ffffff;
+  border: 2px solid #773400b6;
+}
 
-        .tabela-container-1 th {
-        text-align: center; 
-        vertical-align: middle; 
-        }
 
-        .tabela-container {
-            width: 93vw;
-            max-width: 100%;
-            overflow-x: auto;
-            border: 1px solid #d3d3d3;
-            background: white;
-            padding: 5px;
-            margin-left: 90px;
-        }
-        textarea {
-            width: 100%;
-            height: 100px;
-        }
-        .botoes {
-            margin-top: 9px;
-            margin-bottom: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .botoes button {
-            background-color: #ff6f00;
-            color: #fff;
-            border: none;
-            padding: 6px 40px;
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        .botoes-1 {
-            margin-top: 20px;
-            margin-right: 10px;
-        }
-        .container-principal {
-        background-color: #fff; /* Fundo branco */
-        border-radius: 15px; /* Bordas arredondadas */
-        padding: 20px; /* Espaçamento interno */
-        margin: 20px auto; /* Centraliza o container */
-        width: 90%; /* Largura responsiva */
-        max-width: 1200px; /* Limita a largura máxima */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
-        }
- </style>
+  </style>
 </head>
 <body>
-
-  
   <div class="container-principal">
-  <div class="tabela-container-1">
-    <table id="tabela">
+    <div class="tabela-container-1">
+      <table id="tabela">
         <thead>
-            <tr>
-                <th style="width: 90px;">TA METRO</th>
-                <th style="width: 70px;">DWDM LINHA</th>
-                <th style="width: 70px;">TA RAIZ (REDE)</th>
-                <th style="width: 100px;">LOCALIDADE</th>
-                <th style="width: 100px;">ROTA</th>
-                <th style="width: 100px;">DATA ALARME</th>
-                <th style="width: 120px;">TEMPO CORRIDO</th>
-                <th style="width: 90px;">RISCO FTTX</th>
-                <th style="width: 90px;">RISCO ADSL</th>
-                <th style="width: 130px;">AFETAÇÃO ERB</th>
-                <th style="width: 120px;">TOTAL RISCO</th>
-                <th style="width: 120px;">AFETAÇÃO FTTX</th>
-                <th style="width: 90px;">AFETAÇÃO ADSL</th>
-                <th style="width: 90px;">AFETAÇÃO TOTAL</th>
-                <th style="width: 130px;">RESUMO STATUS</th>
-                <th style="width: 120px;">AREA RESPONSAVEL</th>
-                <th style="width: 90px;">EVENTOS ENVOLVIDOS</th>
-                <th style="width: 90px;">TECNOLOGIA</th>
-                <th style="width: 130px;">TTMC</th>
-                <th style="width: 120px;">ADJ, SPC</th>
-                </tr>
+          <tr>
+            <th style="width: 90px;">TA METRO</th>
+            <th style="width: 70px;">DW LINHA</th>
+            <th style="width: 70px;">TA RAIZ</th>
+            <th style="width: 100px;">LOCALIDADE</th>
+            <th style="width: 100px;">ROTA</th>
+            <th style="width: 100px;">DATA ALARME</th>
+            <th style="width: 120px;">TEMPO CORRIDO</th>
+            <th style="width: 90px;">RISCO FTTX</th>
+            <th style="width: 90px;">RISCO ADSL</th>
+            <th style="width: 130px;">AFET ERB</th>
+            <th style="width: 120px;">TOTAL RISCO</th>
+            <th style="width: 120px;">AFET FTTX</th>
+            <th style="width: 90px;">AFET ADSL</th>
+            <th style="width: 90px;">AFET TOTAL</th>
+            <th style="width: 130px;">RESUMO STATUS</th>
+            <th style="width: 120px;">AREA RESPONSAVEL</th>
+            <th style="width: 90px;">EVENTOS ENVOLVIDOS</th>
+            <th style="width: 90px;">TECNOLOGIA</th>
+            <th style="width: 130px;">TTMC</th>
+            <th style="width: 120px;">ADJ, SPC</th>
+          </tr>
         </thead>
         <tbody id="tabela-body"></tbody>
-    </table>
-</div>
+      </table>
+    </div>
 
-<div class="botoes">
-    <button class="limparTabela">Limpar</button>
-</div>
-
- <div class="container">
- <div class="titulo">NT-SPI 🌡️ Escalonamentos 🌡️</div>
- <h1>Formulário</h1>
- <form id="meuFormulario">
-
-  <label for="escalonamento">Escalonamento:</label>
-  <select id="escalonamento" name="escalonamento" required>
-    <option value="" hidden>SELECIONAR O TIPO</option>
-    <option value="OLT-LINK">OLT-LINK</option>
-  <option value="INFRA">INFRA</option>
-   <option value="OLT-DOWN">OLT-DOWN</option>
-   <option value="DRACO">DRACO</option>
-   <option value="DWDM">DWDM</option>
-   <option value="HL4">HL4</option>
-   <option value="METRO">METRO</option>
-   <option value="MÓVEL">MÓVEL</option>
-  <option value="ADJACÊNCIA">ADJANCÊNCIA</option>
-  <option value="BBN">BBN</option>
-  <option value="CONDOMÍNIO PLANTA INTERNA">CONDOMÍNIO PLANTA INTERNA</option>
- </select><br><br>
- 
- <label for="municipio">Municipio:</label>
- <input type="text" id="municipio" name="municipio" required><br><br>
- 
- <label for="ta">TA:</label>
- <input type="text" id="ta" name="ta" required><br><br>
- 
- <label for="dataAbertura">Data Abertura:</label>
- <input type="datetime-local" id="dataAbertura" name="dataAbertura" required><br><br>
- 
- <label for="taRaiz">TA Raiz:</label>
- <input type="text" id="taRaiz" name="taRaiz" required><br><br>
-
-
- <label for="gestorAtual">Gestor Atual:</label>
-<select id="gestorAtual" name="gestorAtual" required>
-  <option value="" hidden>SELECIONAR</option>
-  <option value="N1 - ABILITY">N1 - ABILITY</option>
-  <option value="N1 - TEL">N1 - TEL</option>
-  <option value="REDE - TEL">REDE - TEL</option>
-  <option value="REDE - ICOMON">REDE - ICOMON</option>
-  <option value="NOC">NOC</option>
-  <option value="N2">N2</option>
-  <option value="O&M ACESSO VIVO_N1_SPI">O&M ACESSO VIVO_N1_SPI</option>
-  <option value="SUPORTE">SUPORTE</option>
-  <option value="SWAP">SWAP</option>
-  <option value="CO-N1">CO-N1</option>
-  <option value="SOBRESSALENTE CHAMADO INTERNO">SOBRESSALENTE INTERNO</option>
-  <option value="SOBRESSALENTE FORNECEDOR">SOBRESSALENTE FORNECEDOR</option>
-  <option value="OPERACAO RF">OPERACAO RF</option>
-  <option value="OPERACAO MOVEL BACKHAUL">OPERACAO MOVEL BACKHAUL</option>
-  <option value="OPERAÇÃO BANDA LARGA">OPERAÇÃO BANDA LARGA</option>
-  <option value="OPERAÇÃO DWDM">OPERAÇÃO DWDM</option>
-  <option value="OPERAÇÃO REDE IP">OPERAÇÃO REDE IP</option>
-  <option value="N1 CAPITAL">N1 CAPITAL</option>
-  <option value="N1 SUDESTE">N1 SUDESTE</option>
-  <option value="REDE SUDESTE">REDE SUDESTE</option>
-  <option value="REDE CAPITAL">REDE CAPITAL</option>
-</select><br><br>
-
-
-<label for="tempoNoc">Tempo NOC (horas):</label>
-<input type="text" id="tempoNoc" name="tempoNoc" required pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM"><br><br>
-
-<label for="tempoN1">Tempo N1 (horas):</label>
-<input type="text" id="tempoN1" name="tempoN1" required pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM"><br><br>
-
-<label for="tempoRede">Tempo Rede (horas):</label>
-<input type="text" id="tempoRede" name="tempoRede" required pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM"><br><br>
-
-<!-- Campo para selecionar "Outro" -->
-<label for="outroTipo">Outro:</label>
-<input type="checkbox" id="outroTipo" name="outroTipo" onclick="toggleOutroOptions()">
-<br><br>
-
-<div id="outroOptions" style="display: none;">
-    <label for="outrosOPP"></label>
-    <select id="outrosOPP" name="outrosOPP" onchange="atualizarTituloTempoOutro()">
-      <option value="" hidden>Outros</option>
-      <option value="N2">N2</option>
-      <option value="SUPORTE">SUPORTE</option>
-      <option value="SWAP">SWAP</option>
-      <option value="CO-N1">CO-N1</option>
-      <option value="SOBRESSALENTE CHAMADO INTERNO">SOBRESSALENTE INTERNO</option>
-      <option value="SOBRESSALENTE FORNECEDOR">SOBRESSALENTE FORNECEDOR</option>
-      <option value="OPERACAO RF">OPERACAO RF</option>
-      <option value="OPERACAO MOVEL BACKHAUL">OPERACAO MOVEL BACKHAUL</option>
-      <option value="OPERAÇÃO BANDA LARGA">OPERAÇÃO BANDA LARGA</option>
-      <option value="OPERAÇÃO DWDM">OPERAÇÃO DWDM</option>
-      <option value="OPERAÇÃO REDE IP">OPERAÇÃO REDE IP</option>
-      <option value="N1 CAPITAL">N1 CAPITAL</option>
-      <option value="N1 SUDESTE">N1 SUDESTE</option>
-      <option value="REDE SUDESTE">REDE SUDESTE</option>
-      <option value="REDE CAPITAL">REDE CAPITAL</option>
-    </select>
-    <input type="text" id="tempoOutro" name="tempoOutro" pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM"><br><br>
-  </div>
-  
-  <label for="nivel">Nível:</label>
-  <select id="nivel" name="nivel" required>
-    <option value="" hidden>SELECIONAR</option>
-    <option value="COORDENADOR">COORDENADOR</option>
-    <option value="GERENTE">GERENTE</option>
-    <option value="SENIOR">SENIOR</option>
-    <option value="DIRETOR">DIRETOR</option>
-  </select><br><br>
-  
-  <label for="status">Status:</label>
-  <textarea id="status" name="status" required></textarea><br><br>
-  
-  <input type="hidden" id="envio" name="envio" value="">
-  <button type="submit">Enviar</button>
-  
-  <div class="carimbo" id="carimbo">
-    <div class="carimboTitulo">NT-SPI 🌡️ Escalonamentos 🌡️</div>
-    <table>
-      <tr>
-        <th>Descrição</th>
-        <th>Atualização</th>
-      </tr>
-      <tr>
-        <td>Escalonamento</td>
-        <td><span id="carimboEscalonamento"></span></td>
-      </tr>
-      <tr>
-        <td>Municipio</td>
-        <td><span id="carimboMunicipio"></span></td>
-      </tr>
-      <tr>
-        <td>TA</td>
-        <td><span id="carimboTA"></span></td>
-      </tr>
-      <tr>
-        <td>Data Abertura</td>
-        <td><span id="carimboDataAbertura"></span></td>
-      </tr>
-      <tr>
-        <td>TA Raiz</td>
-        <td><span id="carimboTARaiz"></span></td>
-      </tr>
-      <tr>
-        <td>Gestor Atual</td>
-        <td><span id="carimboGestorAtual"></span></td>
-      </tr>
-      <tr>
-        <td>Tempo NOC</td>
-        <td><span id="carimboTempoNoc"></span></td>
-      </tr>
-      <tr>
-        <td>Tempo N1</td>
-        <td><span id="carimboTempoN1"></span></td>
-      </tr>
-      <tr>
-        <td>Tempo Rede</td>
-        <td><span id="carimboTempoRede"></span></td>
-      </tr>
-      <tr>
-        <td>Tempo Total (NOC, N1, Rede)</td>
-        <td><span id="carimboTempoTotal"></span></td>
-      </tr>
-      <tr id="outroRow" style="display: none;">
-        <td id="tituloTempoOutro">Tempo Outros</td>
-        <td><span id="carimboTempoOutro"></span></td>
-      </tr>
-      <tr>
-        <td>Nível</td>
-        <td><span id="carimboNivel"></span></td>
-      </tr>
-      <tr>
-        <td>Status</td>
-        <td><span id="carimboStatus"></span></td>
-      </tr>
-      <tr>
-        <td>Envio</td>
-        <td><span id="carimboEnvio"></span></td>
-      </tr>
-      <tr>
-        <td>Tempo TA</td>
-        <td><span id="carimboTempoTA"></span></td>
-      </tr>
-    </table>
     <div class="botoes">
-      <button id="voltar">Voltar</button>
+      <button class="limparTabela">Limpar</button>
+    </div>
+
+    <div class="container">
+      <div class="titulo">NT-SPI 🌡️ Escalonamentos 🌡️</div>
+      <h1>Formulário Escalonamento</h1>
+      <form id="meuFormulario">
+        <label for="escalonamento">Escalonamento:</label>
+        <select id="escalonamento" name="escalonamento" required>
+          <option value="" hidden>SELECIONAR O TIPO</option>
+          <option value="OLT-LINK">OLT-LINK</option>
+          <option value="INFRA">INFRA</option>
+          <option value="OLT-DOWN">OLT-DOWN</option>
+          <option value="DRACO">DRACO</option>
+          <option value="DWDM">DWDM</option>
+          <option value="HL4">HL4</option>
+          <option value="METRO">METRO</option>
+          <option value="MÓVEL">MÓVEL</option>
+          <option value="ADJACÊNCIA">ADJANCÊNCIA</option>
+          <option value="BBN">BBN</option>
+          <option value="CONDOMÍNIO PLANTA INTERNA">CONDOMÍNIO PLANTA INTERNA</option>
+        </select>
+
+        <label for="municipio">Municipio:</label>
+        <input type="text" id="municipio" name="municipio" required>
+        
+        <label for="ta">TA:</label>
+        <input type="text" id="ta" name="ta" required>
+        
+        <label for="dataAbertura">Data Abertura:</label>
+        <input type="datetime-local" id="dataAbertura" name="dataAbertura" required>
+        
+        <label for="taRaiz">TA Raiz:</label>
+        <input type="text" id="taRaiz" name="taRaiz" required>
+        
+        <label for="gestorAtual">Gestor Atual:</label>
+        <select id="gestorAtual" name="gestorAtual" required>
+          <option value="" hidden>SELECIONAR</option>
+          <option value="N1 - ABILITY">N1 - ABILITY</option>
+          <option value="N1 - TEL">N1 - TEL</option>
+          <option value="REDE - TEL">REDE - TEL</option>
+          <option value="REDE - ICOMON">REDE - ICOMON</option>
+          <option value="NOC">NOC</option>
+          <option value="N2">N2</option>
+          <option value="O&M ACESSO VIVO_N1_SPI">O&M ACESSO VIVO_N1_SPI</option>
+          <option value="SUPORTE">SUPORTE</option>
+          <option value="SWAP">SWAP</option>
+          <option value="CO-N1">CO-N1</option>
+          <option value="SOBRESSALENTE CHAMADO INTERNO">SOBRESSALENTE INTERNO</option>
+          <option value="SOBRESSALENTE FORNECEDOR">SOBRESSALENTE FORNECEDOR</option>
+          <option value="OPERACAO RF">OPERACAO RF</option>
+          <option value="OPERACAO MOVEL BACKHAUL">OPERACAO MOVEL BACKHAUL</option>
+          <option value="OPERAÇÃO BANDA LARGA">OPERAÇÃO BANDA LARGA</option>
+          <option value="OPERAÇÃO DWDM">OPERAÇÃO DWDM</option>
+          <option value="OPERAÇÃO REDE IP">OPERAÇÃO REDE IP</option>
+          <option value="N1 CAPITAL">N1 CAPITAL</option>
+          <option value="N1 SUDESTE">N1 SUDESTE</option>
+          <option value="REDE SUDESTE">REDE SUDESTE</option>
+          <option value="REDE CAPITAL">REDE CAPITAL</option>
+        </select>
+        
+        <label for="tempoNoc">Tempo NOC (horas):</label>
+        <input type="text" id="tempoNoc" name="tempoNoc" required pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM">
+        
+        <label for="tempoN1">Tempo N1 (horas):</label>
+        <input type="text" id="tempoN1" name="tempoN1" required pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM">
+        
+        <label for="tempoRede">Tempo Rede (horas):</label>
+        <input type="text" id="tempoRede" name="tempoRede" required pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM">
+        
+        <!-- Campo para selecionar "Outro" -->
+        <label for="outroTipo">Outro:</label>
+        <input type="checkbox" id="outroTipo" name="outroTipo" onclick="toggleOutroOptions()">
+        
+        <div id="outroOptions" style="display: none;">
+          <label for="outrosOPP"></label>
+          <select id="outrosOPP" name="outrosOPP" onchange="atualizarTituloTempoOutro()">
+            <option value="" hidden>Outros</option>
+            <option value="N2">N2</option>
+            <option value="SUPORTE">SUPORTE</option>
+            <option value="SWAP">SWAP</option>
+            <option value="CO-N1">CO-N1</option>
+            <option value="SOBRESSALENTE CHAMADO INTERNO">SOBRESSALENTE INTERNO</option>
+            <option value="SOBRESSALENTE FORNECEDOR">SOBRESSALENTE FORNECEDOR</option>
+            <option value="OPERACAO RF">OPERACAO RF</option>
+            <option value="OPERACAO MOVEL BACKHAUL">OPERACAO MOVEL BACKHAUL</option>
+            <option value="OPERAÇÃO BANDA LARGA">OPERAÇÃO BANDA LARGA</option>
+            <option value="OPERAÇÃO DWDM">OPERAÇÃO DWDM</option>
+            <option value="OPERAÇÃO REDE IP">OPERAÇÃO REDE IP</option>
+            <option value="N1 CAPITAL">N1 CAPITAL</option>
+            <option value="N1 SUDESTE">N1 SUDESTE</option>
+            <option value="REDE SUDESTE">REDE SUDESTE</option>
+            <option value="REDE CAPITAL">REDE CAPITAL</option>
+          </select>
+          <input type="text" id="tempoOutro" name="tempoOutro" pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM">
+        </div><br>
+        
+        <label for="nivel" style="margin-top: 5px;">Nível:</label>
+        <select id="nivel" name="nivel" required>
+          <option value="" hidden>SELECIONAR</option>
+          <option value="COORDENADOR">COORDENADOR</option>
+          <option value="GERENTE">GERENTE</option>
+          <option value="SENIOR">SENIOR</option>
+          <option value="DIRETOR">DIRETOR</option>
+        </select>
+        
+        <label for="status">Status:</label>
+        <textarea id="status" name="status" required></textarea>
+        
+        <input type="hidden" id="envio" name="envio" value="">
+        <button type="submit">Enviar</button>
+        
+        <!-- Carimbo (sem alterações) -->
+        <div class="carimbo" id="carimbo">
+          <div class="carimboTitulo" style="text-align: center;">NT-SPI 🌡️ Escalonamentos 🌡️</div>
+          <table>
+            <tr>
+              <th style="text-align: center;">Descrição</th>
+              <th style="text-align: center;">Atualização</th>
+            </tr>
+            <tr>
+              <td style="background-color: #e5e5e5; text-align: center;">Escalonamento</td>
+              <td><span id="carimboEscalonamento"></span></td>
+            </tr>
+            <tr>
+              <td style="background-color: #e5e5e5; text-align: center;">Municipio</td>
+              <td><span id="carimboMunicipio"></span></td>
+            </tr>
+            <tr>
+              <td style="background-color: #e5e5e5; text-align: center;">TA</td>
+              <td><span id="carimboTA"></span></td>
+            </tr>
+            <tr>
+              <td style="background-color: #e5e5e5; text-align: center;">Data Abertura</td>
+              <td><span id="carimboDataAbertura"></span></td>
+            </tr>
+            <tr>
+              <td style="background-color: #e5e5e5; text-align: center;">TA Raiz</td>
+              <td><span id="carimboTARaiz"></span></td>
+            </tr>
+            <tr>
+              <td style="background-color: #e5e5e5; text-align: center;">Gestor Atual</td>
+              <td><span id="carimboGestorAtual"></span></td>
+            </tr>
+            <tr>
+              <td style="background-color: #e5e5e5; text-align: center;">Tempo NOC</td>
+              <td><span id="carimboTempoNoc"></span></td>
+            </tr>
+            <tr>
+              <td style="background-color: #e5e5e5; text-align: center;">Tempo N1</td>
+              <td><span id="carimboTempoN1"></span></td>
+            </tr>
+            <tr>
+              <td style="background-color: #e5e5e5; text-align: center;">Tempo Rede</td>
+              <td><span id="carimboTempoRede"></span></td>
+            </tr>
+            <tr>
+              <td style="background-color: #e5e5e5; text-align: center;">Tempo Total (NOC, N1, Rede)</td>
+              <td><span id="carimboTempoTotal"></span></td>
+            </tr>
+            <tr id="outroRow" style="display: none;">
+              <td id="tituloTempoOutro" style="background-color: #e5e5e5; text-align: center;">Tempo Outros</td>
+              <td><span id="carimboTempoOutro"></span></td>
+            </tr>
+            <tr>
+              <td style="background-color: #e5e5e5; text-align: center;">Nível</td>
+              <td><span id="carimboNivel"></span></td>
+            </tr>
+            <tr>
+              <td style="background-color: #e5e5e5; text-align: center;">Status</td>
+              <td><span id="carimboStatus"></span></td>
+            </tr>
+            <tr>
+              <td style="background-color: #e5e5e5; text-align: center;">Envio</td>
+              <td><span id="carimboEnvio"></span></td>
+            </tr>
+            <tr>
+              <td style="background-color: #e5e5e5; text-align: center;">Tempo TA</td>
+              <td><span id="carimboTempoTA"></span></td>
+            </tr>
+          </table>
+          <div class="botoes">
+            <button id="voltar">Voltar</button>
+            
+          </div>
+        </div>
+      </form>
     </div>
   </div>
-</div>
  <script>
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -660,30 +733,3 @@ document.getElementById('voltar').addEventListener('click', function() {
       window.location.href = "HOME.html"; // Substitua com o caminho da sua página
   });
 </script>
-
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <!-- Inclui o arquivo de autenticação -->
-  <script src="auth.js"></script>
-  <script>
-    // Verifica se o usuário está autenticado ao carregar a página.
-    checkAuth();
-  </script>
-</head>
-<body>
-  <script>
-    // Função de logout
-    document.getElementById('logout').addEventListener('click', function() {
-      firebase.auth().signOut().then(function() {
-        window.location.href = "login.html";
-      });
-    });
-  </script>
-</body>
-</html>
