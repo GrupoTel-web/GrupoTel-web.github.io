@@ -1,72 +1,4491 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-	<link rel="icon" type="image/png" href="icons/nt.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verificador de DDD</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #d1d1d1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        input[type="text"] {
-            padding: 8px;
-            margin: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 300px;
-        }
-
-        button {
-            padding: 8px 16px;
-            margin: 5px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        #map {
-            height: 600px;
-            width: 100%;
-            margin-top: 20px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 1);
-            background-color:#ffffff;
-        }
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="icons/nt.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verificador de DDD</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+  <style>
+    /* Reset e configurações básicas */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    /* Header com visual moderno e cores neutras */
+    header {
+      background-color: #7a7a7a;
+      color: #fff;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    header h1 {
+      font-size: 24px;
+    }
+    .sair {
+      background-color: #606060;
+      border: none;
+      padding: 8px 12px;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+    }
+    .sair:hover {
+      background-color: #505050;
+    }
+    /* Área superior: container para busca e card de resultado */
+    .top-section {
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .search-container {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .search-container form {
+      display: flex;
+    }
+    .search-container input[type="text"] {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+      font-size: 16px;
+    }
+    .search-container button {
+      padding: 12px 20px;
+      border: none;
+      background-color: #808080;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+      transition: background 0.3s ease;
+    }
+    .search-container button:hover {
+      background-color: #696969;
+    }
+    .result-card {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #e0e0e0;
+      border-left: 4px solid #808080;
+      border-radius: 4px;
+      font-size: 16px;
+      line-height: 1.5;
+      white-space: pre-line;
+      display: none;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    /* Mapa ocupa somente a base da página */
+    #map {
+      flex: 1;
+      width: 100%;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 1);
+      background-color:#fff;
+    }
+  </style>
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
 </head>
 <body>
+ 
+  <header>
     <h1>Verificador de DDD</h1>
-    <input type="text" id="municipio" placeholder="Digite o município">
-    <button onclick="buscarDDD()">Buscar</button>
-    <p id="resultado"></p>
-    <div id="map"></div>
+    <button class="sair" onclick="window.location.href='HOME.html'">Sair</button>
+  </header>
+  
 
-    <script>
-let map;
-let marker;
+  <div class="top-section">
+    <div class="search-container">
+      <form onsubmit="event.preventDefault(); buscarDDD();">
+        <input type="text" id="municipio" placeholder="Digite o município">
+        <button type="submit">Buscar</button>
+      </form>
+      <div id="resultado" class="result-card"></div>
+    </div>
+  </div>
+  
 
-// Base JSON local
-const verificadorBase = [
+
+  <div id="map"></div>
+  
+  <script>
+
+
+   // Mapeamento de coordenadores por DDD
+   const coordenadores = {
+      "15": "Americo Gumercindo",
+      "19": "Americo Gumercindo",
+      "14": "Helena Hanawa Tanaka",
+      "18": "Helena Hanawa Tanaka",
+      "11": "Renato Farias da Silva",
+      "12": "Renato Farias da Silva",
+      "16": "Carlos Alberto Toniolli Domench",
+      "17": "Carlos Alberto Toniolli Domench"
+    };
+    
+    function carregarCache() {
+      try {
+        const data = localStorage.getItem('cache');
+        return data ? JSON.parse(data) : {};
+      } catch (err) {
+        console.error('Erro ao carregar o cache:', err);
+        return {};
+      }
+    }
+    
+    function salvarCache(cache) {
+      try {
+        localStorage.setItem('cache', JSON.stringify(cache));
+      } catch (err) {
+        console.error('Erro ao salvar o cache:', err);
+      }
+    }
+    
+    let cache = carregarCache();
+    
+    function removerAcentos(texto) {
+      return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+    
+    function buscarDDD() {
+    const municipioInput = document.getElementById('municipio').value.trim();
+    const municipio = removerAcentos(municipioInput.toLowerCase());
+    if (!municipio) return;
+    
+    const resultadoCard = document.getElementById('resultado');
+    resultadoCard.style.display = "none";
+    
+    if (cache[municipio]) {
+        const resultado = cache[municipio];
+        const coordenador = coordenadores[resultado.ddd] || "Não encontrado";
+        let infoExtra = obterCoordenadoresAdicionais(municipio);
+        resultadoCard.innerText = `Município: ${resultado.cidade}\nDDD: ${resultado.ddd}\nCoordenador N1: ${coordenador}${infoExtra}`;
+        resultadoCard.style.display = "block";
+        exibirMapa(resultado.cidade);
+        return;
+    }
+    
+    const ddds = [11, 12, 14, 15, 16, 17, 18, 19];
+    const promises = ddds.map(ddd => {
+        return new Promise((resolve, reject) => {
+            fetch(`https://brasilapi.com.br/api/ddd/v1/${ddd}`)
+                .then(response => response.json())
+                .then(data => {
+                    const cidadeExata = data.cities.find(city =>
+                        removerAcentos(city.toLowerCase()) === municipio
+                    );
+                    if (cidadeExata) {
+                        resolve({ cidade: cidadeExata, ddd: ddd });
+                    } else {
+                        reject();
+                    }
+                })
+                .catch(() => reject());
+        });
+    });
+    
+    Promise.any(promises)
+        .then(result => {
+            const coordenador = coordenadores[result.ddd] || "Não encontrado";
+            let infoExtra = obterCoordenadoresAdicionais(municipio);
+            resultadoCard.innerText = `Município: ${result.cidade}\nDDD: ${result.ddd}\nCoordenador N1: ${coordenador}${infoExtra}`;
+            resultadoCard.style.display = "block";
+            cache[municipio] = { cidade: result.cidade, ddd: result.ddd };
+            salvarCache(cache);
+            exibirMapa(result.cidade);
+        })
+        .catch(() => {
+            const municipioLocal = verificadorBase.find(item =>
+                removerAcentos(item["MUNICÍPIO"].toLowerCase()) === municipio
+            );
+            if (municipioLocal) {
+                const coordenador = coordenadores[municipioLocal["DDD"]] || "Não encontrado";
+                let infoExtra = obterCoordenadoresAdicionais(municipio);
+                resultadoCard.innerText = `Município: ${municipioLocal["MUNICÍPIO"]}\nDDD: ${municipioLocal["DDD"]}\nCoordenador N1: ${coordenador}${infoExtra}`;
+                resultadoCard.style.display = "block";
+                cache[municipio] = { cidade: municipioLocal["MUNICÍPIO"], ddd: municipioLocal["DDD"] };
+                salvarCache(cache);
+                exibirMapaLocal(municipioLocal);
+            } else {
+                resultadoCard.innerText = 'Município não encontrado.';
+                resultadoCard.style.display = "block";
+            }
+        });
+}
+
+function obterCoordenadoresAdicionais(municipio) {
+    const coordenadorExtra = coordenadoresAdicionais.find(item =>
+        removerAcentos(item.CIDADE.toLowerCase()) === municipio
+    );
+    
+    if (coordenadorExtra) {
+        return `\nCoordenador Rede: ${coordenadorExtra["Coordenador Rede"]}\n` +
+               `Supervisor EPS: ${coordenadorExtra["Supervisor EPS"]}\n` +
+               `Supervisor VIVO: ${coordenadorExtra["Supervisor VIVO"]}`;
+    }
+    return "";
+}
+
+    
+    function exibirMapa(cidade) {
+      if (!map) {
+        map = L.map('map').setView([-23.5505, -46.6333], 8);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+      }
+      fetch(`https://nominatim.openstreetmap.org/search?city=${cidade}&country=Brazil&format=json`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.length > 0) {
+            const { lat, lon } = data[0];
+            if (marker) map.removeLayer(marker);
+            marker = L.marker([lat, lon]).addTo(map).bindPopup(cidade).openPopup();
+            map.setView([lat, lon], 12);
+          }
+        });
+    }
+    
+    function exibirMapaLocal(municipioLocal) {
+      const lat = parseFloat(municipioLocal["LATITUDE"]);
+      const lon = parseFloat(municipioLocal["LONGITUDE"]);
+      if (!map) {
+        map = L.map('map').setView([lat, lon], 8);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+      }
+      if (marker) map.removeLayer(marker);
+      marker = L.marker([lat, lon]).addTo(map).bindPopup(municipioLocal["MUNICÍPIO"]).openPopup();
+      map.setView([lat, lon], 12);
+    }
+
+    
+
+    let map, marker;
+
+    const coordenadoresAdicionais = [
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Pirapora do Bom Jesus",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Araçariguama",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Santana do Parnaiba",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Barueri",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Osasco",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Carapicuíba",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Jandira",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Cotia",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Embú",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Taboão da Serra",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Itapevi",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Vargem Grande Paulista",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "São Roque",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Mairinque",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Alumínio",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia/ Jose Mauro",
+        "CIDADE": "Itapecirica da Serra",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "São Lourenço da Serra",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Embú Guaçu",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Juquitiba",
+        "Supervisor EPS": "Douglas ICOM",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Pinhalzinho",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Pedra Bela",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Vargen",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Joanópolis",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Tuiuti",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Bragança Paulista",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Morungaba",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Piracaia",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Itatiba",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Atibaia",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Jarinú",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Nazaré Paulista",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Bom Jesus dos Perdões",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Campo Limpo",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Francisco Morato",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Mairiporã",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Caieiras 8",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Franco da Rocha",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Cajamar",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Varzea Paulista",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Jundiaí",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Itupeva",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "11",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Cabreúva",
+        "Supervisor EPS": "Adeilson TEL",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Aparecida",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Arapeí",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Areias",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Bananal",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Caçapava",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Cachoeira Paulista",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Campos do Jordão",
+        "Supervisor EPS": "Ademir",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Canas",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Caraguatatuba",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Cruzeiro",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Cunha",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Guaratinguetá",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Ilhabela",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Jambeiro",
+        "Supervisor EPS": "Ademir",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Lagoinha",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Lavrinhas",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Lorena",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Monteiro Lobato",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Natividade da Serra",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Paraibuna",
+        "Supervisor EPS": "Ademir",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Pindamonhangaba",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Piquete",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Potim",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Queluz",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Redenção da Serra",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Roseira",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Santa Branca",
+        "Supervisor EPS": "Ademir",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Santo Antônio do Pinhal",
+        "Supervisor EPS": "Ademir",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "São Bento do Sapucaí",
+        "Supervisor EPS": "Ademir",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "São José do Barreiro",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "São José dos Campos",
+        "Supervisor EPS": "Ademir",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "São Luiz do Paraitinga",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "São Sebastião",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Silveiras",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Taubaté",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Tremembé",
+        "Supervisor EPS": "Ademir",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "12",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Ubatuba",
+        "Supervisor EPS": "Alexandre",
+        "Supervisor VIVO": "Moises"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Águas de Santa Bárbara",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Agudos",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Álvaro de Carvalho",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Alvinlândia",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Anhembi",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Arandu",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Arco-Íris",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Arealva",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Areiópolis",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Avaí",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Avaré",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Balbinos",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Bariri",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Barra Bonita",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Bastos",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Bauru",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Bernardino de Campos",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Bocaina",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Bofete",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Boracéia",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Borebi",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro",
+        "CIDADE": "Botucatu",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Brotas",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cabrália Paulista",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cafelândia",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Campos Novos Paulista",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Canitar",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cerqueira César",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Chavantes",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Conchas",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Coronel Macedo",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Dois Córregos",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Duartina",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Espírito Santo do Turvo",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Fartura",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Fernão",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Gália",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Garça",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Getulina",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guaiçara",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guaimbê",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guarantã",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Herculândia",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Iacanga",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Iacri",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Iaras",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ibirarema",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Igaraçu do Tietê",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ipaussu",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itaí",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itaju",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itapuí",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itatinga",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Jaú",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Júlio Mesquita",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Lençóis Paulista",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Lins",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Lucianópolis",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Lupércio",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Macatuba",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Manduri",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Marília",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Mineiros do Tietê",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ocauçu",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Óleo",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Oriente",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Oscar Bressane",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ourinhos",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Paranapanema",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pardinho",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Paulistânia",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pederneiras",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pereiras",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Piraju",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pirajuí",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Piratininga",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pompéia",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pongaí",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pratânia",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Presidente Alves",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Promissão",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Queiroz",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Quintana",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Reginópolis",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ribeirão do Sul",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Sabino",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Salto Grande",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santa Cruz do Rio Pardo",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "São Manuel",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "São Pedro do Turvo",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Sarutaiá",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Taguaí",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Taquarituba",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Tejupá",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Timburi",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Torrinha",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Tupã",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ubirajara",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Uru",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "14",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Vera Cruz",
+        "Supervisor EPS": "Eduardo",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Alambari",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Angatuba",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Apiaí",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Aracoiaba da Serra",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Barão de Antonina",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Barra do Chapéu",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Barra do Turvo",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Boituva",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Bom Sucesso de Itararé",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Buri",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Campina do Monte Alegre",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Capão Bonito",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Capela do Alto",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cerquilho",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cesário Lange",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guapiara",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guareí",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ibiúna",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Iperó",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Iporanga",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itaberá",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itaoca",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itapetininga",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itapeva",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itapirapuã Paulista",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itaporanga",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itararé",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Jumirim",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Laranjal Paulista",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Nova Campina",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Piedade",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pilar do Sul",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Porangaba",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Porto Feliz",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Quadra",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ribeira",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ribeirão Branco",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ribeirão Grande",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Riversul",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Salto de Pirapora",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "São Miguel Arcanjo",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Sarapuí",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Sorocaba",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Tapiraí",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Taquarivaí",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Tatuí",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Tietê",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Torre de Pedra",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "15",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Votorantim",
+        "Supervisor EPS": "Wellington",
+        "Supervisor VIVO": "Adilson Manoel"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Altinópolis",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Américo Brasiliense",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Aramina",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Araraquara",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Barrinha",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Batatais",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Boa Esperança do Sul",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Borborema",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Brodowski",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Buritizal",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cajuru",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cândido Rodrigues",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cássia dos Coqueiros",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cravinhos",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cristais Paulista",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Dobrada",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Dourado",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Dumont",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Fernando Prestes",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Franca",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Gavião Peixoto",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guará",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guariba",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guatapara",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ibaté",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ibitinga",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Igarapava",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ipuã",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itápolis",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itirapuã",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ituverava",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Jaboticabal",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Jardinópolis",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Jeriquara",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Luiz Antônio",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Matão",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Miguelópolis",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Monte Alto",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Morro Agudo",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Motuca",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Nova Europa",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Nuporanga",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Orlândia",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Patrocínio Paulista",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pedregulho",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pitangueiras",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pontal",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pradópolis",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Restinga",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ribeirão Bonito",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ribeirão Corrente",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ribeirão Preto",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Rifaina",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Rincão",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Sales Oliveira",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santa Cruz da Esperança",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santa Ernestina",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santa Lúcia",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santa Rosa de Viterbo",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santo Antônio da Alegria",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "São Carlos",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "São Joaquim da Barra",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "São José da Bela Vista",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "São Simão",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Serra Azul",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Serrana",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Sertãozinho",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Tabatinga",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Taiaçu",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Taiúva",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Taquaral",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Taquaritinga",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Trabiju",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "16",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Vista Alegre do Alto",
+        "Supervisor EPS": "Alencar",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Adolfo",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Altair",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Álvares Florence",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Américo de Campos",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Aparecida D’Oeste",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ariranha",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Aspásia",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Auriflama",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Bady Bassitt",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Bálsamo",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Barretos",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Bebedouro",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cajobi",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cardoso",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Catanduva",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Catiguá",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cedral",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Colina",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Colômbia",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cosmorama",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Dirce Reis",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Dolcinópolis",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Elisiário",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Embaúba",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Estrela D’Oeste",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Fernandópolis",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Floreal",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Gastão Vidigal",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "General Salgado",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guaíra",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guapiaçu",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guaraci",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guarani D’Oeste",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guzolândia",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ibirá",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Icém",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Indiaporã",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ipiguá",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Irapuã",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itajobi",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Jaborandi",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Jaci",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Jales",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "José Bonifácio",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Macaubal",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Macedônia",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Magda",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Marapoama",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Marinópolis",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Mendonça",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Meridiano",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Mesópolis",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Mira Estrela",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Mirassol",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Mirassolândia",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Monções",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Monte Aprazível",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Monte Azul Paulista",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Neves Paulista",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Nhandeara",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Nipoã",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Nova Aliança",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Nova Canaã Paulista",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Nova Castilho",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Nova Granada",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Nova Luzitânia",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Novais",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Novo Horizonte",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro",
+        "CIDADE": "Olimpia",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Onda Verde",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Orindiúva",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ouroeste",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Palestina",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Palmares Paulista",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Palmeira D’Oeste",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Paraíso",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Paranapuã",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Parisi",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Paulo de Faria",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pedranópolis",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pindorama",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pirangi",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Poloni",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pontalinda",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pontes Gestal",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Populina",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Potirendaba",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Riolândia",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Rubineia",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Sales",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santa Adélia",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santa Albertina",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santa Clara D’Oeste",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santa Fé do Sul",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santa Rita D’Oeste",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santa Salete",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santana da Ponte Pensa",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "São Francisco",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "São João das Duas Pontes",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "São João de Iracema",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "São José do Rio Preto",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Sebastianópolis do Sul",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Severínia",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Tabapuã",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Tanabi",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Terra Roxa",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Três Fronteiras",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Turmalina",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ubarana",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Uchoa",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "União Paulista",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Urânia",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Urupês",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Valentim Gentil",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Viradouro",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Vitória Brasil",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "17",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Votuporanga",
+        "Supervisor EPS": "Elizeu  Ferias / Alex Alves ",
+        "Supervisor VIVO": "Paselo"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Adamantina",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Adamantina",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Alto Alegre",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Álvares Machado",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Andradina",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Anhumas",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Araçatuba",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Assis",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Avanhandava",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Barbosa",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Bento de Abreu",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Bilac",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Birigui",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Bora",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Braúna",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Brejo Alegre",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Buritama",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Caiabu",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Caiuá",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cândido Mota",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Castilho",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Clementina",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Coroados",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Cruzália",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Dracena",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Echapora",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Emilianópolis",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Estrela do Norte",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Euclides da Cunha Paulista",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Flora Rica",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Flórida Paulista",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Florínia",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Gabriel Monteiro",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Glicério",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guaraçaí",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Guararapes",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Iepê",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ilha Solteira",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Indiana",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Inúbia Paulista",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Irapuru",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Itapura",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "João Ramalho",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Junqueirópolis",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Lavínia",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Lourdes",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Lucélia",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Luiziânia",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Lutécia",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Marabá Paulista",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Maracaí",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Mariapolis",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Martinópolis",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Mirandópolis",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Mirante do Paranapanema",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Monte Castelo",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Murutinga do Sul",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Nantes",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Narandiba",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Nova Guataporanga",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Nova Independência",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Osvaldo Cruz",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ouro Verde",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pacaembu",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Palmital",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Panorama",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Paraguaçu Paulista",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Parapuã",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Paulicéia",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pedrinhas Paulista",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Penápolis",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pereira Barreto",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Piacatu",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Piquerobi",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pirapozinho",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Planalto",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Platinha",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Pracinha",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Presidente Bernardes",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Presidente Epitácio",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Presidente Prudente",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Presidente Venceslau",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Quatá",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Rancharia",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Regente Feijó",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Ribeirão dos Índios",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Rinópolis",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Rosana",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Rubiácea",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Sagres",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Salmourão",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Sandovalina",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santa Mercedes",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santo Anastácio",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santo Antônio do Aracanguá",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santo Expedito",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Santópolis do Aguapeí",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "São João do Pau D’Alho",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Sud Mennucci",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Suzanópolis",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Taciba",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Tarabai",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Tarumã",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Teodoro Sampaio",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Tupi Paulista",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Turiúba",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Valparaíso",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "18",
+        "Coordenador Rede": "Jose Mauro/Adilson",
+        "CIDADE": "Zacarias",
+        "Supervisor EPS": "Euclides",
+        "Supervisor VIVO": "Mazoni"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Aguaí",
+        "Supervisor EPS": "Márcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Águas da Prata",
+        "Supervisor EPS": "Márcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Águas de Lindóia",
+        "Supervisor EPS": "Márcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Águas de São Pedro",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Americana",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Amparo",
+        "Supervisor EPS": "Márcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Analândia",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Araras",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Artur Nogueira",
+        "Supervisor EPS": "Márcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Caconde",
+        "Supervisor EPS": "Márcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Campinas",
+        "Supervisor EPS": "Alexon",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Capivari",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Casa Branca",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Charqueada",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Conchal",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Cordeirópolis",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Corumbataí",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Cosmópolis",
+        "Supervisor EPS": "Alexon",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Descalvado",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Divinolândia",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Elias Fausto",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Elias Fausto",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Espírito Santo do Pinhal",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Estiva Gerbi",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Holambra",
+        "Supervisor EPS": "Alexon",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Hortolândia",
+        "Supervisor EPS": "Alexon",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Indaiatuba",
+        "Supervisor EPS": "Alexon",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Ipeúna",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Iracemápolis",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Itapira",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Itirapina",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Itobi",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Jaguariúna",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Leme",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Limeira",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Lindóia",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Louveira",
+        "Supervisor EPS": "Alexon",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Mococa",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Mogi Guaçu",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Mogi-Mirim",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Mombuca",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Monte Alegre do Sul",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Monte Mor",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Nova Odessa",
+        "Supervisor EPS": "Alexon",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Paulínia",
+        "Supervisor EPS": "Alexon",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Pedreira",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Piracicaba",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Pirassununga",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Porto Ferreira",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Rafard",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Rio Claro",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Rio das Pedras",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Saltinho",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Santa Barbara D’Oeste",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Santa Cruz da Conceição",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Santa Cruz das Palmeiras",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Santa Gertrudes",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Santa Maria da Serra",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Santa Rita do Passa Quatro",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Santo Antônio de Posse",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Santo Antônio do Jardim",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "São João da Boa Vista",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "São José do Rio Pardo",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "São Pedro",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "São Sebastião da Grama",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Serra Negra",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Socorro",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Sumaré",
+        "Supervisor EPS": "Alexon",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Tambaú",
+        "Supervisor EPS": "Jeferson",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Tapiratiba",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Valinhos",
+        "Supervisor EPS": "Alexon",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Vargem Grande do Sul",
+        "Supervisor EPS": "Marcio",
+        "Supervisor VIVO": "Camilo"
+    },
+    {
+        "DDD": "19",
+        "Coordenador Rede": "Quinalia",
+        "CIDADE": "Vinhedo",
+        "Supervisor EPS": "Alexon",
+        "Supervisor VIVO": "Camilo"
+    }
+];
+    
+    // Base JSON local (exemplo)
+    const verificadorBase = [
     {
         "MUNICÍPIO": "BAURU",
         "DDD": "14",
@@ -6427,184 +10846,9 @@ const verificadorBase = [
         "LONGITUDE": "-51.1803",
         "ALTITUDE": "386"
     }
-];
-
-
-// Mapeamento de coordenadores por DDD
-const coordenadores = {
-    "15": "Americo Gumercindo",
-    "19": "Americo Gumercindo",
-    "14": "Helena Hanawa Tanaka",
-    "18": "Helena Hanawa Tanaka",
-    "11": "Renato Farias da Silva",
-    "12": "Renato Farias da Silva",
-    "16": "Carlos Alberto Toniolli Domench",
-    "17": "Carlos Alberto Toniolli Domench"
-};
-
-function carregarCache() {
-    try {
-        const data = localStorage.getItem('cache');
-        return data ? JSON.parse(data) : {};
-    } catch (err) {
-        console.error('Erro ao carregar o cache:', err);
-        return {};
-    }
-}
-
-function salvarCache(cache) {
-    try {
-        localStorage.setItem('cache', JSON.stringify(cache));
-    } catch (err) {
-        console.error('Erro ao salvar o cache:', err);
-    }
-}
-
-let cache = carregarCache();
-
-function removerAcentos(texto) {
-    return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-}
-
-function buscarDDD() {
-    const municipio = removerAcentos(document.getElementById('municipio').value.trim().toLowerCase());
-
-    if (cache[municipio]) {
-        const resultado = cache[municipio];
-        const coordenador = coordenadores[resultado.ddd] || "Não encontrado";
-        document.getElementById('resultado').innerText = `Município: ${resultado.cidade}, DDD: ${resultado.ddd}, Coordenador N1: ${coordenador}`;
-        exibirMapa(resultado.cidade);
-        return;
-    }
-
-    const ddds = [11, 12, 14, 15, 16, 17, 18, 19];
-
-    const promises = ddds.map(ddd => {
-        return new Promise((resolve, reject) => {
-            fetch(`https://brasilapi.com.br/api/ddd/v1/${ddd}`)
-                .then(response => response.json())
-                .then(data => {
-                    const cidadeExata = data.cities.find(city =>
-                        removerAcentos(city.toLowerCase()) === municipio
-                    );
-                    if (cidadeExata) {
-                        resolve({ cidade: cidadeExata, ddd: ddd });
-                    } else {
-                        reject();
-                    }
-                })
-                .catch(() => reject());
-        });
-    });
-
-    Promise.any(promises)
-        .then(result => {
-            const coordenador = coordenadores[result.ddd] || "Não encontrado";
-            document.getElementById('resultado').innerText = `Município: ${result.cidade}, DDD: ${result.ddd}, Coordenador N1: ${coordenador}`;
-            cache[municipio] = { cidade: result.cidade, ddd: result.ddd };
-            salvarCache(cache);
-            exibirMapa(result.cidade);
-        })
-        .catch(() => {
-            // Quando não encontrar na API, procurar na base local
-            const municipioLocal = verificadorBase.find(item =>
-                removerAcentos(item["MUNICÍPIO"].toLowerCase()) === municipio
-            );
-
-            if (municipioLocal) {
-                const coordenador = coordenadores[municipioLocal["DDD"]] || "Não encontrado";
-                document.getElementById('resultado').innerText = `Município: ${municipioLocal["MUNICÍPIO"]}, DDD: ${municipioLocal["DDD"]}, Coordenador N1: ${coordenador}`;
-                cache[municipio] = { cidade: municipioLocal["MUNICÍPIO"], ddd: municipioLocal["DDD"] };
-                salvarCache(cache);
-                exibirMapaLocal(municipioLocal);
-            } else {
-                document.getElementById('resultado').innerText = 'Município não encontrado.';
-            }
-        });
-}
-
-function exibirMapa(cidade) {
-    if (!map) {
-        map = L.map('map').setView([-23.5505, -46.6333], 8);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-    }
-
-    fetch(`https://nominatim.openstreetmap.org/search?city=${cidade}&country=Brazil&format=json`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.length > 0) {
-                const { lat, lon } = data[0];
-                if (marker) {
-                    map.removeLayer(marker);
-                }
-                marker = L.marker([lat, lon]).addTo(map).bindPopup(cidade).openPopup();
-                map.setView([lat, lon], 12);
-            }
-        });
-}
-
-function exibirMapaLocal(municipioLocal) {
-    const lat = parseFloat(municipioLocal["LATITUDE"]);
-    const lon = parseFloat(municipioLocal["LONGITUDE"]);
-
-    if (!map) {
-        map = L.map('map').setView([lat, lon], 8);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-    }
-
-    if (marker) {
-        map.removeLayer(marker);
-    }
-    marker = L.marker([lat, lon]).addTo(map).bindPopup(municipioLocal["MUNICÍPIO"]).openPopup();
-    map.setView([lat, lon], 12);
-}
-</script>
+]
+    
+  
+  </script>
 </body>
 </html>
-
-
-<div class="sair">
-    <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
-    <span>Sair</span>
-</div>
-
-<style>
-    .sair {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        z-index: 9999; /* Fica sempre no topo */
-        background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
-        padding: 5px;
-        border-radius: 8px;
-    }
-
-    .icone-porta {
-        width: 30px;
-        height: 30px;
-        margin-right: 5px;
-    }
-
-    .sair span {
-        font-size: 18px;
-        font-weight: bold;
-    }
-
-    .sair:hover {
-        opacity: 0.8;
-    }
-</style>
-
-<script>
-    document.querySelector('.sair').addEventListener('click', function() {
-        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
-    });
-</script>
-    
