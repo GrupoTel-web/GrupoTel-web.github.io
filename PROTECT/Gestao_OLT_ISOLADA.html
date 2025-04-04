@@ -215,7 +215,7 @@ td {
 </div><br/><br/>
 <div class="chart-container">
 <div class="chart-table">
-<div class="chart-title">OLT's ISOLADA A</div>
+<div class="chart-title">OLT's ISOLADA</div>
 <canvas class="chart" id="doughnutChart"></canvas>
 <div class="values-container">
 <div class="value-box ok-box" id="okValue">OK: 715</div>
@@ -553,32 +553,4 @@ document.addEventListener("DOMContentLoaded", function () {
       window.location.href = "HOME.html"; // Substitua com o caminho da sua página
   });
 </script>
-
-
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <!-- Inclui o arquivo de autenticação -->
-  <script src="auth.js"></script>
-  <script>
-    // Verifica se o usuário está autenticado ao carregar a página.
-    checkAuth();
-  </script>
-</head>
-<body>
-  <script>
-    // Função de logout
-    document.getElementById('logout').addEventListener('click', function() {
-      firebase.auth().signOut().then(function() {
-        window.location.href = "login.html";
-      });
-    });
-  </script>
-</body>
-</html>
 

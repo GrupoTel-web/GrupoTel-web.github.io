@@ -7,83 +7,181 @@
     <link rel="icon" type="image/png" href="icons/nt.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        /* Global */
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color:#70dbc4;
+          font-family: 'Poppins', sans-serif;
+          background-color: #70dbc4;
+          margin: 0;
+          padding: 20px;
         }
+        /* Container principal */
+        .container-principal {
+          background-color: #fff;
+          border-radius: 15px;
+          padding: 20px;
+          margin: 20px auto;
+          width: 90%;
+          max-width: 1200px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 1);
+        }
+        /* Container de formulário */
         .container {
-            border: 2px solid #000;
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #f9f9f9;
+          background-color: #f9f9f9;
+          padding: 20px;
+          max-width: 600px;
+          margin: 0 auto;
+          border-radius: 8px;
         }
+        /* Título */
         .titulo {
-            background-color: #70dbc4; /* Roxo mais claro */
-            color: #fff; /* Branco */
-            padding: 10px;
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 20px;
+          background-color: #70dbc4;
+          color: #fff;
+          padding: 10px;
+          text-align: center;
+          font-size: 1.5em;
+          margin-bottom: 20px;
+          border-radius: 8px 8px 0 0;
         }
-        .carimbo {
-            border: 2px solid #000;
-            margin-top: 20px;
-            display: none;
+        /* Estilo do formulário */
+        form label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
         }
-        .carimboTitulo {
-            background-color: #70dbc4; /* Roxo mais claro */
-            color: #fff; /* Branco */
-            padding: 10px;
-            text-align: center;
-            font-size: 1.2em;
-            margin-bottom: 10px;
+        form input[type="text"],
+        form input[type="datetime-local"],
+        form select,
+        form textarea {
+          width: 100%;
+          padding: 8px;
+          margin-bottom: 15px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          box-sizing: border-box;
+          transition: border-color 0.3s ease;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        form input[type="text"]:focus,
+        form input[type="datetime-local"]:focus,
+        form select:focus,
+        form textarea:focus {
+          border-color: #70dbc4;
+          outline: none;
         }
-        table, th, td {
-            border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+        form button {
+          background-color: #70dbc4;
+          color: #fff;
+          border: none;
+          padding: 10px 20px;
+          cursor: pointer;
+          border-radius: 8px;
+          font-size: 16px;
+          transition: background-color 0.3s ease;
+          margin-top: 10px;
         }
-        th, td {
-            padding: 8px;
-            text-align: left;
+        form button:hover {
+          background-color: #5cbca9;
         }
-        th {
-            background-color: #70dbc4; /* Roxo mais claro */
-            color: #fff; /* Branco */
+        /* Tabela externa */
+        .tabela-container-1 {
+          width: 90vw;
+          max-width: 100%;
+          overflow-x: auto;
+          border: 1px solid #d3d3d3;
+          background: #fff;
+          padding: 0;
+          margin: 0 auto 20px;
+          font-size: 10px;
+          font-weight: bold;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        td {
-            background-color: #fff; /* Branco */
+        .tabela-container-1 table {
+          width: 100%;
+          border-collapse: collapse;
         }
-        textarea {
-            width: 100%;
-            height: 100px;
+        .tabela-container-1 th,
+        .tabela-container-1 td {
+          border: 3px solid #d3d3d3;
+          padding: 8px;
+          text-align: left;
         }
+        .tabela-container-1 th {
+          background-color: #70dbc4;
+          color: #fff;
+          text-align: center;
+          vertical-align: middle;
+        }
+        /* Botões gerais */
         .botoes {
-            margin-top: 20px;
+          margin-top: 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
         }
         .botoes button {
-            margin-right: 10px;
+          background-color: #70dbc4;
+          color: #fff;
+          border: none;
+          padding: 6px 40px;
+          cursor: pointer;
+          border-radius: 8px;
+          font-size: 16px;
+          transition: background-color 0.3s ease;
         }
-        .container-principal {
-        background-color: #fff; /* Fundo branco */
-        border-radius: 15px; /* Bordas arredondadas */
-        padding: 20px; /* Espaçamento interno */
-        margin: 20px auto; /* Centraliza o container */
-        width: 90%; /* Largura responsiva */
-        max-width: 1200px; /* Limita a largura máxima */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
+        .botoes button:hover {
+          background-color: #5cbca9;
         }
-    </style>
-</head>
-<body>
-    <div class="container-principal">
-    <div class="container">
-        <div class="titulo">NT - SPI 🏢 CIRCUITO FRANQUIA AXT DOWN 🏢 </div>
-        <h1>Formulário</h1>
-        <form id="meuFormulario">
+        /* Estilo do Carimbo */
+        .carimbo {
+          border: 4px solid #70dbc4;
+          padding: 10px;
+          margin-top: 20px;
+          display: none;
+          width: 600px;
+          border-radius: 14px;
+          background: linear-gradient(#73e2ca, #5cbca9);
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .carimboTitulo {
+          background-color: #70dbc4;
+          color: #fff;
+          padding: 10px;
+          text-align: center;
+          font-size: 1.2em;
+          margin-bottom: 10px;
+          border-radius: 8px 8px 0 0;
+        }
+        .carimbo table {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 3px;
+        }
+        .carimbo th,
+        .carimbo td {
+          padding: 8px;
+          text-align: left;
+          border: 3px solid #70dbc4;
+          border-radius: 14px;
+          font-weight: 200;
+        }
+        .carimbo th {
+          background-color: #70dbc4;
+          color: #fff;
+          font-weight: bold;
+        }
+        .carimbo td {
+          background-color: #fff;
+          border: 2px solid #5cbca9;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container-principal">
+         <div class="container">
+          <div class="titulo">NT - SPI 🏢 CIRCUITO FRANQUIA AXT DOWN 🏢</div>
+          <h1>Formulário</h1>
+          <form id="meuFormulario">
             <label for="franquia">FRANQUIA:</label>
             <select id="franquia" name="franquia" required>
                 <option value="" hidden>SELECIONE</option>
@@ -127,68 +225,73 @@
                 <option value="AXT - PINDORAMA x SANTA ADELIA - PPAL">AXT - PINDORAMA x SANTA ADELIA - PPAL</option>
                 <option value="AXT - PINDORAMA x SANTA ADELIA - BCKP">AXT - PINDORAMA x SANTA ADELIA - BCKP</option>
                 <option value="AXT - PITANGUEIRAS PPAL x ARARAQUARA">AXT - PITANGUEIRAS PPAL x ARARAQUARA</option>
-                                        <option value="AXT - PITANGUEIRAS BCKP x ARARAQUARA">AXT - PITANGUEIRAS BCKP x ARARAQUARA</option>
-                                    <option value="AXT - PORTO FERREIRA - PPAL">AXT - PORTO FERREIRA - PPAL</option>
-                                    <option value="AXT - PORTO FERREIRA - BCKP">AXT - PORTO FERREIRA - BCKP</option>
-                                    <option value="AXT - RIO DAS PEDRAS-SP - PPAL x MONTE MOR">AXT - RIO DAS PEDRAS-SP - PPAL x MONTE MOR</option>
-                                    <option value="AXT - RIO DAS PEDRAS-SP - BCKP x MONTE MOR">AXT - RIO DAS PEDRAS-SP - BCKP x MONTE MOR</option>
-                                    <option value="AXT - STA CRUZ DAS PALMEIRAS - PPAL x AGUAI">AXT - STA CRUZ DAS PALMEIRAS - PPAL x AGUAI</option>
-                                    <option value="AXT - STA CRUZ DAS PALMEIRAS - BCKP x PORTO FERREIRA">AXT - STA CRUZ DAS PALMEIRAS - BCKP x PORTO FERREIRA</option>
-                                    <option value="AXT - SAO PEDRO - PPAL">AXT - SAO PEDRO - PPAL</option>
-                                    <option value="AXT - SAO PEDRO - BCKP">AXT - SAO PEDRO - BCKP</option>
-                                    <option value="AXT - STA RITA PASSA QUATRO - BCKP x PORTO FERREIRA">AXT - STA RITA PASSA QUATRO - BCKP x PORTO FERREIRA</option>
-                                    <option value="AXT - STA RITA PASSA QUATRO - PPAL x AGUAI">AXT - STA RITA PASSA QUATRO - PPAL x AGUAI</option>
-                                    <option value="AXT - TAQUARITINGA - PPAL">AXT - TAQUARITINGA - PPAL</option>
-                                    <option value="AXT - TAQUARITINGA - BCKP">AXT - TAQUARITINGA - BCKP</option>
-                                    <option value="AXT - VARGEM GRANDE PAULISTA - PPAL">AXT - VARGEM GRANDE PAULISTA - PPAL</option>
-                                    <option value="AXT - VARGEM GRANDE PAULISTA - BCKP">AXT - VARGEM GRANDE PAULISTA - BCKP</option>
-                                    <option value="AXT - VARGEM GRANDE DO SUL PPAL x AGUAI">AXT - VARGEM GRANDE DO SUL PPAL x AGUAI</option>
-                                    <option value="AXT - VARGEM GRANDE DO SUL BCKP x PORTO FERREIRA">AXT - VARGEM GRANDE DO SUL BCKP x PORTO FERREIRA</option>
-                                </select><br><br>
-                                <label for="bd">BD:</label>
-                                <input type="text" id="bd" name="bd" required><br><br>
-                                <label for="ta">TA:</label>
-                                <input type="text" id="ta" name="ta" required><br><br>
-                                <label for="dataTA">DATA TA:</label>
-                                <input type="datetime-local" id="dataTA" name="dataTA" required><br><br>
-                                <label for="status">STATUS:</label>
-                                <textarea id="status" name="status" required></textarea><br><br>
-                                <button type="submit">Enviar</button>
-                            </form>
-                            <div class="carimbo" id="carimbo">
-                                <div class="carimboTitulo">NT-SPI  🏢 CIRCUITO FRANQUIA AXT DOWN 🏢</div>
-                                <table>
-                                    <tr>
-                                        <th>Descrição</th>
-                                        <th>Atualização</th>
-                                    </tr>
-                                    <tr>
-                                        <td>FRANQUIA</td>
-                                        <td><span id="carimboFranquia"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>TA</td>
-                                        <td><span id="carimboTA"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>BD</td>
-                                        <td><span id="carimboBD"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>DATA TA</td>
-                                        <td><span id="carimboDataTA"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>STATUS</td>
-                                        <td><span id="carimboStatus"></span></td>
-                                    </tr>
-                                </table>
-                                <div class="botoes">
-                                    <button id="voltar">Voltar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <option value="AXT - PITANGUEIRAS BCKP x ARARAQUARA">AXT - PITANGUEIRAS BCKP x ARARAQUARA</option>
+                <option value="AXT - PORTO FERREIRA - PPAL">AXT - PORTO FERREIRA - PPAL</option>
+                <option value="AXT - PORTO FERREIRA - BCKP">AXT - PORTO FERREIRA - BCKP</option>
+                <option value="AXT - RIO DAS PEDRAS-SP - PPAL x MONTE MOR">AXT - RIO DAS PEDRAS-SP - PPAL x MONTE MOR</option>
+                <option value="AXT - RIO DAS PEDRAS-SP - BCKP x MONTE MOR">AXT - RIO DAS PEDRAS-SP - BCKP x MONTE MOR</option>
+                <option value="AXT - STA CRUZ DAS PALMEIRAS - PPAL x AGUAI">AXT - STA CRUZ DAS PALMEIRAS - PPAL x AGUAI</option>
+                <option value="AXT - STA CRUZ DAS PALMEIRAS - BCKP x PORTO FERREIRA">AXT - STA CRUZ DAS PALMEIRAS - BCKP x PORTO FERREIRA</option>
+                <option value="AXT - SAO PEDRO - PPAL">AXT - SAO PEDRO - PPAL</option>
+                <option value="AXT - SAO PEDRO - BCKP">AXT - SAO PEDRO - BCKP</option>
+                <option value="AXT - STA RITA PASSA QUATRO - BCKP x PORTO FERREIRA">AXT - STA RITA PASSA QUATRO - BCKP x PORTO FERREIRA</option>
+                <option value="AXT - STA RITA PASSA QUATRO - PPAL x AGUAI">AXT - STA RITA PASSA QUATRO - PPAL x AGUAI</option>
+                <option value="AXT - TAQUARITINGA - PPAL">AXT - TAQUARITINGA - PPAL</option>
+                <option value="AXT - TAQUARITINGA - BCKP">AXT - TAQUARITINGA - BCKP</option>
+                <option value="AXT - VARGEM GRANDE PAULISTA - PPAL">AXT - VARGEM GRANDE PAULISTA - PPAL</option>
+                <option value="AXT - VARGEM GRANDE PAULISTA - BCKP">AXT - VARGEM GRANDE PAULISTA - BCKP</option>
+                <option value="AXT - VARGEM GRANDE DO SUL PPAL x AGUAI">AXT - VARGEM GRANDE DO SUL PPAL x AGUAI</option>
+                <option value="AXT - VARGEM GRANDE DO SUL BCKP x PORTO FERREIRA">AXT - VARGEM GRANDE DO SUL BCKP x PORTO FERREIRA</option>
+            </select>
+            
+            <label for="bd">BD:</label>
+            <input type="text" id="bd" name="bd" required>
+            
+            <label for="ta">TA:</label>
+            <input type="text" id="ta" name="ta" required>
+            
+            <label for="dataTA">DATA TA:</label>
+            <input type="datetime-local" id="dataTA" name="dataTA" required>
+            
+            <label for="status">STATUS:</label>
+            <textarea id="status" name="status" required></textarea>
+            
+            <button type="submit">Enviar</button>
+          </form>
+          <div class="carimbo" id="carimbo">
+            <div class="carimboTitulo">NT - SPI 🏢 CIRCUITO FRANQUIA AXT DOWN 🏢</div>
+            <table>
+              <tr>
+                <th  style="text-align: center; white-space: nowrap;">Descrição</th>
+                <th  style="text-align: center; white-space: nowrap;">Atualização</th>
+              </tr>
+              <tr>
+                <td  style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">FRANQUIA</td>
+                <td><span id="carimboFranquia"></span></td>
+              </tr>
+              <tr>
+                <td  style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">TA</td>
+                <td><span id="carimboTA"></span></td>
+              </tr>
+              <tr>
+                <td  style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">BD</td>
+                <td><span id="carimboBD"></span></td>
+              </tr>
+              <tr>
+                <td  style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">DATA TA</td>
+                <td><span id="carimboDataTA"></span></td>
+              </tr>
+              <tr>
+                <td  style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">STATUS</td>
+                <td><span id="carimboStatus"></span></td>
+              </tr>
+            </table>
+            <div class="botoes">
+              <button id="voltar">Voltar</button>
+            </div>
+          </div>
+        </div>
+      </div>
                         <script>
                             document.getElementById('meuFormulario').addEventListener('submit', function(event) {
                                 event.preventDefault();
@@ -263,30 +366,4 @@
         window.location.href = "HOME.html"; // Substitua com o caminho da sua página
     });
   </script>
-
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <!-- Inclui o arquivo de autenticação -->
-  <script src="auth.js"></script>
-  <script>
-    // Verifica se o usuário está autenticado ao carregar a página.
-    checkAuth();
-  </script>
-</head>
-<body>
-  <script>
-    // Função de logout
-    document.getElementById('logout').addEventListener('click', function() {
-      firebase.auth().signOut().then(function() {
-        window.location.href = "login.html";
-      });
-    });
-  </script>
-</body>
-</html>
+  

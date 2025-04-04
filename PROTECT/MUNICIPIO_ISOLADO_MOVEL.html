@@ -8,172 +8,263 @@
     <title>Formulário com Carimbo</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        /* Global */
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #380450;
+          font-family: 'Poppins', sans-serif;
+          background-color: #380450;
+          margin: 0;
+          padding: 20px;
         }
+        /* Container principal */
+        .container-principal {
+          background-color: #fff;
+          border-radius: 15px;
+          padding: 20px;
+          margin: 20px auto;
+          width: 90%;
+          max-width: 1200px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        /* Container padrão */
         .container {
-            border: 2px solid #000;
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #f9f9f9;
+          background-color: #f9f9f9;
+          padding: 20px;
+          max-width: 600px;
+          margin: 0 auto 50px;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .titulo {
-            background-color: #380450; /* Roxo */
-            color: #fff; /* Branco */
-            padding: 10px;
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 20px;
+        /* Títulos */
+        .titulo, .carimboTitulo {
+          background-color: #380450;
+          color: #fff;
+          padding: 10px;
+          text-align: center;
+          font-size: 1.5em;
+          margin-bottom: 20px;
+          border-radius: 8px 8px 0 0;
         }
-        .carimbo {
-            border: 2px solid #000;
-            padding: 10px;
-            margin-top: 20px;
-            display: none;
+        /* Estilo dos formulários */
+        form label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
         }
-        .carimboTitulo {
-            background-color: #380450; /* Roxo */
-            color: #fff; /* Branco */
-            padding: 10px;
-            text-align: center;
-            font-size: 1.2em;
-            margin-bottom: 10px;
+        form input[type="number"],
+        form input[type="text"],
+        form input[type="datetime-local"],
+        form select,
+        form textarea {
+          width: 100%;
+          padding: 8px;
+          margin-bottom: 15px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          box-sizing: border-box;
+          transition: border-color 0.3s ease;
+          }
+        form input[type="text"]:focus,
+        form input[type="datetime-local"]:focus,
+        form select:focus,
+        form textarea:focus {
+          border-color: #380450;
+          outline: none;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        form button {
+          background-color: #380450;
+          color: #fff;
+          border: none;
+          padding: 10px 20px;
+          cursor: pointer;
+          border-radius: 8px;
+          font-size: 16px;
+          transition: background-color 0.3s ease;
+          margin-top: 10px;
         }
-        table, th, td {
-            border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+        form button:hover {
+          background-color: #2d0338;
         }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #380450; /* Roxo */
-            color: #fff; /* Branco */
-        }
-        td {
-            background-color: #fff; /* Branco */
-        }
-        textarea {
-            width: 100%;
-            height: 100px;
-        }
+        /* Botões gerais */
         .botoes {
-            margin-top: 20px;
+          margin-top: 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
         }
         .botoes button {
-            margin-right: 10px;
+          background-color: #380450;
+          color: #fff;
+          border: none;
+          padding: 6px 40px;
+          cursor: pointer;
+          border-radius: 8px;
+          font-size: 16px;
+          transition: background-color 0.3s ease;
         }
-
-        .container-principal {
-        background-color: #fff; /* Fundo branco */
-        border-radius: 15px; /* Bordas arredondadas */
-        padding: 20px; /* Espaçamento interno */
-        margin: 20px auto; /* Centraliza o container */
-        width: 90%; /* Largura responsiva */
-        max-width: 1200px; /* Limita a largura máxima */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
+        .botoes button:hover {
+          background-color: #2d0338;
         }
-
-
-    </style>
-</head>
-<body>
-    <div class="container-principal">
-    <div class="container">
-        <div class="titulo">NT-SPI 🗼 Municipio Isolado Móvel 🗼</div>
-        <h1>Formulário</h1>
-        <form id="meuFormulario">
-            
+        /* Estilo das tabelas */
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        table, th, td {
+          border: none;
+        }
+        th, td {
+          padding: 8px;
+          text-align: left;
+        }
+        th {
+          background-color: #380450;
+          color: #fff;
+          text-align: center;
+          vertical-align: middle;
+        }
+        td {
+          background-color: #fff;
+        }
+        textarea {
+          width: 100%;
+          height: 100px;
+          padding: 8px;
+          box-sizing: border-box;
+        }
+        /* Estilo do Carimbo */
+        .carimbo {
+          border: 4px solid #380450;
+          padding: 10px;
+          margin-top: 20px;
+          display: block;
+          width: 600px;
+          border-radius: 14px;
+          background: linear-gradient(#380450, #2d0338);
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .carimboTitulo {
+          font-size: 1.2em;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+        .carimbo table {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 8px;
+        }
+        .carimbo th,
+        .carimbo td {
+          padding: 8px;
+          text-align: left;
+          border: 3px solid #380450;
+          border-radius: 14px;
+          font-weight: 200;
+        }
+        .carimbo th {
+          background-color: #380450;
+          color: #fff;
+          font-weight: bold;
+        }
+        .carimbo td {
+          background-color: #fff;
+          border: 2px solid #2d0338;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container-principal">
+        <div class="container">
+          <div class="titulo">NT-SPI 🗼 Municipio Isolado Móvel 🗼</div>
+          <h1>Formulário</h1>
+          <form id="meuFormulario">
             <label for="taRaiz">TA Raiz:</label>
-            <input type="text" id="taRaiz" name="taRaiz" required><br><br>
-
+            <input type="text" id="taRaiz" name="taRaiz" required>
+            
+            <label for="causa" style="margin-top: 5px;">Causa:</label>
+            <select id="causa" name="causa" required>
+              <option value="" hidden>SELECIONAR</option>
+              <option value="HL5">HL5</option>
+              <option value="HL4">HL4</option>
+              <option value="DWDM">DWDM</option>
+              <option value="GWD">GWD</option>
+              <option value="SWD">SWD</option>
+            </select>
+            
             <label for="cidade">Cidade:</label>
-            <input type="text" id="cidade" name="cidade" required><br><br>
-
-            <label for="erbPlanta">ERB Planta:</label>
-            <input type="text" id="erbPlanta" name="erbPlanta" required><br><br>
-
+            <input type="text" id="cidade" name="cidade" required>
+            
             <label for="erbAfetacao">ERB Afetação:</label>
-            <input type="text" id="erbAfetacao" name="erbAfetacao" required><br><br>
-
+            <input type="text" id="erbAfetacao" name="erbAfetacao" required>
+            
             <label for="indisponibilidade">Indisponibilidade (%):</label>
-            <input type="number" id="indisponibilidade" name="indisponibilidade" required min="0" max="100" step="0.01" placeholder="0.00"><br><br>
-
+            <input type="number" id="indisponibilidade" name="indisponibilidade" required min="0" max="100" step="0.01" placeholder="0.00">
+            
             <label for="siteAfetado">Site Afetado:</label>
-            <input type="text" id="siteAfetado" name="siteAfetado" required><br><br>
-
+            <input type="text" id="siteAfetado" name="siteAfetado" required>
+            
             <label for="dataCriacao">Data Criação:</label>
-            <input type="datetime-local" id="dataCriacao" name="dataCriacao" required><br><br>
-
+            <input type="datetime-local" id="dataCriacao" name="dataCriacao" required>
             
             <button type="submit">Enviar</button>
-        </form>
-        
-        <div class="carimbo" id="carimbo">
+          </form>
+          
+          <div class="carimbo" id="carimbo">
             <div class="carimboTitulo">NT-SPI 🗼 Municipio Isolado Móvel 🗼</div>
             <table>
-                <tr>
-                    <th>Descrição</th>
-                    <th>Atualização</th>
-                </tr>
-                <tr>
-                    <td>TA Raiz</td>
-                    <td><span id="carimboTARaiz"></span></td>
-                </tr>
-                <tr>
-                    <td>Cidade</td>
-                    <td><span id="carimboCidade"></span></td>
-                </tr>
-                <tr>
-                    <td>ERB Planta</td>
-                    <td><span id="carimboERBPlanta"></span></td>
-                </tr>
-                <tr>
-                    <td>ERB Afetação</td>
-                    <td><span id="carimboERBAfetacao"></span></td>
-                </tr>
-                <tr>
-                    <td>Indisponibilidade (%)</td>
-                    <td><span id="carimboIndisponibilidade"></span></td>
-                </tr>
-                <tr>
-                    <td>Site Afetado</td>
-                    <td><span id="carimboSiteAfetado"></span></td>
-                </tr>
-                <tr>
-                    <td>Data Criação</td>
-                    <td><span id="carimboDataCriacao"></span></td>
-                </tr> 
+              <tr>
+                <th style="text-align: center;">Descrição</th>
+                <th style="text-align: center;">Atualização</th>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">TA Raiz</td>
+                <td><span id="carimboTARaiz"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Causas</td>
+                <td><span id="carimboCausa"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Cidade</td>
+                <td><span id="carimboCidade"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">ERB Afetação</td>
+                <td><span id="carimboERBAfetacao"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Indisponibilidade (%)</td>
+                <td><span id="carimboIndisponibilidade"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Site Afetado</td>
+                <td><span id="carimboSiteAfetado"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Data Criação</td>
+                <td><span id="carimboDataCriacao"></span></td>
+              </tr>
             </table>
-
-            <div class='botoes'>
-                <button id='voltar'>Voltar</button> 
+            <div class="botoes">
+              <button id="voltar">Voltar</button>
             </div>
-
+          </div>
         </div>
-
-    </div>
-</div>
+      </div>
     <script>
         document.getElementById('meuFormulario').addEventListener('submit', function(event) {
             event.preventDefault();
             var taRaiz = document.getElementById('taRaiz').value;
+            var causa = document.getElementById('causa').value;
             var cidade = document.getElementById('cidade').value;
-            var erbPlanta = document.getElementById('erbPlanta').value;
             var erbAfetacao = document.getElementById('erbAfetacao').value;
             var indisponibilidade = document.getElementById('indisponibilidade').value + '%';
             var siteAfetado = document.getElementById('siteAfetado').value;
             var dataCriacao = document.getElementById('dataCriacao').value.replace('T', ' ');
 
             document.getElementById('carimboTARaiz').textContent = taRaiz;
+            document.getElementById('carimboCausa').textContent = causa;
             document.getElementById('carimboCidade').textContent = cidade;
-            document.getElementById('carimboERBPlanta').textContent = erbPlanta;
             document.getElementById('carimboERBAfetacao').textContent = erbAfetacao;
             document.getElementById('carimboIndisponibilidade').textContent = indisponibilidade;
             document.getElementById('carimboSiteAfetado').textContent = siteAfetado;
@@ -228,7 +319,7 @@
 
 <script>
     document.querySelector('.sair').addEventListener('click', function() {
-        window.location.href = "login.html"; // Substitua com o caminho da sua página
+        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
     });
 </script>
     

@@ -8,179 +8,295 @@
     <link rel="icon" type="image/png" href="icons/nt.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        /* Global */
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #FF6347;
+          font-family: 'Poppins', sans-serif;
+          background-color: #FF6347;
+          margin: 0;
+          padding: 20px;
         }
+        /* Container principal */
+        .container-principal {
+          background-color: #fff;
+          border-radius: 15px;
+          padding: 20px;
+          margin: 20px auto;
+          width: 90%;
+          max-width: 1200px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        /* Tabela externa */
+        .tabela-container-1 {
+          width: 90vw;
+          max-width: 100%;
+          overflow-x: auto;
+          background: #fff;
+          border: 1px solid #d3d3d3;
+          padding: 0;
+          margin: 0 auto 20px;
+          font-size: 10px;
+          font-weight: bold;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tabela-container-1 table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        .tabela-container-1 th,
+        .tabela-container-1 td {
+          border: 3px solid #d3d3d3;
+          padding: 8px;
+          text-align: left;
+        }
+        .tabela-container-1 th {
+          background-color: #FF6347;
+          color: #fff;
+          text-align: center;
+          vertical-align: middle;
+        }
+        /* Container do formulário */
         .container {
-            border: 2px solid #000;
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #f9f9f9;
+          background-color: #f9f9f9;
+          padding: 20px;
+          max-width: 600px;
+          margin: 0 auto;
+          border-radius: 8px;
         }
-        .titulo {
-            background-color: #FF6347; /* Vermelho Claro */
-            color: #fff; /* Branco */
-            padding: 10px;
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 20px;
+        /* Título */
+        .titulo, .carimboTitulo {
+          background-color: #FF6347;
+          color: #fff;
+          padding: 10px;
+          text-align: center;
+          font-size: 1.5em;
+          margin-bottom: 20px;
+          border-radius: 8px 8px 0 0;
         }
-        .carimbo {
-            border: 2px solid #000;
-            padding: 10px;
-            margin-top: 20px;
-            display: none;
+        /* Estilo do formulário */
+        form label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
         }
-        .carimboTitulo {
-            background-color: #FF6347; /* Vermelho Claro */
-            color: #fff; /* Branco */
-            padding: 10px;
-            text-align: center;
-            font-size: 1.2em;
-            margin-bottom: 10px;
+        form input[type="text"],
+        form input[type="datetime-local"],
+        form select,
+        form textarea {
+          width: 100%;
+          padding: 8px;
+          margin-bottom: 15px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          box-sizing: border-box;
+          transition: border-color 0.3s ease;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        form input[type="text"]:focus,
+        form input[type="datetime-local"]:focus,
+        form select:focus,
+        form textarea:focus {
+          border-color: #FF6347;
+          outline: none;
         }
-        table, th, td {
-            border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+        form button {
+          background-color: #FF6347;
+          color: #fff;
+          border: none;
+          padding: 10px 20px;
+          cursor: pointer;
+          border-radius: 8px;
+          font-size: 16px;
+          transition: background-color 0.3s ease;
+          margin-top: 10px;
         }
-        th, td {
-            padding: 8px;
-            text-align: left;
+        form button:hover {
+          background-color: #e0553b;
         }
-        th {
-            background-color: #FF6347; /* Vermelho Claro */
-            color: #fff; /* Branco */
-        }
-        td {
-            background-color: #fff; /* Branco */
-        }
+        /* Botões em geral */
         .botoes {
-            margin-top: 20px;
+          margin-top: 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
         }
         .botoes button {
-            margin-right: 10px;
+          background-color: #FF6347;
+          color: #fff;
+          border: none;
+          padding: 6px 40px;
+          cursor: pointer;
+          border-radius: 8px;
+          font-size: 16px;
+          transition: background-color 0.3s ease;
         }
-        textarea {
-            width: 100%;
-            height: 100px;
-            padding: 8px;
-            box-sizing: border-box;
+        .botoes button:hover {
+          background-color: #e0553b;
         }
-        .container-principal {
-        background-color: #fff; /* Fundo branco */
-        border-radius: 15px; /* Bordas arredondadas */
-        padding: 20px; /* Espaçamento interno */
-        margin: 20px auto; /* Centraliza o container */
-        width: 90%; /* Largura responsiva */
-        max-width: 1200px; /* Limita a largura máxima */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
+        /* Estilo do Carimbo */
+        .carimbo {
+          border: 4px solid #FF6347;
+          padding: 10px;
+          margin-top: 20px;
+          display: none;
+          width: 600px;
+          border-radius: 14px;
+          background: linear-gradient(#FF6347, #e0553b);
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-    </style>
-</head>
-<body>
-    <div class="container-principal">
-    <div class="container">
-        <div class="titulo"> NT-SPI ‼️ DUPLA FALHA ‼️</div>
-        <form id="afectacao-form">
+        .carimboTitulo {
+          font-size: 1.2em;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+        .carimbo table {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 3px;
+        }
+        .carimbo th,
+        .carimbo td {
+          padding: 8px;
+          text-align: left;
+          border: 3px solid #FF6347;
+          border-radius: 14px;
+          font-weight: 200;
+        }
+        .carimbo th {
+          background-color: #FF6347;
+          color: #fff;
+          font-weight: bold;
+        }
+        .carimbo td {
+          background-color: #fff;
+          border: 2px solid #e0553b;
+        }
+        /* Estilo extra para emojis, se necessário */
+        .emoji {
+          text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+        }
+        /* Estilo do texto completo (se necessário) */
+        .textoCompleto {
+          margin-top: 20px;
+        }
+        .textoCompleto textarea {
+          text-align: left;
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          box-sizing: border-box;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container-principal">  
+        <div class="container">
+          <div class="titulo">NT-SPI ‼️ DUPLA FALHA ‼️</div>
+          <form id="afectacao-form">
             <div class="form-section">
-                <p>AFETAÇÃO FTTX: <input type="text" id="afectacao-fttx"></p>
-                <p>AFETAÇÃO MOVEL: <input type="text" id="afectacao-movel"></p>
-            </div><br style="line-height: 0.2;">
+              <p>EQUIPAMENTO: <input type="text" id="equipamento"></p>
+              <p>AFETAÇÃO FTTX: <input type="text" id="afectacao-fttx"></p>
+              <p>AFETAÇÃO MOVEL: <input type="text" id="afectacao-movel"></p>
+            </div>
+            <br style="line-height: 0.2;">
             <div class="form-section">
-                <h2>Falha 01:</h2>
-                <p><strong>Data Falha1:</strong> <input type="datetime-local" id="data-falha1"></p>
-                <p>Local: <input type="text" id="local-falha1"></p>
-                <p>TA: <input type="text" id="ta-falha1"></p>
-                <p>ROTA E CABO: <input type="text" id="rota-cabo-falha1"></p>
-                <p>STATUS: <textarea id="status-falha1"></textarea></p>
-            </div><br style="line-height: 0.2;">
+              <h2>Falha 01:</h2>
+              <p><strong>Data Falha1:</strong> <input type="datetime-local" id="data-falha1"></p>
+              <p>Local: <input type="text" id="local-falha1"></p>
+              <p>TA: <input type="text" id="ta-falha1"></p>
+              <p>ROTA E CABO: <input type="text" id="rota-cabo-falha1"></p>
+              <p>STATUS: <textarea id="status-falha1"></textarea></p>
+            </div>
+            <br style="line-height: 0.2;">
             <div class="form-section">
-                <h2>Falha 02</h2>
-                <p><strong>Data Falha2:</strong> <input type="datetime-local" id="data-falha2"></p>
-                <p>Local: <input type="text" id="local-falha2"></p>
-                <p>TA: <input type="text" id="ta-falha2"></p>
-                <p>ROTA E CABO: <input type="text" id="rota-cabo-falha2"></p>
-                <p>STATUS: <textarea id="status-falha2"></textarea></p>
-            </div><br style="line-height: 0.2;">
+              <h2>Falha 02:</h2>
+              <p><strong>Data Falha2:</strong> <input type="datetime-local" id="data-falha2"></p>
+              <p>Local: <input type="text" id="local-falha2"></p>
+              <p>TA: <input type="text" id="ta-falha2"></p>
+              <p>ROTA E CABO: <input type="text" id="rota-cabo-falha2"></p>
+              <p>STATUS: <textarea id="status-falha2"></textarea></p>
+            </div>
+            <br style="line-height: 0.2;">
             <button type="button" onclick="gerarCarimbo()">Enviar</button>
-        </form>
-
-        <div id="result-section" class="carimbo">
-            <div class="carimboTitulo">NT-SPI ‼️ DUPLA FALHA ‼️ </div>
+          </form>
+    
+          <div id="result-section" class="carimbo">
+            <div class="carimboTitulo">NT-SPI ‼️ DUPLA FALHA ‼️</div>
             <table>
-                <tr>
-                    <th>Descrição</th>
-                    <th>Atualização</th>
-                </tr>
-                <tr>
-                    <td>AFETAÇÃO FTTX</td>
-                    <td><span id="result-afectacao-fttx"></span></td>
-                </tr>
-                <tr>
-                    <td>AFETAÇÃO MOVEL</td>
-                    <td><span id="result-afectacao-movel"></span></td>
-                </tr>
-                <tr>
-                    <td colspan="2"></td>
-                </tr>
-                <tr>
-                    <td><strong>Data Falha1</strong></td>
-                    <td><span id="result-data-falha1"></span></td>
-                </tr>
-                <tr>
-                    <td>Local</td>
-                    <td><span id="result-local-falha1"></span></td>
-                </tr>
-                <tr>
-                    <td>TA</td>
-                    <td><span id="result-ta-falha1"></span></td>
-                </tr>
-                <tr>
-                    <td>ROTA E CABO</td>
-                    <td><span id="result-rota-cabo-falha1"></span></td>
-                </tr>
-                <tr>
-                    <td>STATUS</td>
-                    <td><span id="result-status-falha1"></span></td>
-                </tr>
-                <tr>
-                    <td colspan="2"></td>
-                </tr>
-                <tr>
-                    <td><strong>Data Falha2</strong></td>
-                    <td><span id="result-data-falha2"></span></td>
-                </tr>
-                <tr>
-                    <td>Local</td>
-                    <td><span id="result-local-falha2"></span></td>
-                </tr>
-                <tr>
-                    <td>TA</td>
-                    <td><span id="result-ta-falha2"></span></td>
-                </tr>
-                <tr>
-                    <td>ROTA E CABO</td>
-                    <td><span id="result-rota-cabo-falha2"></span></td>
-                </tr>
-                <tr>
-                    <td>STATUS</td>
-                    <td><span id="result-status-falha2"></span></td>
-                </tr>
+              <tr>
+                <th style="text-align: center;">Descrição</th>
+                <th style="text-align: center;">Atualização</th>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center;">EQUIPAMENTO</td>
+                <td><span id="result-equipamento"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center;">AFETAÇÃO FTTX</td>
+                <td><span id="result-afectacao-fttx"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center;">AFETAÇÃO MOVEL</td>
+                <td><span id="result-afectacao-movel"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #f55f43; text-align: left; white-space: nowrap; border: none; color: #fff;"><strong>Falha 1:</strong></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center;"><span>Data Falha</span></td>
+                <td><span id="result-data-falha1"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center;">Local</td>
+                <td><span id="result-local-falha1"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center;">TA</td>
+                <td><span id="result-ta-falha1"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center;">ROTA E CABO</td>
+                <td><span id="result-rota-cabo-falha1"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center;">STATUS</td>
+                <td><span id="result-status-falha1"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #eb5a3f; text-align: left; white-space: nowrap; border: none; color: #fff;"><strong>Falha 2:</strong></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center;"><span>Data Falha</span></td>
+                <td><span id="result-data-falha2"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center;">Local</td>
+                <td><span id="result-local-falha2"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center;">TA</td>
+                <td><span id="result-ta-falha2"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center;">ROTA E CABO</td>
+                <td><span id="result-rota-cabo-falha2"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center;">STATUS</td>
+                <td><span id="result-status-falha2"></span></td>
+              </tr>
             </table>
             <div class="botoes">
-                <button id="voltar">Voltar</button>
+              <button id="voltar">Voltar</button>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
     <script>
         function gerarCarimbo() {
+            document.getElementById('result-equipamento').textContent = document.getElementById('equipamento').value;
             document.getElementById('result-afectacao-fttx').textContent = document.getElementById('afectacao-fttx').value;
             document.getElementById('result-afectacao-movel').textContent = document.getElementById('afectacao-movel').value;
 
@@ -189,7 +305,6 @@
             document.getElementById('result-ta-falha1').textContent = document.getElementById('ta-falha1').value;
             document.getElementById('result-rota-cabo-falha1').textContent = document.getElementById('rota-cabo-falha1').value;
             document.getElementById('result-status-falha1').textContent = document.getElementById('status-falha1').value;
-
             document.getElementById('result-data-falha2').textContent = formatarDataHora(document.getElementById('data-falha2').value);
             document.getElementById('result-local-falha2').textContent = document.getElementById('local-falha2').value;
             document.getElementById('result-ta-falha2').textContent = document.getElementById('ta-falha2').value;
@@ -270,30 +385,3 @@ function formatarDataHora(dataHora) {
         window.location.href = "HOME.html"; // Substitua com o caminho da sua página
     });
 </script>
-
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <!-- Inclui o arquivo de autenticação -->
-  <script src="auth.js"></script>
-  <script>
-    // Verifica se o usuário está autenticado ao carregar a página.
-    checkAuth();
-  </script>
-</head>
-<body>
-  <script>
-    // Função de logout
-    document.getElementById('logout').addEventListener('click', function() {
-      firebase.auth().signOut().then(function() {
-        window.location.href = "login.html";
-      });
-    });
-  </script>
-</body>
-</html>

@@ -1,197 +1,233 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta charset="UTF-8">
-  <link rel="icon" type="image/png" href="nt.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestão de Carimbos</title>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <!-- Inclui o arquivo de autenticação -->
-  <script src="auth.js"></script>
-  <script>
-    // Verifica se o usuário está autenticado ao carregar a página.
-    checkAuth();
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="icons/nt.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Carimbos</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #bae6df;
+            margin-top: 120px;
+            margin-bottom: 70px;
+            zoom: 70%;
+            background-image: url('sua-imagem.jpg'); /* Caminho da imagem */
+    background-size: cover; /* Faz a imagem cobrir toda a tela */
+    background-repeat: no-repeat; /* Evita a repetição */
+    background-position: center center; /* Centraliza a imagem */
+    background-attachment: fixed;
+        }
+        .container {
+            text-align: center;
+            background-color: #ffffffa2;
+            padding: 60px;
+            border-radius: 40px;
+            box-shadow: 0 0 30px rgb(0, 0, 0);
+            height: auto;
+            width: 1500px;
+            user-select: none; 
+            cursor: default; 
+        }
+        h1 {
+            color: #252525;
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+        button {
+           background-color: #4caf50;
+           color: white;
+           padding: 25px;
+           margin: 10px 0;
+           border: none;
+           border-radius: 5px;
+           cursor: pointer;
+           font-size: 15px;
+           transition: background-color 0.3s ease;
+           font-family: Arial, Helvetica, sans-serif;
+           width: 200px;
+           height: 85px; /* Tamanho fixo de altura */
+          font-weight: bold;
+        }
+        button:hover {
+            font-size: 15px;
+            background-color: #4caf50;
+            font-weight: bold;
+        }
 
-  </script>
-  <style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        background-color: #d1d1d1;
-        margin-top: 90px;
-        zoom: 80%;
-    }
-    .container {
-        text-align: center;
-        background-color: #fff;
-        padding: 60px;
-        border-radius: 40px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 1);
-        height: 450px;
-        width: 1300px;
-    }
-    h1 {
-        color: #333;
-        font-size: 20px;
-        margin-bottom: 10px;
-    }
-    button {
-       background-color: #4CAF50;
-       color: white;
-       padding: 25px;
-       margin: 10px 0;
-       border: none;
-       border-radius: 5px;
-       cursor: pointer;
-       font-size: 15px;
-       transition: background-color 0.3s ease;
-       font-family: Arial, Helvetica, sans-serif;
-       width: 200px;
-       height: 85px; /* Tamanho fixo de altura */
-      font-weight: bold;
-    }
-    button:hover {
-        font-size: 15px;
-        background-color: #1c9850;
-        font-weight: bold;
-    }
+
+        .button-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* Padrão: 6 colunas */
+    grid-template-rows: repeat(2, auto); /* 2 linhas ajustáveis */
+    gap: 15px; /* Espaçamento fixo */
+    max-width: 80%; /* Mantém os botões centralizados */
+    margin: 0 auto;
+    justify-content: center;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 1200px) {
     .button-grid {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 10px;
-        max-width: 1000px;
-        margin-left: 30px;
+        grid-template-columns: repeat(5, 1fr); /* Reduz para 4 colunas */
     }
-    .scroll-button {
-        cursor: pointer;
-        font-size: 24px;
-        margin: 0 10px;
-        color: #333;
-        opacity: 1;
-        transition: opacity 0.3s;
-    }
-    .scroll-button.disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
-    }
-    .hidden-buttons {
-        display: none;
-    }
+}
 
-    button {
-       background-color: #4CAF50;
-       color: white;
-       padding: 25px;
-       margin: 10px 0;
-       border: none;
-       border-radius: 5px;
-       cursor: pointer;
-       font-size: 15px;
-       transition: background-color 0.3s ease;
-       font-family: Arial, Helvetica, sans-serif;
-       width: 200px;
-       height: 85px; /* Tamanho fixo de altura */
-      font-weight: bold;
-    }
-    button:hover {
-        font-size: 15px;
-        background-color: #1c9850;
-        font-weight: bold;
-    }
+@media (max-width: 900px) {
     .button-grid {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 10px;
-        max-width: 1000px;
-        margin-left: 30px;
+        grid-template-columns: repeat(4, 1fr); /* Reduz para 3 colunas */
+        max-width: 90%; /* Acompanha a tela */
+        gap: 10px; /* Diminui o espaçamento */
     }
+}
 
-    .sair {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      z-index: 9999; /* Fica sempre no topo */
-      background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
-      padding: 5px;
-      border-radius: 8px;
-  }
+@media (max-width: 600px) {
+    .button-grid {
+        grid-template-columns: repeat(3, 1fr); /* 2 colunas em telas menores */
+        max-width: 100%;
+        gap: 8px;
+    }
+}
 
-  .icone-porta {
-      width: 50px;
-      height: 50px;
-      margin-right: 5px;
-  }
+@media (max-width: 400px) {
+    .button-grid {
+        grid-template-columns: repeat(1, 1fr); /* Empilha os botões em telas bem pequenas */
+        max-width: 100%;
+        gap: 5px;
+    }
+}
 
-  .sair span {
-      font-size: 18px;
-      font-weight: bold;
-  }
 
-  .sair:hover {
-      opacity: 0.8;
-  }
-</style>
+     
 
+
+        .scroll-button {
+            cursor: pointer;
+            font-size: 24px;
+            margin: 0 10px;
+            color: #333;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+        .scroll-button.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .hidden-buttons {
+            display: none;
+        }
+        .button-grid button {
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(210deg, #4caf4f,  #318634, #4CAF50);
+            color: rgb(255, 255, 255);
+            position: relative;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .button-grid button.hover-bg {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: transparent;
+        }
+
+        .button-grid button.hover-color {
+            background-color: #1c9850;
+        }
+
+
+        .background-button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    padding: 3px 6px; /* Reduzindo o padding */
+    background-color: #8c8c8c73;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 10px; /* Reduzindo a fonte */
+    transition: background 0.3s;
+    height: 25px; /* Ajuste de altura */
+    width: 60px;
+    min-width: 80px; /* Definir um tamanho mínimo */
+    user-select: none;  
+}
+
+.background-button:hover {
+    background-color: #65a66f;
+    font-size: 10px; /* Reduzindo a fonte */
+    user-select: none;
+}
+
+
+
+
+    </style>
 </head>
 <body>
-   
-<body>
 
-    <div class="container">
+    <button id="background-btn" class="background-button">Selecionar</button>
+    <input type="file" id="image-input" accept="image/*" style="display: none;">
+
+    <div class="container" readonly>
         <h1 id="title">
             <span class="scroll-button" id="prev-btn" onclick="changePage('prev')">⯇</span>
             <span id="page-title">Gestão de Carimbos NT - SPI</span>
             <span class="scroll-button" id="next-btn" onclick="changePage('next')">⯈</span>
         </h1><br><br><br>
         
-       <div class="button-grid" id="buttons">
+        <div class="button-grid" id="buttons">
             <!-- Botões da primeira página (arquivos locais) -->
-            <button onclick="location.href='CARIMBO_OLT_ISOLADA_FINAL.html'">CARIMBO OLT ISOLADA</button>
-            <button onclick="location.href='CARIMBO_UPLINK_OLT_SWD_HL4.html'">ADJACÊNCIA (OLT, SWD, HL4)</button>
-            <button onclick="location.href='CARIMBO_ESCALONAMENTO.html'">CARIMBO ESCALONAMENTO</button>
-            <button onclick="location.href='DUPLA_FALHA.html'">CARIMBO DUPLA FALHA</button>
-            <button onclick="location.href='ESCALONAMENTO_INFRA.html'">CARIMBO INFRA</button>
-            <button onclick="location.href='CARIMBO_RISCO_ISOLAMENTO.html'">RISCO ISOLAMENTO</button>
-            <button onclick="location.href='Gestao_OLT_UPLINK.html'">GESTÃO OLT UPLINK</button>
-            <button onclick="location.href='Gestao_OLT_ISOLADA.html'">GESTÃO OLT ISOLADA</button>
-            <button onclick="location.href='CARIMBO_AXT_LINK.html'">AXT FRANQUIA LINK</button>
-            <button onclick="location.href='CARIMBO_AXT_DOWN.html'">AXT FRANQUIA ISOLADA</button>
-            <button onclick="location.href='ESCALONAMENTO_MOVEL_PENDENCIA_REDE.html'">PENDENCIA REDE EXTERNA MÓVEL</button>
-            <button onclick="location.href='MUNICIPIO_ISOLADO_MOVEL.html'">CARIMBO MUNI ISOLADO MOVEL</button>
+            <button onclick="location.href='CARIMBO_OLT_ISOLADA_FINAL.html'" data-image="BTNBG/Pag1 - OLT ISOLADA.png">CARIMBO OLT ISOLADA</button>
+            <button onclick="location.href='CARIMBO_UPLINK_OLT_SWD_HL4.html'" data-image="BTNBG/Pag1 - ADJ.png">ADJACÊNCIA (OLT, SWD, HL4)</button>
+            <button onclick="location.href='CARIMBO_ESCALONAMENTO.html'" data-image="BTNBG/Pag1 - ESCAL.png">CARIMBO ESCALONAMENTO</button>
+            <button onclick="location.href='DUPLA_FALHA.html'" data-image="BTNBG/Pag1 - 2FALHA.png">CARIMBO DUPLA FALHA</button>
+            <button onclick="location.href='ESCALONAMENTO_INFRA.html'" data-image="BTNBG/Pag1 - INFRA.png">CARIMBO INFRA</button>
+            <button onclick="location.href='CARIMBO_RISCO_ISOLAMENTO.html'" data-image="BTNBG/Pag1 - RISCO.png">RISCO ISOLAMENTO</button>
+            <button onclick="location.href='Gestao_OLT_UPLINK.html'" data-image="BTNBG/Pag1 - GLINK.png">GESTÃO OLT UPLINK</button>
+            <button onclick="location.href='Gestao_OLT_ISOLADA.html'" data-image="BTNBG/Pag1 - GDOWN.png">GESTÃO OLT ISOLADA</button>
+            <button onclick="location.href='CARIMBO_AXT_LINK.html'" data-image="BTNBG/Pag1 - AXTLK.png">AXT FRANQUIA LINK</button>
+            <button onclick="location.href='CARIMBO_AXT_DOWN.html'" data-image="BTNBG/Pag1 - AXTDW.png">AXT FRANQUIA ISOLADA</button>
+            <button onclick="location.href='ESCALONAMENTO_MOVEL_PENDENCIA_REDE.html'" data-image="BTNBG/Pag1 - RDMOV.png">PENDENCIA REDE EXTERNA MÓVEL</button>
+            <button onclick="location.href='MUNICIPIO_ISOLADO_MOVEL.html'" data-image="BTNBG/Pag1 - MUNIDW.png">CARIMBO MUNI ISOLADO MOVEL</button>
+            <button onclick="location.href='CARIMBO_AST_GPON.html'" data-image="BTNBG/Pag1 - OUTLIER.png">CARIMBO OUTLIER AST</button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
         </div>
         
         <div class="button-grid hidden-buttons" id="hidden-buttons-2">
             <!-- Botões da segunda página (links para páginas da web) -->
-            <button onclick="window.open('http://10.26.35.126/dash-dwdm_ocorrencia', '_blank')">PORTAL DWDM</button>
-            <button onclick="window.open('http://10.26.35.126/dash-metro_alta_ocorrencia', '_blank')">PORTAL METRO</button>
-            <button onclick="window.open('http://10.26.35.126/dash-mun_isolados_ocorrencia', '_blank')">PORTAL MUNI ISOLADOS</button>
-            <button onclick="window.open('http://10.215.39.31:7772/portal_hl4/inicio.php', '_blank')">ACOMPANHAMENTO HL4</button>
-            <button onclick="window.open('http://10.26.35.126/dash-geo_oper_ocor/principal-pagina', '_blank')">GESTÃO HL4 </button>
-            <button onclick="window.open('http://10.124.100.13:9091/', '_blank')">4FIELD</button>
-            <button onclick="window.open('https://10.200.36.116/cactiFusion/plugins/weathermap/weathermap-cacti-plugin.php', '_blank')">CACTI FUSION</button>
-            <button onclick="window.open('https://cactiagregador.telesp.net.br/cacti/graph_view.php?action=tree&node=tree_anchor-3&site_id=-1&host_id=-1&host_template_id=-1&hgd=&hyper=true', '_blank')">CACTI AGREGADOR</button>
-            <button onclick="window.open('https://vivosmart.tdata.com.br/Orion/Login.aspx?sessionTimeout=yes&ReturnUrl=%2fOrion%2fSummaryView.aspx%3fViewID%3d97', '_blank')">AXT</button>
-            <button onclick="window.open('https://sigitm.vivo.com.br/app/index.jsp', '_blank')">SIGITM</button>
-            <button onclick="window.open('http://sigitm.redecorp.br/SIGITMWeb/index.jsf;jsessionid=btCU-Fco7trqzWzIdkee-j1sVwj580ciDn07Nx4NtlmJzqgkSmUU!1842956776!1395024305', '_blank')">SIGITM BD</button>
-            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/_layouts/15/Doc.aspx?sourcedoc=%7B3ca09476-ad3a-4fbe-b9d5-c58ac0f3900e%7D&action=default&CID=57f4946a-1f28-40ad-bc73-b29e1228ceeb&_SRM=2%3AS%3A560', '_blank')">RELATÓRIO MUNI ISOLADOS</button>
+            <button onclick="window.open('http://10.26.35.126/dash-dwdm_ocorrencia', '_blank')"  data-image="BTNBG/Pag2 - PDWDM.png">PORTAL DWDM</button>
+            <button onclick="window.open('http://10.26.35.126/dash-metro_alta_ocorrencia', '_blank')" data-image="BTNBG/Pag2 - PMETRO.png">PORTAL METRO</button>
+            <button onclick="window.open('http://10.26.35.126/dash-mun_isolados_ocorrencia', '_blank')" data-image="BTNBG/Pag2 - PMUNIDW.png">PORTAL MUNI ISOLADOS</button>
+            <button onclick="window.open('http://10.215.39.31:7772/portal_hl4/inicio.php', '_blank')" data-image="BTNBG/Pag2 - PAHL4.png">ACOMPANHAMENTO HL4</button>
+            <button onclick="window.open('http://10.26.35.126/dash-geo_oper_ocor/principal-pagina', '_blank')" data-image="BTNBG/Pag2 - GHL4.png">GESTÃO HL4 </button>
+            <button onclick="window.open('http://10.124.100.13:9091/', '_blank')" data-image="BTNBG/Pag2 - 4FIELD.png">4FIELD</button>
+            <button onclick="window.open('https://10.200.36.116/cactiFusion/plugins/weathermap/weathermap-cacti-plugin.php', '_blank')" data-image="BTNBG/Pag2 - CACTIF.png">CACTI FUSION</button>
+            <button onclick="window.open('https://cactiagregador.telesp.net.br/cacti/graph_view.php?action=tree&node=tree_anchor-3&site_id=-1&host_id=-1&host_template_id=-1&hgd=&hyper=true', '_blank')" data-image="BTNBG/Pag2 - CACTIA.png">CACTI AGREGADOR</button>
+            <button onclick="window.open('https://vivosmart.tdata.com.br/Orion/Login.aspx?sessionTimeout=yes&ReturnUrl=%2fOrion%2fSummaryView.aspx%3fViewID%3d97', '_blank')" data-image="BTNBG/Pag2 - AXTSM.png">AXT</button>
+            <button onclick="window.open('https://sigitm.vivo.com.br/app/index.jsp', '_blank')" data-image="BTNBG/Pag2 - SIGITM.png">SIGITM</button>
+            <button onclick="window.open('http://sigitm.redecorp.br/SIGITMWeb/index.jsf;jsessionid=btCU-Fco7trqzWzIdkee-j1sVwj580ciDn07Nx4NtlmJzqgkSmUU!1842956776!1395024305', '_blank')" data-image="BTNBG/Pag2 - SIGBD.png">SIGITM BD</button>
+            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/_layouts/15/Doc.aspx?sourcedoc=%7B3ca09476-ad3a-4fbe-b9d5-c58ac0f3900e%7D&action=default&CID=57f4946a-1f28-40ad-bc73-b29e1228ceeb&_SRM=2%3AS%3A560', '_blank')" data-image="BTNBG/Pag2 - RELATHL4.png">RELATÓRIO HL4</button>
+            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/_layouts/15/Doc.aspx?sourcedoc=%7B3ca09476-ad3a-4fbe-b9d5-c58ac0f3900e%7D&action=default&CID=57f4946a-1f28-40ad-bc73-b29e1228ceeb&_SRM=2%3AS%3A560', '_blank')" data-image="BTNBG/Pag3 - MUNIISO.png">RELATÓRIO MUNI ISOLADOS</button>
+            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/_layouts/15/doc2.aspx?sourcedoc=%7Ba7c85442-62bf-467d-9d66-655bd96ea7ab%7D&action=default&CID=faabfc01-4ef9-43cd-b4cd-ada4ee0903ee&_SRM=2%3AE%3A8', '_blank')" data-image="BTNBG/Pag3 - RELNT.png">RELATÓRIO NÚCLEO TÉCNICO</button>
         </div>
 
         <div class="button-grid hidden-buttons" id="hidden-buttons-3">
             <!-- Botões da terceira página (mais links) -->
-            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/g/personal/aldo_stoffel_telefonica_com/EUJUyKe_Yn1GnWZlW9lup6sBGfW14Fti_q4KjmfA90UwkA?e=4%3AjxcgGa&at=9', '_blank')">RELATÓRIO NÚCLEO TÉCNICO</button>
-            <button onclick="window.open('https://10.18.77.200/index.php', '_blank')">GEO FIBRA</button>
-            <button onclick="location.href='CABOS_OP_Mapa.pdf'">MAPA DE CABOS</button>
-            <button onclick="location.href='Verificador de DDD.html'">VERIFICADOR DE DDD</button>
+            <button onclick="window.open('https://10.18.77.200/index.php', '_blank')" data-image="BTNBG/Pag3 - GEOF.png">GEO FIBRA</button>
+            <button onclick="location.href='CABOS_OP_Mapa.pdf'" data-image="BTNBG/Pag3 - MPFO.png">MAPA DE CABOS</button>
+            <button onclick="location.href='Verificador de DDD.html'" data-image="BTNBG/Pag3 - DDD.png">VERIFICADOR DE DDD</button>
+            <button onclick="location.href='PESQUISA OLT.html'" data-image="BTNBG/Pag4 - PSOLT.png">CONSULTA DE OLT</button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
@@ -203,10 +239,12 @@
         </div>
         <div class="button-grid hidden-buttons" id="hidden-buttons-3">
             <!-- Botões da terceira página (mais links) -->
-            <button onclick="location.href='ARVORE DE ESCALONAMENTOS.html'">ESCALONAMENTOS</button>
-            <button onclick="location.href='CARROSEL TP.html'">PROCEDIMENTO DAS TP's</button>
-            <button onclick="location.href='CARROSEL AXT.html'">ROTAS AXT</button>
-            <button onclick="location.href='CARROSEL COREIP.html'">ROTAS CORE-IP</button>
+            <button onclick="location.href='ARVORE DE ESCALONAMENTOS.html'" data-image="BTNBG/Pag4 - TESCAL.png">ESCALONAMENTOS</button>
+            <button onclick="location.href='CARROSEL TP.html'" data-image="BTNBG/Pag4 - PRTP.png">PROCEDIMENTO DAS TP's</button>
+            <button onclick="location.href='CARROSEL AXT.html'" data-image="BTNBG/Pag4 - RAXT.png">ROTAS AXT</button>
+            <button onclick="location.href='CARROSEL COREIP.html'" data-image="BTNBG/Pag4 - CORIP.png">ROTAS CORE-IP</button>
+            <button onclick="location.href='CARROSEL TOPO.html'" data-image="BTNBG/Pag4 - TOPO.png">TOPOLOGIAS DE REDE</button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
@@ -217,110 +255,237 @@
             <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
         </div><br><br>
         <div id="pagination-dots" style="text-align: center; margin-top: 20px;"></div>
-
-        <bnt id="logout"><img src="icons/LGT.png" alt="Ícone de Porta" class="icone-porta"></bnt>
     </div>
 
-
-
-</body>
-</html>
-
-  
-  <script>
-    // Função de logout
-    document.getElementById('logout').addEventListener('click', function() {
-      firebase.auth().signOut().then(function() {
-        window.location.href = "login.html";
-      });
-    });
-
-
-
-
-
-
-
-       let currentPage = 1;
-    const totalPages = 4;
-
-    function updatePageTitle() {
-        const pageTitle = document.getElementById('page-title');
-        if (currentPage === 1) {
-            pageTitle.textContent = 'Gestão de Carimbos NT - SPI';
-        } else if (currentPage === 2) {
-            pageTitle.textContent = 'Acessos Núcleo Técnico';
-        } else if (currentPage === 3) {
-            pageTitle.textContent = 'Acessos Núcleo Técnico';
-        } else if (currentPage === 4) {
-            pageTitle.textContent = 'Procedimentos Ações Núcleo Técnico';
-        }
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const bgButton = document.getElementById("background-btn");
+            const fileInput = document.getElementById("image-input");
+            const buttons = document.querySelectorAll(".button-grid button");
+            const defaultGradient = "linear-gradient(210deg, #4caf4f, #318634, #4CAF50)";
+            let currentGradient = defaultGradient; // Gradiente atual (padrão ou calculado)
+        
+            // Se houver imagem salva, aplica-a e atualiza o gradiente dos botões
+            const savedImage = localStorage.getItem("backgroundImage");
+            if (savedImage) {
+                document.body.style.backgroundImage = `url(${savedImage})`;
+                bgButton.textContent = "Remover";
+                updateButtonGradient(savedImage);
+            } else {
+                resetButtonGradient();
+            }
+        
+            // Ao clicar no botão de fundo: se imagem existe, remove; senão, abre o seletor de arquivo
+            bgButton.addEventListener("click", () => {
+                if (localStorage.getItem("backgroundImage")) {
+                    localStorage.removeItem("backgroundImage");
+                    document.body.style.backgroundImage = "";
+                    bgButton.textContent = "Selecionar";
+                    resetButtonGradient();
+                } else {
+                    fileInput.click();
+                }
+            });
+        
+            // Quando o usuário seleciona uma imagem
+            fileInput.addEventListener("change", (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const imageUrl = e.target.result;
+                        localStorage.setItem("backgroundImage", imageUrl);
+                        document.body.style.backgroundImage = `url(${imageUrl})`;
+                        bgButton.textContent = "Remover";
+                        updateButtonGradient(imageUrl);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        
+            // Atualiza o gradiente dos botões com base na imagem de fundo
+            function updateButtonGradient(imageUrl) {
+                extractAverageColor(imageUrl, (avgColor) => {
+                    currentGradient = getGradientFromColor(avgColor);
+                    buttons.forEach(button => {
+                        button.style.background = currentGradient;
+                        button.style.color = "white"; // Garante que o texto esteja visível
+                    });
+                });
+            }
+        
+            // Restaura os botões para o gradiente padrão
+            function resetButtonGradient() {
+                currentGradient = defaultGradient;
+                buttons.forEach(button => {
+                    button.style.background = defaultGradient;
+                    button.style.color = "white";
+                });
+            }
+        
+            // Função que extrai a cor média da imagem usando canvas
+            function extractAverageColor(imageUrl, callback) {
+                let img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.src = imageUrl;
+                img.onload = function () {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, img.width, img.height);
+                    const imageData = ctx.getImageData(0, 0, img.width, img.height).data;
+                    let r = 0, g = 0, b = 0;
+                    let count = 0;
+                    for (let i = 0; i < imageData.length; i += 4) {
+                        r += imageData[i];
+                        g += imageData[i + 1];
+                        b += imageData[i + 2];
+                        count++;
+                    }
+                    r = Math.floor(r / count);
+                    g = Math.floor(g / count);
+                    b = Math.floor(b / count);
+                    const rgb = `rgb(${r}, ${g}, ${b})`;
+                    callback(rgb);
+                };
+            }
+        
+            // Gera um gradiente a partir de uma cor base, com variações mais claras e escuras
+            function getGradientFromColor(rgb) {
+                const match = rgb.match(/(\d+),\s*(\d+),\s*(\d+)/);
+                if (!match) return defaultGradient;
+                let r = parseInt(match[1]), g = parseInt(match[2]), b = parseInt(match[3]);
+                function adjustColor(value, amount) {
+                    return Math.min(255, Math.max(0, value + amount));
+                }
+                const light = `rgb(${adjustColor(r, 40)}, ${adjustColor(g, 40)}, ${adjustColor(b, 40)})`;
+                const dark = `rgb(${adjustColor(r, -40)}, ${adjustColor(g, -40)}, ${adjustColor(b, -40)})`;
+                return `linear-gradient(210deg, ${light}, ${rgb}, ${dark})`;
+            }
+        
+            // Efeito hover nos botões: exibe a imagem definida em data-image e oculta o texto
+            buttons.forEach(button => {
+                const hoverImage = button.getAttribute("data-image");
+                button.addEventListener("mouseover", function () {
+                    if (hoverImage) {
+                        button.style.backgroundImage = `url('${hoverImage}')`;
+                        button.style.backgroundSize = "cover";
+                        button.style.backgroundPosition = "center";
+                    }
+                    button.style.color = "transparent";
+                });
+                button.addEventListener("mouseout", function () {
+                    button.style.backgroundImage = "";
+                    // Ao sair do hover, volta para o gradiente atual (calculado ou padrão)
+                    button.style.background = currentGradient;
+                    button.style.color = "white";
+                });
+            });
+        
+            // Navegação entre páginas de botões
+            let currentPage = 1;
+            const totalPages = 4;
+        
+            function updatePageTitle() {
+                const pageTitle = document.getElementById('page-title');
+                if (currentPage === 1) {
+                    pageTitle.textContent = 'Gestão de Carimbos NT - SPI';
+                } else if (currentPage === 2) {
+                    pageTitle.textContent = 'Acessos Núcleo Técnico';
+                } else if (currentPage === 3) {
+                    pageTitle.textContent = 'Acessos Núcleo Técnico';
+                } else if (currentPage === 4) {
+                    pageTitle.textContent = 'Procedimentos Ações Núcleo Técnico';
+                }
+            }
+        
+            function renderPaginationDots(totalPages) {
+                const paginationDots = document.getElementById('pagination-dots');
+                paginationDots.innerHTML = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    const dot = document.createElement('span');
+                    dot.textContent = '⬤';
+                    dot.style.margin = '0 5px';
+                    dot.style.opacity = (i === currentPage) ? '1' : '0.3';
+                    paginationDots.appendChild(dot);
+                }
+            }
+        
+            function updateButtons() {
+                const allGrids = document.querySelectorAll('.button-grid');
+                allGrids.forEach((grid, index) => {
+                    grid.style.display = (index === currentPage - 1) ? 'grid' : 'none';
+                });
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
+                if (currentPage === 1) {
+                    prevBtn.style.opacity = '0.3';
+                    prevBtn.style.pointerEvents = 'none';
+                } else {
+                    prevBtn.style.opacity = '1';
+                    prevBtn.style.pointerEvents = 'auto';
+                }
+                if (currentPage === allGrids.length) {
+                    nextBtn.style.opacity = '0.3';
+                    nextBtn.style.pointerEvents = 'none';
+                } else {
+                    nextBtn.style.opacity = '1';
+                    nextBtn.style.pointerEvents = 'auto';
+                }
+                updatePageTitle();
+                renderPaginationDots(allGrids.length);
+            }
+        
+            function changePage(direction) {
+    if (direction === 'prev' && currentPage > 1) {
+        currentPage--;
+    } else if (direction === 'next' && currentPage < totalPages) {
+        currentPage++;
     }
-
-    function renderPaginationDots(totalPages) {
-        const paginationDots = document.getElementById('pagination-dots');
-        paginationDots.innerHTML = '';
-
-        for (let i = 1; i <= totalPages; i++) {
-            const dot = document.createElement('span');
-            dot.textContent = '⬤';
-            dot.style.margin = '0 5px';
-            dot.style.opacity = (i === currentPage) ? '1' : '0.3';
-            paginationDots.appendChild(dot);
-        }
-    }
-
-    function updateButtons() {
-    const allGrids = document.querySelectorAll('.button-grid');
-    allGrids.forEach((grid, index) => {
-        grid.style.display = (index === currentPage - 1) ? 'grid' : 'none';
-    });
-
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-
-    // Controle de visibilidade dos botões de navegação
-    if (currentPage === 1) {
-        prevBtn.style.opacity = '0.3';
-        prevBtn.style.pointerEvents = 'none';
-    } else {
-        prevBtn.style.opacity = '1';
-        prevBtn.style.pointerEvents = 'auto';
-    }
-
-    if (currentPage === allGrids.length) {
-        nextBtn.style.opacity = '0.3';
-        nextBtn.style.pointerEvents = 'none';
-    } else {
-        nextBtn.style.opacity = '1';
-        nextBtn.style.pointerEvents = 'auto';
-    }
-
-    updatePageTitle();
-    renderPaginationDots(allGrids.length);
+    updateButtons();
 }
 
-    function changePage(direction) {
-        if (direction === 'prev' && currentPage > 1) {
-            currentPage--;
-        } else if (direction === 'next' && currentPage < totalPages) {
-            currentPage++;
-        }
-        updateButtons();
-    }
+            // Expondo a função para uso em onclick inline (HTML)
+            window.changePage = changePage;
+        
+            // Navegação por teclado
+            document.addEventListener("keydown", (e) => {
+                if (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
+                    if (e.key === "ArrowRight") {
+                        document.getElementById("next-btn").click();
+                    } else if (e.key === "ArrowLeft") {
+                        document.getElementById("prev-btn").click();
+                    }
+                }
+            });
+        
+            // Controle de swipe para navegação
+            let touchStartX = 0;
+            let touchEndX = 0;
+            document.addEventListener("touchstart", (e) => {
+                touchStartX = e.touches[0].clientX;
+            });
+            document.addEventListener("touchend", (e) => {
+                touchEndX = e.changedTouches[0].clientX;
+                handleSwipe();
+            });
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                if (touchStartX - touchEndX > swipeThreshold) {
+                    document.getElementById("next-btn").click();
+                } else if (touchEndX - touchStartX > swipeThreshold) {
+                    document.getElementById("prev-btn").click();
+                }
+            }
+        
+            // Inicializa a página de botões
+            updateButtons();
+        });
+        </script>
+        
+        
+        
 
-    // Adiciona controle pelas setas do teclado
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'ArrowLeft') {
-            changePage('prev');
-        } else if (event.key === 'ArrowRight') {
-            changePage('next');
-        }
-    });
-
-    // Inicializa a página
-    updateButtons();
-
-  </script>
 </body>
 </html>

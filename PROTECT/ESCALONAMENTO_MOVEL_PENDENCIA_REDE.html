@@ -8,261 +8,286 @@
     <title>Móvel - Pendencia Rede Externa</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        /* Global */
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #c0074e;
-            zoom: 80%;
+          font-family: 'Poppins', sans-serif;
+          background-color: #c0074e;
+          zoom: 80%;
+          margin: 0;
+          padding: 20px;
         }
+        /* Container principal */
+        .container-principal {
+          background-color: #fff;
+          border-radius: 15px;
+          padding: 20px;
+          margin: 20px auto;
+          width: 90%;
+          max-width: 1300px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        /* Container padrão */
         .container {
-            border: 2px solid #000;
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #f9f9f9;
+          background-color: #f9f9f9;
+          padding: 20px;
+          max-width: 600px;
+          margin: 0 auto 50px;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .titulo {
-            background-color: #c0074e; /* Roxo */
-            color: #fff; /* Branco */
-            padding: 10px;
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 20px;
+        /* Títulos */
+        .titulo, .carimboTitulo {
+          background-color: #c0074e;
+          color: #fff;
+          padding: 10px;
+          text-align: center;
+          font-size: 1.5em;
+          margin-bottom: 20px;
+          border-radius: 8px 8px 0 0;
         }
+        /* Estilo dos formulários */
+        form label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
+        }
+        form input[type="text"],
+        form input[type="datetime-local"],
+        form select,
+        form textarea {
+          width: 100%;
+          padding: 8px;
+          margin-bottom: 15px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          box-sizing: border-box;
+          transition: border-color 0.3s ease;
+        }
+        form input[type="text"]:focus,
+        form input[type="datetime-local"]:focus,
+        form select:focus,
+        form textarea:focus {
+          border-color: #c0074e;
+          outline: none;
+        }
+        form button {
+          background-color: #c0074e;
+          color: #fff;
+          border: none;
+          padding: 10px 20px;
+          cursor: pointer;
+          border-radius: 8px;
+          font-size: 16px;
+          transition: background-color 0.3s ease;
+          margin-top: 10px;
+        }
+        form button:hover {
+          background-color: #a00543;
+        }
+        /* Botões gerais */
+        .botoes {
+          margin-top: 9px;
+          margin-bottom: 10px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+        }
+        .botoes button {
+          background-color: #c0074e;
+          color: #fff;
+          border: none;
+          padding: 6px 40px;
+          cursor: pointer;
+          border-radius: 8px;
+          font-size: 16px;
+          transition: background-color 0.3s ease;
+        }
+        .botoes button:hover {
+          background-color: #a00543;
+        }
+        /* Estilo das tabelas externas */
+        .tabela-container-1 {
+            width: 140vw;
+           max-width: 98%;
+      min-width: 98%;
+      overflow-x: auto;
+      background: white;
+      padding: 0px;
+      margin:  auto auto;
+      border-radius: 8px;
+      box-shadow: 0 9px 10px #a0054395;
+      font-size: 17px;
+      border: 2px solid #dbdbdb;
+      zoom: 55%;
+        }
+        .tabela-container-1 table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        .tabela-container-1 th,
+        .tabela-container-1 td {
+          padding: 8px;
+          text-align: left;
+          height: 50px;
+        }
+        .tabela-container-1 th {
+          background-color: #c0074e;
+          color: #fff;
+          text-align: center;
+          vertical-align: middle;
+        }
+        /* Estilo do Carimbo */
         .carimbo {
-            border: 2px solid #000;
-            padding: 10px;
-            margin-top: 20px;
-            display: none;
+          border: 4px solid #c0074e;
+          padding: 10px;
+          margin-top: 20px;
+          display: none;
+          width: 600px;
+          border-radius: 14px;
+          background: linear-gradient(#c0074e, #a00543);
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .carimboTitulo {
-            background-color: #c0074e; /* Roxo */
-            color: #fff; /* Branco */
-            padding: 10px;
-            text-align: center;
-            font-size: 1.2em;
-            margin-bottom: 10px;
+          font-size: 1.2em;
+          font-weight: bold;
+          margin-bottom: 10px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .carimbo table {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 3px;
         }
-        table, th, td {
-            border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+        .carimbo th,
+        .carimbo td {
+          padding: 8px;
+          text-align: left;
+          border: 3px solid #c0074e;
+          border-radius: 14px;
+          font-weight: 200;
         }
-        th, td {
-            padding: 8px;
-            text-align: left;
+        .carimbo th {
+          background-color: #c0074e;
+          color: #fff;
+          font-weight: bold;
         }
-        th {
-            background-color: #c0074e; /* Roxo */
-            color: #fff; /* Branco */
+        .carimbo td {
+          background-color: #fff;
+          border: 2px solid #a00543;
         }
-        td {
-            background-color: #fff; /* Branco */
-        }
-        textarea {
-            width: 100%;
-            height: 100px;
-        }
-        .botoes {
-            margin-top: 20px;
-        }
-        .botoes button {
-            margin-right: 10px;
-        }
-
-        .container-principal {
-        background-color: #fff; /* Fundo branco */
-        border-radius: 15px; /* Bordas arredondadas */
-        padding: 20px; /* Espaçamento interno */
-        margin: 20px auto; /* Centraliza o container */
-        width: 90%; /* Largura responsiva */
-        max-width: 1300px; /* Limita a largura máxima */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
-        }
-
-        
-
-
-
-
-
-
-
-        .tabela-container-1 {
-            width: 95vw;
-            max-width: 120%;
-            overflow-x: auto;
-            border: 1px solid #d3d3d3;
-            background: white;
-            padding: 5px;
-            margin-left: -10px;
-            font-size: 10px;
-            font-weight: bold;
-        }
-
-        .tabela-container-1 th {
-        text-align: center; 
-        vertical-align: middle; 
-        }
-
-        .tabela-container {
-            width: 93vw;
-            max-width: 120%;
-            overflow-x: auto;
-            border: 1px solid #d3d3d3;
-            background: white;
-            padding: 5px;
-            margin-left: 40px;
-        }
-        textarea {
-            width: 100%;
-            height: 100px;
-        }
-        .botoes {
-            margin-top: 9px;
-            margin-bottom: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .botoes button {
-            background-color: #c0074e;
-            color: #fff;
-            border: none;
-            padding: 6px 40px;
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        .botoes-1 {
-            margin-top: 20px;
-            margin-right: 10px;
-        }
-
-        .botoes button:hover {
-            background-color: #c0074e;
-        }
-    </style>
-</head>
-<body>
-    <div class="container-principal">
-
+      </style>
+    </head>
+    <body>
+      <div class="container-principal">
         <div class="tabela-container-1">
-            <table id="tabela">
-                <thead>
-                    <tr>
-                        <th style="width: 90px;">TA METRO / OUTRO</th>
-                        <th style="width: 70px;">DWDM LINHA</th>
-                        <th style="width: 70px;">TA RAIZ (REDE)</th>
-                        <th style="width: 100px;">LOCALIDADE</th>
-                        <th style="width: 100px;">ROTA</th>
-                        <th style="width: 100px;">DATA ALARME</th>
-                        <th style="width: 120px;">TEMPO CORRIDO</th>
-                        <th style="width: 90px;">RISCO FTTX</th>
-                        <th style="width: 90px;">RISCO ADSL</th>
-                        <th style="width: 130px;">AFETAÇÃO ERB</th>
-                        <th style="width: 120px;">TOTAL RISCO</th>
-                        <th style="width: 120px;">AFETAÇÃO FTTX</th>
-                        <th style="width: 90px;">AFETAÇÃO ADSL</th>
-                        <th style="width: 90px;">AFETAÇÃO TOTAL</th>
-                        <th style="width: 130px;">RESUMO STATUS</th>
-                        <th style="width: 120px;">AREA RESPONSAVEL</th>
-                        <th style="width: 90px;">EVENTOS ENVOLVIDOS</th>
-                        <th style="width: 90px;">TECNOLOGIA</th>
-                        <th style="width: 130px;">TTMC</th>
-                        <th style="width: 120px;">ADJ, SPC</th>
-                    </tr>
-                </thead>
-                <tbody id="tabela-body"></tbody>
-            </table>
+          <table id="tabela">
+            <thead>
+              <tr>
+                <th style="width: 90px;">TA METRO / OUTRO</th>
+                <th style="width: 70px;">DWDM LINHA</th>
+                <th style="width: 70px;">TA RAIZ (REDE)</th>
+                <th style="width: 100px;">LOCALIDADE</th>
+                <th style="width: 100px;">ROTA</th>
+                <th style="width: 100px;">DATA ALARME</th>
+                <th style="width: 120px;">TEMPO CORRIDO</th>
+                <th style="width: 90px;">RISCO FTTX</th>
+                <th style="width: 90px;">RISCO ADSL</th>
+                <th style="width: 130px;">AFETAÇÃO ERB</th>
+                <th style="width: 120px;">TOTAL RISCO</th>
+                <th style="width: 120px;">AFETAÇÃO FTTX</th>
+                <th style="width: 90px;">AFETAÇÃO ADSL</th>
+                <th style="width: 90px;">AFETAÇÃO TOTAL</th>
+                <th style="width: 130px;">RESUMO STATUS</th>
+                <th style="width: 120px;">AREA RESPONSAVEL</th>
+                <th style="width: 90px;">EVENTOS ENVOLVIDOS</th>
+                <th style="width: 90px;">TECNOLOGIA</th>
+                <th style="width: 130px;">TTMC</th>
+                <th style="width: 120px;">ADJ, SPC</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-body"></tbody>
+          </table>
         </div>
-    
-        <div class="botoes">
-            <button class="limparTabela">Limpar</button>
-        </div>
-
         
-    <div class="container">
-        <div class="titulo">NT-SPI 🗼 Pendencia Rede Externa - Móvel 🗼</div>
-        <h1>Formulário</h1>
-        <form id="meuFormulario">
-            
+        <div class="botoes">
+          <button class="limparTabela">Limpar</button>
+        </div>
+        
+        <div class="container">
+          <div class="titulo">NT-SPI 🗼 Pendencia Rede Externa - Móvel 🗼</div>
+          <h1>Formulário</h1>
+          <form id="meuFormulario">
             <label for="taRaiz">TA Raiz:</label>
-            <input type="text" id="taRaiz" name="taRaiz" required><br><br>
-
+            <input type="text" id="taRaiz" name="taRaiz" required>
+            
             <label for="cidade">Cidade:</label>
-            <input type="text" id="cidade" name="cidade" required><br><br>
-
+            <input type="text" id="cidade" name="cidade" required>
+            
             <label for="erbAfetacao">ERB Afetação:</label>
-            <input type="text" id="erbAfetacao" name="erbAfetacao" required><br><br>
-
+            <input type="text" id="erbAfetacao" name="erbAfetacao" required>
+            
             <label for="siteAfetado">Site Afetado:</label>
-            <input type="text" id="siteAfetado" name="siteAfetado" required><br><br>
-
+            <input type="text" id="siteAfetado" name="siteAfetado" required>
+            
             <label for="dataCriacao">Data Criação:</label>
-            <input type="datetime-local" id="dataCriacao" name="dataCriacao" required><br><br>
-
+            <input type="datetime-local" id="dataCriacao" name="dataCriacao" required>
+            
             <label for="responsavel">Responsável:</label>
             <select id="responsavel" name="responsavel" required>
-                <option value="" hidden>SELECIONAR</option>
-                <option value="COORDENADOR">COORDENADOR</option>
-                <option value="GERENTE">GERENTE</option>
-                <option value="SENIOR">SENIOR</option>
-                <option value="DIRETOR">DIRETOR</option>
-              </select><br><br>
-
+              <option value="" hidden>SELECIONAR</option>
+              <option value="COORDENADOR">COORDENADOR</option>
+              <option value="GERENTE">GERENTE</option>
+              <option value="SENIOR">SENIOR</option>
+              <option value="DIRETOR">DIRETOR</option>
+            </select>
+            
             <button type="submit">Enviar</button>
-        </form>
-        
-        <div class="carimbo" id="carimbo">
+          </form>
+          
+          <div class="carimbo" id="carimbo">
             <div class="carimboTitulo">NT-SPI 🗼 Pendencia Rede Externa - Móvel 🗼</div>
             <table>
-                <tr>
-                    <th>Descrição</th>
-                    <th>Atualização</th>
-                </tr>
-                <tr>
-                    <td>TA Raiz</td>
-                    <td><span id="carimboTARaiz"></span></td>
-                </tr>
-                <tr>
-                    <td>Cidade</td>
-                    <td><span id="carimboCidade"></span></td>
-                </tr>
-                <tr>
-                    <td>ERB Afetação</td>
-                    <td><span id="carimboERBAfetacao"></span></td>
-                </tr>
-                <tr>
-                    <td>Site Afetado</td>
-                    <td><span id="carimboSiteAfetado"></span></td>
-                </tr>
-                <tr>
-                    <td>Data Criação</td>
-                    <td><span id="carimboDataCriacao"></span></td>
-                </tr>
-                <tr>
-                    <td>Responsável</td>
-                    <td><span id="carimboResponsavel"></span></td>
-                </tr>
-                <tr>
-                    <td>SLA</td>
-                    <td><span id="carimboSLA"></span></td>
-                </tr>
+              <tr>
+                <th style="text-align: center; white-space: nowrap;">Descrição</th>
+                <th style="text-align: center; white-space: nowrap;">Atualização</th>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">TA Raiz</td>
+                <td><span id="carimboTARaiz"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Cidade</td>
+                <td><span id="carimboCidade"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">ERB Afetação</td>
+                <td><span id="carimboERBAfetacao"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Site Afetado</td>
+                <td><span id="carimboSiteAfetado"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Data Criação</td>
+                <td><span id="carimboDataCriacao"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Responsável</td>
+                <td><span id="carimboResponsavel"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">SLA</td>
+                <td><span id="carimboSLA"></span></td>
+              </tr>
             </table>
-
-            <div class='botoes'>
-                <button id='voltar'>Voltar</button> 
+            <div class="botoes">
+              <button id="voltar">Voltar</button>
             </div>
-
+          </div>
+          
         </div>
-
-    </div>
-
-    </div>
+      </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -432,31 +457,3 @@
         window.location.href = "HOME.html"; // Substitua com o caminho da sua página
     });
 </script>
-
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <!-- Inclui o arquivo de autenticação -->
-  <script src="auth.js"></script>
-  <script>
-    // Verifica se o usuário está autenticado ao carregar a página.
-    checkAuth();
-  </script>
-</head>
-<body>
-  <script>
-    // Função de logout
-    document.getElementById('logout').addEventListener('click', function() {
-      firebase.auth().signOut().then(function() {
-        window.location.href = "login.html";
-      });
-    });
-  </script>
-</body>
-</html>
-

@@ -7,316 +7,361 @@
     <link rel="icon" type="image/png" href="icons/nt.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        /* Global */
         body {
-            font-family: 'Poppins', sans-serif;
-            align-content: center;
-            margin-right: 1px;
-            background-color: #5a5756;
+          font-family: 'Poppins', sans-serif;
+          background: linear-gradient(to left, #2a2a2a, #656565,  #d7d7d7, #656565, #2a2a2a);
+
+          margin: 0;
+          padding: 20px;
+          align-content: center;
         }
+        /* Container principal */
+        .container-principal {
+          background-color: #fff;
+          border-radius: 15px;
+          padding: 20px;
+          margin: 20px auto;
+          width: 90%;
+          max-width: 1200px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        /* Container do formulário */
         .container {
-            border: 2px solid #000;
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #f9f9f9;
+          background-color: #f9f9f9;
+          padding: 20px;
+          max-width: 600px;
+          margin: 0 auto 30px;
+          border-radius: 8px;
         }
+        /* Título da seção */
         .titulo {
-            background-color: #6d6765;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 20px;
+          background-color: #5a5756;
+          color: #fff;
+          padding: 10px;
+          text-align: center;
+          font-size: 1.5em;
+          margin-bottom: 20px;
+          border-radius: 8px 8px 0 0;
         }
-        .carimbo {
-            border: 2px solid #000;
-            padding: 10px;
-            margin-top: 20px;
-            display: none;
-        }
-        .carimboTitulo {
-            background-color: #646160;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 0px;
-        }
-        table th, table td {
-            border: 3px solid #d3d3d3;
-            padding: 8px;
-            text-align: left;
-        }
-        table th {
-            background-color: #5a5756;
-            color: #fff;
-        }
+        /* Estilo das tabelas externas */
         .tabela-container-1 {
-            width: 93vw;
-            max-width: 100%;
-            overflow-x: auto;
-            border: 1px solid #d3d3d3;
-            background: white;
-            padding: 0px;
-            margin-left: 0px;
-            font-size: 12px;
+          width: 93vw;
+          max-width: 100%;
+          overflow-x: auto;
+          border: 1px solid #d3d3d3;
+          background: #fff;
+          padding: 0;
+          margin-left: 0;
+          font-size: 12px;
+          border-radius: 8px;
+          box-shadow: 0 5px 10px rgba(70, 70, 70, 0.82);
+          margin-bottom: 20px;
         }
-
+        .tabela-container-1 table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        .tabela-container-1 th,
+        .tabela-container-1 td {
+          padding: 8px;
+          text-align: left;
+        }
         .tabela-container-1 th {
-        text-align: center; 
-        vertical-align: middle; 
+          background-color: #5a5756;
+          color: #fff;
         }
-
         .tabela-container {
-            width: 93vw;
-            max-width: 100%;
-            overflow-x: auto;
-            border: 1px solid #d3d3d3;
-            background: white;
-            padding: 5px;
-            margin-left: 60px;
+          width: 93vw;
+          max-width: 100%;
+          overflow-x: auto;
+          border: 1px solid #d3d3d3;
+          background: #fff;
+          padding: 5px;
+          margin-left: 60px;
+          border-radius: 8px;
+          box-shadow: 0 10px 0px rgb(0, 0, 0);
         }
+        /* Inputs e Textarea */
+        input[type="text"],
         textarea {
-            width: 100%;
-            height: 100px;
+          width: 100%;
+          padding: 8px;
+          margin-bottom: 15px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          box-sizing: border-box;
+          transition: border-color 0.3s ease;
         }
+        input[type="text"]:focus,
+        textarea:focus {
+          border-color: #5a5756;
+          outline: none;
+        }
+        /* Botões */
         .botoes {
-            margin-top: 9px;
-            margin-bottom: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+          margin-top: 9px;
+          margin-bottom: 1px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
         }
         .botoes button {
-            background-color: #6d6765;
-            color: #fff;
-            border: none;
-            padding: 6px 40px;
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 16px;
+          background-color: #5a5756;
+          color: #fff;
+          border: none;
+          padding: 6px 40px;
+          cursor: pointer;
+          border-radius: 8px;
+          font-size: 16px;
+          transition: background-color 0.3s ease;
         }
-
-        .botoes-1 {
-            margin-top: 20px;
-            margin-right: 10px;
-        }
-
         .botoes button:hover {
-            background-color: #5a5756;
+          background-color: #353535;
         }
-        .container-principal {
-        background-color: #fff; /* Fundo branco */
-        border-radius: 15px; /* Bordas arredondadas */
-        padding: 20px; /* Espaçamento interno */
-        margin: 20px auto; /* Centraliza o container */
-        width: 90%; /* Largura responsiva */
-        max-width: 1200px; /* Limita a largura máxima */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
+        .botoes-1 {
+          margin-top: 20px;
+          margin-right: 10px;
         }
-    </style>
-</head>
-<body>
-    <div class="container-principal">
-    <div class="tabela-container-1">
-        <table id="tabela">
+        /* Estilo do Carimbo (mantendo a identidade em tons roxos) */
+        .carimbo {
+          border: 4px solid #353535;
+          padding: 10px;
+          margin: 20px auto;
+          display: none;
+          width: 600px;
+          border-radius: 14px;
+          background: linear-gradient(#5a5756, #4c4c4c);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .carimboTitulo {
+          background-color: #00000000;
+          color: #ffffff;
+          padding: 10px;
+          text-align: center;
+          font-size: 1.2em;
+          font-weight: bold;
+          margin-bottom: 10px;
+          border-top-left-radius: 8px;
+          border-top-right-radius: 8px;
+        }
+        .carimbo table {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 3px;
+        }
+        .carimbo th,
+        .carimbo td {
+          padding: 8px;
+          text-align: left;
+          border: 3px solid #5a5756;
+          border-radius: 14px;
+          font-weight: 200;
+        }
+        .carimbo th {
+          background-color: #5a5756;
+          color: #ffffff;
+          font-weight: bold;
+        }
+        .carimbo td {
+          background-color: #ffffff;
+          border: 2px solid #353535;
+        }
+
+        input[type="datetime-local"] {
+    width: 100%;
+    height: 35px;
+    padding: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+      </style>
+    </head>
+    <body>
+      <div class="container-principal">
+        <div class="tabela-container-1">
+          <table id="tabela">
             <thead>
-                <tr>
-                    <th style="width: 180px;">CLUSTER</th>
-                    <th style="width: 90px;">CIDADE</th>
-                    <th style="width: 70px;">MINUTOS</th>
-                    <th style="width: 100px;">TQA_CODIGO</th>
-                    <th style="width: 100px;">TQA_RAIZ</th>
-                    <th style="width: 100px;">TIPO_FALHA</th>
-                    <th style="width: 120px;">DATA_CRIAÇÃO</th>
-                    <th style="width: 90px;">PLANTA</th>
-                    <th style="width: 90px;">SITE</th>
-                    <th style="width: 130px;">ÁREA NOME</th>
-                    <th style="width: 120px;">TIPO_SITE</th>
-                </tr>
+              <tr>
+                <th style="width: 180px;">CLUSTER</th>
+                <th style="width: 90px;">CIDADE</th>
+                <th style="width: 70px;">MINUTOS</th>
+                <th style="width: 100px;">TQA_CODIGO</th>
+                <th style="width: 100px;">TQA_RAIZ</th>
+                <th style="width: 100px;">TIPO_FALHA</th>
+                <th style="width: 120px;">DATA_CRIAÇÃO</th>
+                <th style="width: 90px;">PLANTA</th>
+                <th style="width: 90px;">SITE</th>
+                <th style="width: 130px;">ÁREA NOME</th>
+                <th style="width: 120px;">TIPO_SITE</th>
+              </tr>
             </thead>
             <tbody id="tabela-body"></tbody>
-        </table>
-    </div>
-
-    <div class="botoes">
-        <button id="botaoLimpar">Limpar</button>
-    </div>
-
-    <div class="container">
-        <div class="titulo">NT-SPI 🔋 Escalonamentos INFRA 🔋</div>
-        <h1>Formulário</h1>
-        <form id="meuFormulario">
+          </table>
+        </div>
+    
+        <div class="botoes">
+          <button id="botaoLimpar">Limpar</button>
+        </div>
+    
+        <div class="container">
+          <div class="titulo">NT-SPI 🔋 Escalonamentos INFRA 🔋</div>
+          <h1>Formulário</h1>
+          <form id="meuFormulario">
             <label for="responsavel">Responsável:</label>
             <input type="text" id="responsavel" name="responsavel" required><br><br>
-
+    
             <label for="ta">TA:</label>
             <input type="text" id="ta" name="ta" required><br><br>
-
+    
             <label for="dataAbertura">Data Abertura:</label>
-            <input type="text" id="dataAbertura" name="dataAbertura" required oninput="this.value = this.value.replace(/[^0-9/: ]/g, '')"><br><br>
-
+            <input type="datetime-local" id="dataAbertura" name="dataAbertura" required><br><br>            
+    
             <label for="tipoAlarme">Tipo Alarme:</label>
             <input type="text" id="tipoAlarme" name="tipoAlarme" required><br><br>
-
+    
             <label for="atCentralSite">AT/Central/Site:</label>
             <input type="text" id="atCentralSite" name="atCentralSite" required><br><br>
-
+    
             <input type="hidden" id="envio" name="envio" value="">
             <button type="submit">Enviar</button>
-        </form>
-        <div class="carimbo" id="carimbo">
+          </form>
+          <div class="carimbo" id="carimbo">
             <div class="carimboTitulo">NT-SPI 🔋 Escalonamentos INFRA 🔋</div>
             <table>
-                <tr>
-                    <th>Descrição</th>
-                    <th>Atualização</th>
-                </tr>
-                <tr>
-                    <td>Responsável</td>
-                    <td><span id="carimboResponsavel"></span></td>
-                </tr>
-                <tr>
-                    <td>TA</td>
-                    <td><span id="carimboTA"></span></td>
-                </tr>
-                <tr>
-                    <td>Data Abertura</td>
-                    <td><span id="carimboDataAbertura"></span></td>
-                </tr>
-                <tr>
-                    <td>Tipo Alarme</td>
-                    <td><span id="carimboTipoAlarme"></span></td>
-                </tr>
-                <tr>
-                    <td>AT/Central/Site</td>
-                    <td><span id="carimboATCentralSite"></span></td>
-                </tr>
-                <tr>
-                    <td>Envio</td>
-                    <td><span id="carimboEnvio"></span></td>
-                </tr>
-                <tr>
-                    <td>Tempo TA</td>
-                    <td><span id="carimboTempoTA"></span></td>
-                </tr>
+              <tr>
+                <th style="text-align: center;">Descrição</th>
+                <th style="text-align: center;">Atualização</th>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Responsável</td>
+                <td><span id="carimboResponsavel"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">TA</td>
+                <td><span id="carimboTA"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Data Abertura</td>
+                <td><span id="carimboDataAbertura"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Tipo Alarme</td>
+                <td><span id="carimboTipoAlarme"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">AT/Central/Site</td>
+                <td><span id="carimboATCentralSite"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Envio</td>
+                <td><span id="carimboEnvio"></span></td>
+              </tr>
+              <tr>
+                <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Tempo TA</td>
+                <td><span id="carimboTempoTA"></span></td>
+              </tr>
             </table>
             <div class="botoes-1">
-                <button id="botaoVoltar">Voltar</button>
+              <button id="botaoVoltar">Voltar</button>
             </div>            
+          </div>
         </div>
-    </div>
-</div>
-
-    <script>
-
-function criarLinha(celulas = 11, valores = []) {
-    let tabela = document.getElementById("tabela-body");
-
-    // Verifica se já existe uma linha na tabela
-    let novaLinha = tabela.rows[0]; // Verifica a primeira linha, caso exista
-
-    // Se já existir uma linha, substitui seus valores
-    if (novaLinha) {
-        for (let i = 0; i < celulas; i++) {
-            novaLinha.cells[i].textContent = valores[i] || "";  // Substitui o conteúdo da célula
-        }
-    } else {
-        // Caso não exista nenhuma linha, cria uma nova
-        novaLinha = tabela.insertRow();
-        for (let i = 0; i < celulas; i++) {
-            let celula = novaLinha.insertCell();
-            celula.contentEditable = "true";
-            celula.textContent = valores[i] || "";
-        }
-    }
-}
-
-    function inicializarTabela(linhas = 1) {
-        let tabela = document.getElementById("tabela-body");
-        tabela.innerHTML = "";
-        for (let i = 0; i < linhas; i++) {
-            criarLinha();
-        }
-    }
-
-    document.addEventListener("paste", function(event) {
-    // Verifica se o foco está dentro de uma célula da tabela
-    let target = event.target;
-
-    // Se o elemento que está recebendo o paste for uma célula da tabela
-    if (target.tagName.toLowerCase() === 'td') {
-        event.preventDefault();  // Impede o comportamento de colagem padrão
-        let pasteData = event.clipboardData.getData("text");
-        let linhas = pasteData.split("\n").filter(linha => linha.trim() !== "");
-
-        // Para cada linha colada
-        linhas.forEach((linha, linhaIndex) => {
-            let colunas = linha.split("\t");
-
-            // Para cada coluna dentro da linha, preenche a célula
-            colunas.forEach((valor, colunaIndex) => {
-                // Verifica se a linha e a coluna existem dentro da tabela
-                let linhaTabela = target.parentNode.parentNode.rows[linhaIndex];
-                if (linhaTabela) {
-                    let celula = linhaTabela.cells[colunaIndex];
-                    if (celula) {
-                        celula.innerText = valor;  // Preenche a célula com o valor
-                    }
+      </div>
+      <script>
+        function criarLinha(celulas = 11, valores = []) {
+            let tabela = document.getElementById("tabela-body");
+        
+            let novaLinha = tabela.rows[0];
+        
+            if (novaLinha) {
+                for (let i = 0; i < celulas; i++) {
+                    novaLinha.cells[i].textContent = valores[i] || "";
                 }
+            } else {
+                novaLinha = tabela.insertRow();
+                for (let i = 0; i < celulas; i++) {
+                    let celula = novaLinha.insertCell();
+                    celula.contentEditable = "true";
+                    celula.textContent = valores[i] || "";
+                }
+            }
+        }
+        
+        function inicializarTabela(linhas = 1) {
+            let tabela = document.getElementById("tabela-body");
+            tabela.innerHTML = "";
+            for (let i = 0; i < linhas; i++) {
+                criarLinha();
+            }
+        }
+        
+        document.addEventListener("paste", function(event) {
+            let target = event.target;
+        
+            if (target.tagName.toLowerCase() === 'td') {
+                event.preventDefault();
+                let pasteData = event.clipboardData.getData("text");
+                let linhas = pasteData.split("\n").filter(linha => linha.trim() !== "");
+        
+                linhas.forEach((linha, linhaIndex) => {
+                    let colunas = linha.split("\t");
+        
+                    colunas.forEach((valor, colunaIndex) => {
+                        let linhaTabela = target.parentNode.parentNode.rows[linhaIndex];
+                        if (linhaTabela) {
+                            let celula = linhaTabela.cells[colunaIndex];
+                            if (celula) {
+                                celula.innerText = valor;
+                            }
+                        }
+                    });
+                });
+        
+                atualizarCampoTA();
+            }
+        });
+        
+        function limparFormulario() {
+            document.getElementById("responsavel").value = "";
+            document.getElementById("ta").value = "";
+            document.getElementById("tipoAlarme").value = "";
+            document.getElementById("dataAbertura").value = "";
+            document.getElementById("atCentralSite").value = "";
+        
+            let linhas = document.querySelectorAll("#tabela-body tr");
+            linhas.forEach(linha => {
+                let celulas = linha.querySelectorAll("td");
+                celulas.forEach(celula => {
+                    celula.textContent = "";
+                });
             });
-        });
-
-        atualizarCampoTA();  // Atualiza o carimbo (campo TA)
-    } else {
-        // Caso o foco não seja dentro da tabela, o comportamento de colar é normal
-        return;  // Deixa o comportamento de colar padrão funcionar
-    }
-});
-    function limparFormulario() {
-    // Limpa os campos do formulário
-    document.getElementById("responsavel").value = "";
-    document.getElementById("ta").value = "";
-    document.getElementById("tipoAlarme").value = "";
-    document.getElementById("dataAbertura").value = "";
-    document.getElementById("atCentralSite").value = "";
-
-    // Percorre todas as células da tabela e apaga o conteúdo delas
-    let linhas = document.querySelectorAll("#tabela-body tr");
-    linhas.forEach(linha => {
-        let celulas = linha.querySelectorAll("td");
-        celulas.forEach(celula => {
-            celula.textContent = ""; // Limpa o conteúdo das células
-        });
-    });
-}
-
-    function atualizarCampoTA() {
+        }
+        
+        function atualizarCampoTA() {
     let primeiraLinha = document.querySelector("#tabela-body tr");
     if (primeiraLinha) {
         let codigo = primeiraLinha.cells[3]?.textContent.trim();
         let tipoFalha = primeiraLinha.cells[5]?.textContent.trim();
         let dataCriacao = primeiraLinha.cells[6]?.textContent.trim();
-        let cidade = primeiraLinha.cells[1]?.textContent.trim(); // Coluna Cidade
-        let site = primeiraLinha.cells[8]?.textContent.trim(); // Coluna Site
+        let cidade = primeiraLinha.cells[1]?.textContent.trim();
+        let site = primeiraLinha.cells[8]?.textContent.trim();
 
         if (codigo) document.getElementById("ta").value = codigo;
         if (tipoFalha) document.getElementById("tipoAlarme").value = tipoFalha;
 
         if (dataCriacao) {
-            let partes = dataCriacao.split(" ");
-            let dataPartes = partes[0].split("-");
-            let hora = partes[1];
-
-            if (dataPartes.length === 3) {
-                let dataFormatada = `${dataPartes[2]}/${dataPartes[1]}/${dataPartes[0]} ${hora}`;
-                document.getElementById("dataAbertura").value = dataFormatada;
+            // Tenta identificar o formato da data automaticamente
+            let dataObj = new Date(dataCriacao);
+            if (!isNaN(dataObj)) {
+                // Converte para o formato usado no input datetime-local (YYYY-MM-DDTHH:MM)
+                let localFormat = dataObj.toISOString().slice(0, 16);
+                document.getElementById("dataAbertura").value = localFormat;
             }
         }
 
@@ -326,115 +371,108 @@ function criarLinha(celulas = 11, valores = []) {
     }
 }
 
-    function gerarTabela(event) {
-        event.preventDefault(); // Evita o recarregamento da página ao enviar o formulário
-
-        let responsavel = document.getElementById("responsavel").value;
-        let ta = document.getElementById("ta").value;
-        let dataAbertura = document.getElementById("dataAbertura").value;
-        let tipoAlarme = document.getElementById("tipoAlarme").value;
-        let atCentralSite = document.getElementById("atCentralSite").value;
-
-        if (dataAbertura) {
-            let partes = dataAbertura.split(" ");
-            let dataPartes = partes[0].split("/");
-            let hora = partes[1];
-
-            if (dataPartes.length === 3) {
-                dataAbertura = `${dataPartes[0]}/${dataPartes[1]}/${dataPartes[2]} ${hora}`;
+        
+        function gerarTabela(event) {
+            event.preventDefault();
+        
+            let responsavel = document.getElementById("responsavel").value;
+            let ta = document.getElementById("ta").value;
+            let dataAbertura = document.getElementById("dataAbertura").value;
+            let tipoAlarme = document.getElementById("tipoAlarme").value;
+            let atCentralSite = document.getElementById("atCentralSite").value;
+        
+            if (dataAbertura) {
+                let partes = dataAbertura.split(" ");
+                let dataPartes = partes[0].split("/");
+                let hora = partes.length > 1 ? partes[1] : "00:00";
+        
+                if (dataPartes.length === 3) {
+                    dataAbertura = `${dataPartes[0]}/${dataPartes[1]}/${dataPartes[2]} ${hora}`;
+                }
             }
+        
+            let tabela = document.getElementById("tabelaFinal").getElementsByTagName('tbody')[0];
+            let novaLinha = tabela.insertRow();
+        
+            let valores = [responsavel, ta, dataAbertura, tipoAlarme, atCentralSite];
+            valores.forEach(valor => {
+                let celula = novaLinha.insertCell();
+                celula.textContent = valor;
+            });
+        
+            document.getElementById("tabelaFinalContainer").style.display = "block";
+            limparFormulario();
         }
+        
+        document.getElementById('meuFormulario').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-        let tabela = document.getElementById("tabelaFinal").getElementsByTagName('tbody')[0];
-        let novaLinha = tabela.insertRow();
+    var responsavel = document.getElementById('responsavel').value;
+    var ta = document.getElementById('ta').value;
+    var dataAbertura = document.getElementById('dataAbertura').value;
+    var tipoAlarme = document.getElementById('tipoAlarme').value;
+    var atCentralSite = document.getElementById('atCentralSite').value;
+    var envio = new Date();
+    var envioFormatado = formatarDataEnvio(envio);
+    var tempoTA = calcularTempoTA(dataAbertura, envio);
 
-        let valores = [responsavel, ta, dataAbertura, tipoAlarme, atCentralSite];
-        valores.forEach(valor => {
-            let celula = novaLinha.insertCell();
-            celula.textContent = valor;
-        });
-
-        document.getElementById("tabelaFinalContainer").style.display = "block"; // Exibe a tabela gerada
-        limparFormulario();
+    function formatarDataHora(dataISO) {
+        if (!dataISO) return '';
+        let data = new Date(dataISO);
+        if (isNaN(data)) return '';
+        let dia = String(data.getDate()).padStart(2, '0');
+        let mes = String(data.getMonth() + 1).padStart(2, '0');
+        let ano = data.getFullYear();
+        let hora = String(data.getHours()).padStart(2, '0');
+        let minuto = String(data.getMinutes()).padStart(2, '0');
+        return `${dia}/${mes}/${ano} ${hora}:${minuto}`;
     }
 
-    inicializarTabela();
-
-
-
-
-
-
-    document.getElementById('meuFormulario').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var responsavel = document.getElementById('responsavel').value;
-            var ta = document.getElementById('ta').value;
-            var dataAbertura = document.getElementById('dataAbertura').value;
-            var tipoAlarme = document.getElementById('tipoAlarme').value;
-            var atCentralSite = document.getElementById('atCentralSite').value;
-            var envio = new Date();
-            var envioFormatado = formatarDataEnvio(envio);
-            var tempoTA = calcularTempoTA(dataAbertura, envio);
-            
-            function formatarDataHora(dataHora) {
-    return dataHora || '';
-}
-function formatarDataEnvio(dataHora) {
-    if (!dataHora) return '';
-    var dia = String(dataHora.getDate()).padStart(2, '0');
-    var mes = String(dataHora.getMonth() + 1).padStart(2, '0'); // Mês começa em 0
-    var ano = dataHora.getFullYear();
-    var horas = String(dataHora.getHours()).padStart(2, '0');
-    var minutos = String(dataHora.getMinutes()).padStart(2, '0');
-    return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
-}
+    function formatarDataEnvio(dataHora) {
+        let dia = String(dataHora.getDate()).padStart(2, '0');
+        let mes = String(dataHora.getMonth() + 1).padStart(2, '0');
+        let ano = dataHora.getFullYear();
+        let horas = String(dataHora.getHours()).padStart(2, '0');
+        let minutos = String(dataHora.getMinutes()).padStart(2, '0');
+        return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+    }
 
     function calcularTempoTA(dataAbertura, envio) {
-    var partes = dataAbertura.split(' '); // Separar data e hora
-    var dataPartes = partes[0].split('/'); // Separar dia, mês e ano
-    var horaPartes = partes[1].split(':'); // Separar horas e minutos
+        if (!dataAbertura) return "--:--";
+        let dataInicio = new Date(dataAbertura);
+        if (isNaN(dataInicio)) return "--:--";
 
-    var dia = parseInt(dataPartes[0], 10);
-    var mes = parseInt(dataPartes[1], 10) - 1; // Mês começa em 0 no JS
-    var ano = parseInt(dataPartes[2], 10);
-    var horas = parseInt(horaPartes[0], 10);
-    var minutos = parseInt(horaPartes[1], 10);
+        let diffMs = envio - dataInicio;
+        let diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+        let diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        return `${String(diffHrs).padStart(2, '0')}:${String(diffMins).padStart(2, '0')}`;
+    }
 
-    var dataAberturaDate = new Date(ano, mes, dia, horas, minutos);
-    var envioDate = new Date(envio);
+    document.getElementById('carimboResponsavel').textContent = responsavel;
+    document.getElementById('carimboTA').textContent = ta;
+    document.getElementById('carimboDataAbertura').textContent = formatarDataHora(dataAbertura);
+    document.getElementById('carimboTipoAlarme').textContent = tipoAlarme;
+    document.getElementById('carimboATCentralSite').textContent = atCentralSite;
+    document.getElementById('carimboEnvio').textContent = envioFormatado;
+    document.getElementById('carimboTempoTA').textContent = tempoTA;
+    document.getElementById('carimbo').style.display = 'block';
+});
 
-    var diffMs = envioDate - dataAberturaDate; // Diferença em milissegundos
-    var diffHrs = Math.floor(diffMs / (1000 * 60 * 60)); // Converter para horas
-    var diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60)); // Minutos restantes
-
-    return `${String(diffHrs).padStart(2, '0')}:${String(diffMins).padStart(2, '0')}`;
-}
-            
-            document.getElementById('carimboResponsavel').textContent = responsavel;
-            document.getElementById('carimboTA').textContent = ta;
-            document.getElementById('carimboDataAbertura').textContent = formatarDataHora(dataAbertura);
-            document.getElementById('carimboTipoAlarme').textContent = tipoAlarme;
-            document.getElementById('carimboATCentralSite').textContent = atCentralSite;
-            document.getElementById('carimboEnvio').textContent = envioFormatado;
-            document.getElementById('carimboTempoTA').textContent = tempoTA;
-            document.getElementById('carimbo').style.display = 'block';
+        
+        document.getElementById('botaoVoltar').addEventListener('click', function () {
+            document.getElementById('carimbo').style.display = 'none';
+            limparFormulario();
         });
         
+        document.getElementById('botaoLimpar').addEventListener('click', function () {
+            document.getElementById('meuFormulario').reset();
+            document.getElementById('carimbo').style.display = 'none';
+            limparFormulario();
+        });
         
+        inicializarTabela();
+        </script>
         
-        
-document.getElementById('botaoVoltar').addEventListener('click', function() {
-    document.getElementById('carimbo').style.display = 'none';
-    limparFormulario(); 
-});
-
-document.getElementById('botaoLimpar').addEventListener('click', function() {
-    document.getElementById('meuFormulario').reset();
-    document.getElementById('carimbo').style.display = 'none';
-    limparFormulario(); 
-});
-
-</script>
 
 </body>
 </html>
@@ -479,31 +517,3 @@ document.getElementById('botaoLimpar').addEventListener('click', function() {
         window.location.href = "HOME.html"; // Substitua com o caminho da sua página
     });
 </script>
-
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <!-- Inclui o arquivo de autenticação -->
-  <script src="auth.js"></script>
-  <script>
-    // Verifica se o usuário está autenticado ao carregar a página.
-    checkAuth();
-  </script>
-</head>
-<body>
-  <script>
-    // Função de logout
-    document.getElementById('logout').addEventListener('click', function() {
-      firebase.auth().signOut().then(function() {
-        window.location.href = "login.html";
-      });
-    });
-  </script>
-</body>
-</html>
-

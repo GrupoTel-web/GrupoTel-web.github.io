@@ -8,376 +8,369 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #9370DB;
-            
-        }
-        .container {
-            border: 2px solid #000;
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #f9f9f9;
-            margin-bottom: 30px;
-        }
-        .titulo {
-            background-color: #9370DB; /* Roxo mais claro */
-            color: #fff; /* Branco */
-            padding: 10px;
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-        }
-        .carimbo {
-            border: 2px solid #000;
-            margin-top: 20px;
-            display: none;
-        }
-        .carimboTitulo {
-            background-color: #9370DB; /* Roxo mais claro */
-            color: #fff; /* Branco */
-            padding: 10px;
-            text-align: center;
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 9px;
-        }
-        table, th, td {
-            border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #9370DB; /* Roxo mais claro */
-            color: #fff; /* Branco */
-        }
-        td {
-            background-color: #fff; /* Branco */
-        }
-        textarea {
-            width: 100%;
-            height: 100px;
-        }
-        .botoes {
-            margin-top: 20px;
-        }
-        .botoes button {
-            margin-right: 10px;
-        }
-        #atencao {
-            display: none;
-        }
-        .atencaoLaranja {
-            color: #FF8C00; /* Laranja escuro */
-        }
-        .tabela-container {
-            height: auto;
-            width: 100vw;
-            max-width: 100%;
-            overflow-x: auto;
-            border: 1px solid #d3d3d3;
-            background: white;
-            padding: 5px;
-            font-size: 10px;
-            font-weight: bold;
-            margin: 1px 0; /* Adiciona espaçamento entre as tabelas */
-        }
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to left, #664d98, #8f71cd,  #f1d4ff, #8f71cd, #664d98);
+      margin: 0;
+      padding: 20px;
+      zoom: 75%;
+    }
 
-        .tabela-container th {
-        text-align: center; 
-        vertical-align: middle; 
-        }
+    /* Container principal com cantos arredondados e sombra */
+    .container-principal {
+      background-color: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 1200px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
-        #mensagem-selecao {
-    position: relative;
-    margin-bottom: 20px; /* Espaço entre o texto e as tabelas */
-    text-align: center;
-    font-size: 20px;
-    font-family: Arial, sans-serif;
-    font-weight: bold;
-    animation: piscar 0.7s infinite alternate;
+    /* Estilo do cabeçalho */
+    .titulo {
+      background-color: #9370DB;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      border-radius: 8px 8px 0 0;
+    }
+
+    /* Container dos formulários (exceto carimbo) */
+    .container {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 600px;
+      margin: 0 auto 30px;
+      border: none;
+    }
+
+    /* Inputs, selects e textarea */
+    input[type="text"],
+    input[type="datetime-local"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 15px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #9370DB;
+      outline: none;
+    }
+
+    /* Botões */
+    .botoes,
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .botoes button,
+    .botoes-button2,
+    button[type="submit"] {
+      background-color: #9370DB;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+    .botoes button:hover,
+    .botoes-button2:hover,
+    button[type="submit"]:hover {
+      background-color: #7a5cc7;
+    }
+
+    /* Estilo dos containers das tabelas */
+    .tabela-container {
+      width: 100vw;
+      max-width: 100%;
+      overflow-x: auto;
+      background: #fff;
+      padding: 0px;
+      margin: 5px 0;
+      border-radius: 8px;
+      box-shadow: 0px 5px 5px #7a5cc7a7;
+      display: none; /* Tabelas ocultas inicialmente */
+      font-size: 10px;
+      font-weight: bold;
+    }
+    .tabela-container table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .tabela-container th,
+    .tabela-container td {
+      padding: 8px;
+      text-align: left;
+    }
+    .tabela-container th {
+      background-color: #9370DB;
+      color: #fff;
+    }
+    .tabela-container tr {
+      border-bottom: 1px solid #d3d3d3;
+    }
+    .tabela-container tr:last-child {
+      border-bottom: none;
+    }
+
+    /* Outros elementos */
+    #mensagem-selecao {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 20px;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      animation: piscar 0.7s infinite alternate;
+    }
+    @keyframes piscar {
+      0% { color: #e0587c; }
+    }
+    #atencao {
+      display: none;
+    }
+    .atencaoLaranja {
+      color: #FF8C00;
+    }
+    
+    /* Carimbo - mantém o estilo original */
+    .carimbo {
+  border: 4px solid #a558e0; /* Borda roxa */
+  padding: 10px;
+  margin: 20px auto;
+  display: none;
+  width: 600px;
+  border-radius: 14px;
+  background: linear-gradient(#9370DB, #8e5cf2); /* Gradiente em tons roxos */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-        @keyframes piscar {
-            0% { color: #ff0000; }
-        }
-
-        
-
-        .botoes-button2 {
-    background-color: #9370DB;
-    color: #fff;
-    border: none;
-    padding: 6px 40px;
-    cursor: pointer;
-    border-radius: 4px;
-    font-size: 16px;
-    margin-bottom: 1px;
-    margin-top: 1px;
-    vertical-align: middle;
+.carimboTitulo {
+  background-color: #9370DB; /* Fundo roxo */
+  color: #ffffff; /* Texto branco */
+  padding: 10px;
+  text-align: center;
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 0px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
-/* Contêiner para centralizar o botão horizontalmente */
-.button-container {
-    display: flex;
-    justify-content: center;  /* Alinha o botão no centro horizontal */
-    margin-top: 20px;         /* Mantém a posição vertical que você já queria */
-    margin-bottom: 15px;
+/* Permitir bordas arredondadas nas células usando 'separate' com espaçamento */
+.carimbo table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 9px;
 }
 
-
-#conteudo {
-    display: flex;
-    flex-direction: column; /* Alinha os itens de forma vertical */
-    justify-content: center; /* Centraliza no eixo vertical */
-    align-items: center; /* Centraliza no eixo horizontal */
-    height: auto; /* Ocupa 100% da altura da tela */
-    margin: 0; /* Remove qualquer margem */
-    padding: 0; /* Remove qualquer padding */
-    text-align: center; /* Alinha o conteúdo das tabelas ao centro */
+.carimbo th,
+.carimbo td {
+  padding: 10px;
+  text-align: left;
+  border: 3px solid #9270d5; /* Borda roxa */
+  border-radius: 14px;
+  font-weight: 200;
 }
 
-/* Estilo da tabela-container */
-
-/* Outras regras para estilização das tabelas */
-table {
-    width: 100%;
-    border-collapse: collapse;
+.carimbo th {
+  background-color: #9370DB;
+  color: #ffffff;
+  font-weight: bold;
 }
 
-table, th, td {
-    border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+.carimbo td {
+  background-color: #ffffff;
+  border: 2px solid #5d3a73; /* Tom roxo mais escuro para contraste */
 }
 
-th, td {
-    padding: 8px;
-    text-align: left;
-}
-
-th {
-    background-color: #9370DB; /* Roxo mais claro */
-    color: #fff; /* Branco */
-}
-
-td {
-    background-color: #fff; /* Branco */
-}
-
-textarea {
-    width: 100%;
-    height: 100px;
-}
-
-.botoes {
-    margin-top: 10px;
-}
-
-.botoes button {
-    margin-right: 10px;
-}
-
-#atencao {
-    display: none;
-}
-
-.atencaoLaranja {
-    color: #FF8C00; /* Laranja escuro */
-}
-
-/* Estilo do botão para centralização */
-.button-container {
-    display: flex;
-    justify-content: center;  /* Alinha o botão no centro horizontal */
-    margin-top: 3px;         /* Mantém a posição vertical que você já queria */
-    margin-bottom: 3px;
-}
-
-.tabela-container {
-            display: none; /* Oculta todas as tabelas inicialmente */
-        }
-        .container-principal {
-        background-color: #fff; /* Fundo branco */
-        border-radius: 15px; /* Bordas arredondadas */
-        padding: 20px; /* Espaçamento interno */
-        margin: 20px auto; /* Centraliza o container */
-        width: 90%; /* Largura responsiva */
-        max-width: 1200px; /* Limita a largura máxima */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
-        }
-
-
-    </style>
+  </style>
 </head>
 <body>
-    <div class="container-principal">
-    <!-- Contêiner para centralizar todo o conteúdo -->
-<div id="conteudo">
-    <!-- Mensagem de seleção -->
-    <div id="mensagem-selecao" style="display: none;">Selecione o tipo de adjacência!</div>
+  <div class="container-principal">
+    <!-- Conteúdo de seleção e tabelas -->
+    <div id="conteudo">
+      <div id="mensagem-selecao" style="display: none;">Selecione o tipo de adjacência!</div>
 
-    <!-- Primeira Tabela -->
-    <div class="tabela-container" id="tabela-OLT" style="display: none;">
+      <!-- Primeira Tabela -->
+      <div class="tabela-container" id="tabela-OLT">
         <table>
-            <thead>
-                <tr>
-                    <th style="width: 90px;">CLUSTER</th>
-                    <th style="width: 70px;">CIDADE</th>
-                    <th style="width: 70px;">CNLAT</th>
-                    <th style="width: 100px;">MINUTOS</th>
-                    <th style="width: 100px;">CLIENTES</th>
-                    <th style="width: 100px;">TQA_CODIGO</th>
-                    <th style="width: 120px;">TRATATIVA</th>
-                    <th style="width: 90px;">TIPO_FALHA</th>
-                    <th style="width: 90px;">DATA_CRIAÇÃO</th>
-                    <th style="width: 130px;">OLT</th>
-                    <th style="width: 120px;">EQUIP</th>
-                    <th style="width: 120px;">MASSIVA</th>
-                    <th style="width: 90px;">SEVERIDADE</th>
-                </tr>
-            </thead>
-            <tbody class="tabela-body"></tbody>
+          <thead>
+            <tr>
+              <th style="width: 90px;">CLUSTER</th>
+              <th style="width: 70px;">CIDADE</th>
+              <th style="width: 70px;">CNLAT</th>
+              <th style="width: 100px;">MINUTOS</th>
+              <th style="width: 100px;">CLIENTES</th>
+              <th style="width: 100px;">TQA_CODIGO</th>
+              <th style="width: 120px;">TRATATIVA</th>
+              <th style="width: 90px;">TIPO_FALHA</th>
+              <th style="width: 90px;">DATA_CRIAÇÃO</th>
+              <th style="width: 130px;">OLT</th>
+              <th style="width: 120px;">EQUIP</th>
+              <th style="width: 120px;">MASSIVA</th>
+              <th style="width: 90px;">SEVERIDADE</th>
+            </tr>
+          </thead>
+          <tbody class="tabela-body"></tbody>
         </table>
-    </div>
+      </div>
 
-    <!-- Segunda Tabela -->
-    <div class="tabela-container" id="tabela-HL4" style="display: none;">
+      <!-- Segunda Tabela -->
+      <div class="tabela-container" id="tabela-HL4">
         <table>
-            <thead>
-                <tr>
-                    <th style="width: 90px;">CLUSTER</th>
-                    <th style="width: 70px;">CIDADE</th>
-                    <th style="width: 70px;">MINUTOS</th>
-                    <th style="width: 100px;">CLIENTES</th>
-                    <th style="width: 100px;">TQA_CODIGO</th>
-                    <th style="width: 100px;">TQA_RAIZ</th>
-                    <th style="width: 90px;">TIPO_FALHA</th>
-                    <th style="width: 70px;">DATA_CRIAÇÃO</th>
-                    <th style="width: 70px;">HOSTNAME</th>
-                    <th style="width: 100px;">EQUIP</th>
-                    <th style="width: 100px;">SEVERIDADE</th>
-                </tr>
-            </thead>
-            <tbody class="tabela-body"></tbody>
+          <thead>
+            <tr>
+              <th style="width: 90px;">CLUSTER</th>
+              <th style="width: 70px;">CIDADE</th>
+              <th style="width: 70px;">MINUTOS</th>
+              <th style="width: 100px;">CLIENTES</th>
+              <th style="width: 100px;">TQA_CODIGO</th>
+              <th style="width: 100px;">TQA_RAIZ</th>
+              <th style="width: 90px;">TIPO_FALHA</th>
+              <th style="width: 70px;">DATA_CRIAÇÃO</th>
+              <th style="width: 70px;">HOSTNAME</th>
+              <th style="width: 100px;">EQUIP</th>
+              <th style="width: 100px;">SEVERIDADE</th>
+            </tr>
+          </thead>
+          <tbody class="tabela-body"></tbody>
         </table>
-    </div>
+      </div>
 
-    <!-- Terceira Tabela -->
-    <div class="tabela-container" id="tabela-SWD" style="display: none;">
+      <!-- Terceira Tabela -->
+      <div class="tabela-container" id="tabela-SWD">
         <table>
-            <thead>
-                <tr>
-                    <th style="width: 90px;">CONTRATO</th>
-                    <th style="width: 70px;">MUNICIPIO</th>
-                    <th style="width: 70px;">TQA_CODIGO</th>
-                    <th style="width: 100px;">TQA_RAIZ</th>
-                    <th style="width: 100px;">TIPO_BILHETE</th>
-                    <th style="width: 100px;">DATA_CRIAÇÃO</th>
-                    <th style="width: 90px;">HOSTNAME</th>
-                    <th style="width: 70px;">NOME_REDE_AGREGADOR</th>
-                </tr>
-            </thead>
-            <tbody class="tabela-body"></tbody>
+          <thead>
+            <tr>
+              <th style="width: 90px;">CONTRATO</th>
+              <th style="width: 70px;">MUNICIPIO</th>
+              <th style="width: 70px;">TQA_CODIGO</th>
+              <th style="width: 100px;">TQA_RAIZ</th>
+              <th style="width: 100px;">TIPO_BILHETE</th>
+              <th style="width: 100px;">DATA_CRIAÇÃO</th>
+              <th style="width: 90px;">HOSTNAME</th>
+              <th style="width: 70px;">NOME_REDE_AGREGADOR</th>
+            </tr>
+          </thead>
+          <tbody class="tabela-body"></tbody>
         </table>
-    </div>
+      </div>
 
-
-    <div class="tabela-container" id="tabela-CONDOMÍNIO" style="display: none;">
+      <!-- Quarta Tabela -->
+      <div class="tabela-container" id="tabela-CONDOMÍNIO">
         <table>
-            <thead>
-                <tr>
-                    <th style="width: 90px;">REGIONAL</th>
-                    <th style="width: 70px;">MINUTOS</th>
-                    <th style="width: 70px;">CONDOMÍNIO</th>
-                    <th style="width: 70px;">TA</th>
-                    <th style="width: 100px;">FALHA</th>
-                    <th style="width: 100px;">DATA CRIAÇÃO</th>
-                    <th style="width: 100px;">TIPO FALHA</th>
-                </tr>
-            </thead>
-            <tbody class="tabela-body"></tbody>
+          <thead>
+            <tr>
+              <th style="width: 90px;">REGIONAL</th>
+              <th style="width: 70px;">MINUTOS</th>
+              <th style="width: 70px;">CONDOMÍNIO</th>
+              <th style="width: 70px;">TA</th>
+              <th style="width: 100px;">FALHA</th>
+              <th style="width: 100px;">DATA CRIAÇÃO</th>
+              <th style="width: 100px;">TIPO FALHA</th>
+            </tr>
+          </thead>
+          <tbody class="tabela-body"></tbody>
         </table>
-    </div>
+      </div>
 
-    <!-- Botão de ação -->
-    <div class="button-container">
+      <!-- Botão de ação -->
+      <div class="button-container">
         <button class="limparTabela botoes-button2">Limpar</button>
+      </div>
     </div>
-</div>
 
+    <!-- Formulário -->
     <div class="container">
-        <div class="titulo">NT - SPI 🚧 Perda de ADJ (OLT,SWD,HL4) 🚧</div>
-        <h1>Formulário</h1>
-        <form id="meuFormulario">
-            <label for="tipo">Tipo:</label>
-            <select id="tipo" name="tipo" required>
-                <option value="" hidden>SELECIONE</option>
-                <option value="CONDOMÍNIO">CONDOMÍNIO</option>
-                <option value="OLT">OLT</option>
-                <option value="SWD">SWD</option>
-                <option value="HL4">HL4</option>
-            </select><br><br>
-            <label for="ta">TA:</label>
-            <input type="text" id="ta" name="ta" required><br><br>
-            <label for="municipio">Municipio:</label>
-            <input type="text" id="municipio" name="municipio" required><br><br>
-            <label for="hostname">Hostname:</label>
-            <input type="text" id="hostname" name="hostname" required><br><br>
-            <label for="dataFalha">Data da Falha:</label>
-            <input type="datetime-local" id="dataFalha" name="dataFalha" required><br><br>
-            <label for="status">Status:</label>
-            <textarea id="status" name="status" required></textarea><br><br>
-            <label for="atencao" id="atencaoLabel">Atenção:</label>
-            <input type="text" id="atencao" name="atencao" readonly class="atencaoLaranja"><br><br>
-            <button type="submit">Enviar</button>
-        </form>
-        <div class="carimbo" id="carimbo">
-            <div class="carimboTitulo">NT-SPI 🚧 Perda de ADJ (OLT,SWD,HL4)🚧</div>
-            <table>
-                <tr>
-                    <th>Descrição</th>
-                    <th>Atualização</th>
-                </tr>
-                <tr>
-                    <td>Tipo</td>
-                    <td><span id="carimboTipo"></span></td>
-                </tr>
-                <tr>
-                    <td>TA</td>
-                    <td><span id="carimboTA"></span></td>
-                </tr>
-                <tr>
-                    <td>Municipio</td>
-                    <td><span id="carimboMunicipio"></span></td>
-                </tr>
-                <tr>
-                    <td>Hostname</td>
-                    <td><span id="carimboHostname"></span></td>
-                </tr>
-                <tr>
-                    <td>Data da Falha</td>
-                    <td><span id="carimboDataFalha"></span></td>
-                </tr>
-                <tr>
-                    <td>Status</td>
-                    <td><span id="carimboStatus"></span></td>
-                </tr>
-                <tr>
-                    <td>Atenção</td>
-                    <td><span id="carimboAtencao" class="atencaoLaranja"></span></td>
-                </tr>
-            </table>
-            <div class="botoes">
-                <button id="voltar">Voltar</button>
-            </div>
+      <div class="titulo">NT - SPI 🚧 Perda de ADJ (OLT, SWD, HL4) 🚧</div>
+      <h1>Formulário</h1>
+      <form id="meuFormulario">
+        <label for="tipo">Tipo:</label>
+        <select id="tipo" name="tipo" required>
+          <option value="" hidden>SELECIONE</option>
+          <option value="CONDOMÍNIO">CONDOMÍNIO</option>
+          <option value="OLT">OLT</option>
+          <option value="SWD" hidden>SWD</option>
+          <option value="HL4">HL4</option>
+        </select>
+        
+        <label for="ta">TA:</label>
+        <input type="text" id="ta" name="ta" required>
+        
+        <label for="municipio">Municipio:</label>
+        <input type="text" id="municipio" name="municipio" required>
+        
+        <label for="hostname">Hostname:</label>
+        <input type="text" id="hostname" name="hostname" required>
+        
+        <label for="dataFalha">Data da Falha:</label>
+        <input type="datetime-local" id="dataFalha" name="dataFalha" required>
+        
+        <label for="status">Status:</label>
+        <textarea style="height: 90px;" id="status" name="status" required></textarea>
+        
+        <label for="atencao" id="atencaoLabel">Atenção:</label>
+        <input type="text" id="atencao" name="atencao" readonly class="atencaoLaranja"><br><br>
+        
+        <button type="submit">Enviar</button>
+      </form>
+      <!-- Carimbo (mantido conforme o estilo original) -->
+      <div class="carimbo" id="carimbo">
+        <div class="carimboTitulo">NT-SPI 🚧 Perda de ADJ (OLT, SWD, HL4) 🚧</div>
+        <table>
+          <tr>
+            <th style="text-align: center; white-space: nowrap;">Descrição</th>
+            <th style="text-align: center; white-space: nowrap;">Atualização</th>
+          </tr>
+          <tr>
+            <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Tipo</td>
+            <td><span id="carimboTipo"></span></td>
+          </tr>
+          <tr>
+            <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">TA</td>
+            <td><span id="carimboTA"></span></td>
+          </tr>
+          <tr>
+            <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Municipio</td>
+            <td><span id="carimboMunicipio"></span></td>
+          </tr>
+          <tr>
+            <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Hostname</td>
+            <td ><span id="carimboHostname"></span></td>
+          </tr>
+          <tr>
+            <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Data da Falha</td>
+            <td><span id="carimboDataFalha"></span></td>
+          </tr>
+          <tr>
+            <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Status</td>
+            <td><span id="carimboStatus"></span></td>
+          </tr>
+          <tr>
+            <td style="background-color: #e5e5e5; text-align: center; white-space: nowrap;">Atenção</td>
+            <td><span id="carimboAtencao" class="atencaoLaranja"></span></td>
+          </tr>
+        </table>
+        <div class="botoes">
+          <button id="voltar">Voltar</button>
         </div>
+      </div>
     </div>
-</div>
+  </div>
     <script>
 
 
@@ -829,31 +822,3 @@ document.getElementById("tipo").addEventListener("change", function() {
         window.location.href = "HOME.html"; // Substitua com o caminho da sua página
     });
 </script>
-
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <!-- Inclui o arquivo de autenticação -->
-  <script src="auth.js"></script>
-  <script>
-    // Verifica se o usuário está autenticado ao carregar a página.
-    checkAuth();
-  </script>
-</head>
-<body>
-  <script>
-    // Função de logout
-    document.getElementById('logout').addEventListener('click', function() {
-      firebase.auth().signOut().then(function() {
-        window.location.href = "login.html";
-      });
-    });
-  </script>
-</body>
-</html>
-
