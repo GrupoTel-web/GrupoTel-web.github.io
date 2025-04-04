@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="icons/nt.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>Escalonamento Plantão</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 900px;
+            margin: 0;
+            background: linear-gradient(to left, #096b9c,  #7dd4ff, #096b9c);
+
+            font-family: 'Poppins', sans-serif;
+            zoom: 70%;
+        }
+        .button-container {
+            display: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #096b9c;
+            color: rgb(255, 255, 255);
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, opacity 0.3s;
+        }
+        button:hover {
+            background-color: #0e3392;
+            color: #fff;
+        }
+        button.inactive {
+            opacity: 0.4; /* Deixa os botões inativos mais claros */
+        }
+
+        .table-container {
+            display: none;
+            margin-left: 20px;
+            margin-right: 20px;
+            
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 5px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+            text-align: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+            
+        }
+        th {
+            background-color: #85fff9; /* Roxo */
+            color: #000; 
+        }
+        td {
+            background-color: #fff; /* Branco */
+            
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 60px;
+            border-radius: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+            height: 650px;
+            width: 1700px;
+        }
+
+        .navigation-container {
+    display: flex;
+    align-items: center; /* Alinha os itens verticalmente ao centro */
+    justify-content: center; /* Centraliza os itens horizontalmente */
+    gap: 10px; /* Espaço entre os itens */
+    font-size: 40px;
+    margin-bottom: 30px;
+}
+
+.custom-button {
+    padding: 5px 10px; /* Padding dentro do botão */
+    font-size: 18px; /* Tamanho da fonte */
+    cursor: pointer; /* Indicador de que o botão pode ser clicado */
+    border-radius: 5px; /* Cantos arredondados */
+    font-size: 40px;
+}
+
+.custom-button:hover {
+    background-color: #e0e0e0; /* Mudança na cor do fundo ao passar o mouse */
+}
+
+.container3 {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.area {
+    width: 300px;
+    margin: 10px;
+    text-align: center;
+    border: 2px solid #0c0141;
+    padding: 15px;
+    background-color: #ffffff; 
+    border-radius: 10px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.content {
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.pulsating-text {
+        animation: pulse 2s infinite;
+    }
+
+@keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+    }
+
+    </style>
+</head>
+
+<div class="navigation-container">
+    <button class="custom-button" onclick="changePage('prev')">⯇</button>
+    <span id="page-title" style="font-weight: bold;">TABELA DE ESCALONAMENTO (PLANTÃO)</span>
+    <button class="custom-button" onclick="changePage('next')">⯈</button>
+</div>
+
+
+<div class="container">
+<body>
+    <div class="button-container">
+        <button class="table-navigation-button" onclick="showTable(0)">1 Hora</button>
+        <button class="table-navigation-button" onclick="showTable(1)">2 Horas</button>
+        <button class="table-navigation-button" onclick="showTable(2)">4 Horas</button>
+        <button class="table-navigation-button" onclick="showTable(3)">5 Horas</button>
+        <button class="table-navigation-button" onclick="showTable(4)">8 Horas</button>
+    </div>
+
+    <div class="table-container" id="table-0">
+        <h1 style="font-size: 30px; margin-top: 10px;"> </h1>
+        <table>
+            <tr>
+                <th>N1 (Ability)</th><th>N1 (Tel)</th><th>Rede (Icomon)</th><th>Rede (TEL)</th><th>NOC</th><th>NOC Móvel</th><th>Sobressalentes (Chamado interno - Merinod)</th>
+                <th>Sobressalentes (C/ o Fornecedor)</th><th>SWAP EXTERNO</th>                
+            </tr>
+            <tr>
+                <td>Conferir Plantonistas da Área</td>
+                    
+                    
+                    <td>Conferir Plantonistas da Área</td>
+
+
+
+<td>Jose mauro ou Quinalia</td><td>Jose mauro ou Quinalia</td>
+<td>Quinteiro, Aldo ou Celso</td><td>Quinteiro, Aldo ou Celso</td><td>Quinteiro, Aldo ou Celso</td>
+<td>Quinteiro, Aldo ou Celso</td><td>Quinteiro, Aldo ou Celso</td>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <th>SWAP INTERNO (VIVO)</th><th>Operação Banda Larga</th><th>Operação DWDM</th><th>Operação Rede IP</th><th>CO-N1 (NOC-BL)</th><th>Operação Móvel Backhaul (Metro Baixa)</th><th>Rede Sudeste</th><th>Operação Móvel RF (Radio / Enlace)</th>
+            </tr>
+            <tr>
+                <td>Quinteiro, Aldo ou Celso</td>
+<td>Quinteiro, Aldo ou Celso</td>
+<td>Quinteiro, Aldo ou Celso</td>
+<td>Quinteiro, Aldo ou Celso</td>
+<td>Quinteiro, Aldo ou Celso</td>
+<td>Quinteiro, Aldo ou Celso</td>
+<td>Quinteiro, Aldo ou Celso</td>
+<td>Quinteiro, Aldo ou Celso</td>
+</tr>
+</table>
+
+<br>
+<h1 style="font-size: 15px; text-shadow: 1px 1px 2px #00fff7;">LISTA DOS PLANTONISTAS: ❗VERIFICAR SEMANALMENTE❗</h1>
+<div class="container3">
+    <div class="area">
+        <div class="title">12</div>
+        <div class="content">
+            Luiz Antonio dos Santos<br>
+            Fernando Lelis Brito Rocha<br>
+            Rogerio Alves Tavares
+        </div>
+    </div>
+
+    <div class="area">
+        <div class="title">15 e 19</div>
+        <div class="content">
+            Alexandre Pichutti Binatti<br>
+            Vanderlei Marques de Oliveira<br>
+            Mauro Proença Junior<br>
+            Luciano Ribeiro da Silva<br>
+            Claudinei Henrique dos Santos<br>
+            Leandro Barrutia
+        </div>
+    </div>
+
+    <div class="area">
+        <div class="title">14 e 18</div>
+        <div class="content">
+            Ciro Tadashi Shiguematsu<br>
+            Ricardo Marcos Gonçalves<br>
+            Júlio César Leme<br>
+            Reginaldo Barbosa Santana<br>
+            Edilson Rodrigues Bezerra<br>
+            André Fábio Gama
+        </div>
+    </div>
+
+    <div class="area">
+        <div class="title">16 e 17</div>
+        <div class="content">
+            André Luis Molesini Galan<br>
+            José Ricardo Rodrigues Alves<br>
+            Edimilson Rosa<br>
+            Claudionor Máximo Souza<br>
+            Airton César Longhi Baliero<br>
+            Edgar Rizzo de Matos<br>
+            Elvis Rodrigues Lopes
+        </div>
+    </div>
+</div>
+
+
+    </div>
+
+    <div class="table-container" id="table-1">
+        <h1 style="font-size: 30px; margin-top: 100px;"> </h1>
+        <table>
+            <tr>
+                <th>N1 (Ability)</th><th>N1 (Tel)</th><th>Rede (Icomon)</th><th>Rede (TEL)</th><th>NOC</th><th>NOC Móvel</th><th>Sobressalentes (Chamado interno - Merinod)</th>
+                <th>Sobressalentes (C/ o Fornecedor)</th><th>SWAP EXTERNO</th>                
+            </tr>
+            <tr>
+                <td>Escalonar Vargas (41)99209-9681</td>
+                <td>Escalonar Adenilson (19)99724-3654</td>
+                <td>Palamin escalonar Alex Ferraz (11)97469-2530</td>
+                <td>Palamin escalonar Alexandre do Bem</td>
+                <td>Renato escalonar Diego Barbosa</td>
+                <td>Rodrigo padilha escalonar Lidiane Ribeiro</td>
+                <td>Reinaldo escalonar Gustavo Siqueira</td>
+                <td>Reinaldo escalonar Paulo Sergio De Lima - BL / Lucio - IP</td>
+                <td>Escalonar Marcelo Figlarz</td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <th>SWAP INTERNO (VIVO)</th><th>Operação Banda Larga</th><th>Operação DWDM</th><th>Operação Rede IP</th><th>CO-N1 (NOC-BL)</th><th>Operação Móvel Backhaul (Metro Baixa)</th><th>Rede Sudeste</th><th>Operação Móvel RF (Radio / Enlace)</th>
+            </tr>
+            <tr>
+                <td>Escalonar Fernanda Marize</td>
+<td>Renato escalonar Paulo Sergio</td>
+<td>Renato escalonar Marcelo Monteiro</td>
+<td>Renato escalonar Lucio Pinto</td>
+<td>Renato escalonar Wanderley Duarte</td>
+<td>Renato escalonar Itamar Burato</td>
+<td>Palamin escalonar Fred</td>
+<td>Renato escalonar Wanderley Duarte</td>
+        </table>
+    </div>
+
+    <div class="table-container" id="table-2">
+        <h1 style="font-size: 30px; margin-top: 100px;"> </h1>
+        <table>
+            <tr>
+                <th>N1 (Ability)</th><th>N1 (Tel)</th><th>Rede (Icomon)</th><th>Rede (TEL)</th><th>NOC</th><th>NOC Móvel</th><th>Sobressalentes (Chamado interno - Merinod)</th>
+                <th>Sobressalentes (C/ o Fornecedor)</th><th>SWAP EXTERNO</th>                
+            </tr>
+            <tr>
+                <td>Escalonar Geber (11)91669-3286</td>
+                <td>Escalonar Antonio Cesar (16)99991-4255</td>
+                <td>Escalonar Odirlei (11)96496-5286</td>
+                <td>Escalonar Vetoretti (17)99618-2197</td>
+                <td>Renato escalonar Geraldo Ramazotti</td>
+                <td>Rodrigo Padilha escalonar Geraldo Ramazotti</td>
+                <td>Reinaldo escalonar DEL REY</td>
+                <td>Reinaldo escalonar Menon - IP</td>
+                <td>Renato escalonar Geraldo Ramazotti</td>
+            </tr>                
+        </table>
+        <br>
+        <table>
+            <tr>
+                <th>SWAP INTERNO (VIVO)</th><th>Operação Banda Larga</th><th>Operação DWDM</th><th>Operação Rede IP</th><th>CO-N1 (NOC-BL)</th><th>Operação Móvel Backhaul (Metro Baixa)</th><th>Rede Sudeste</th><th>Operação Móvel RF (Radio / Enlace)</th>
+            </tr>
+            <tr>
+                <td>Renato escalonar Fernanda Marize</td>
+<td>Renato escalonar Márcio Fagundes</td>
+<td>Renato escalonar Menon</td>
+<td>Renato escalonar Menon</td>
+<td>Renato escalonar Sergio Rodrigo de Souza</td>
+<td>Renato escalonar Leandro Amaral</td>
+<td>Palamin escalonar Fred</td>
+<td>Renato escalonar Leandro Amaral</td>
+        </table>
+    </div>
+
+    <div class="table-container" id="table-3">
+        <h1 style="font-size: 30px; margin-top: 100px;"> </h1>
+        <table>
+            <tr>
+                <th>N1 (Ability)</th><th>N1 (Tel)</th><th>Rede (Icomon)</th><th>Rede (TEL)</th><th>NOC</th><th>NOC Móvel</th><th>Sobressalentes (Chamado interno - Merinod)</th>
+                <th>Sobressalentes (C/ o Fornecedor)</th><th>SWAP EXTERNO</th>                
+            </tr>
+            <tr>
+                <td>Escalonar Ricardo Boccatto (11)99972-3510</td>
+<td>Escalonar José Aparecido Cardoso (16)99961-8028</td>
+<td>Escalonar Sorrilha (11)99654-1671</td>
+<td>Escalonar José Aparecido Cardoso (16)99961-8028</td>
+<td>Renato escalonar Marcelo Figlarz</td>
+<td>Renato escalonar Marcelo Figlarz</td>
+<td>Reinaldo escalonar DEL REY</td>
+<td>Reinaldo escalonar Marcelo Figlarz</td>
+<td>Renato Escalonar Marcelo Figlarz</td>
+            </tr>
+</table>
+        <br>
+        <table>
+            <tr>
+                <th>SWAP INTERNO (VIVO)</th><th>Operação Banda Larga</th><th>Operação DWDM</th><th>Operação Rede IP</th><th>CO-N1 (NOC-BL)</th><th>Operação Móvel Backhaul (Metro Baixa)</th><th>Rede Sudeste</th><th>Operação Móvel RF (Radio / Enlace)</th>
+            </tr>
+            <tr>
+                <td>Renato escalonar Fernanda Marize</td>
+<td>Renato escalonar Marcelo Figlarz</td>
+<td>Renato escalonar Marcelo Figlarz</td>
+<td>Renato escalonar Marcelo Figlarz</td>
+<td>Renato escalonar Fabio Stellato</td>
+<td>Renato escalonar Marcelo Figlarz</td>
+<td>Escalonar Aparecido</td>
+<td>Renato escalonar Marcelo Figlarz</td>
+</tr>
+
+        </table>
+    </div>
+
+    <div class="table-container" id="table-4">
+        <table1>
+            <tr>
+                <h1 class="pulsating-text" style="font-size: 30px; margin-top: 250px;">
+                    Independente do Gestor atual escalonar Renato Farias se TA com 8h
+                </h1>
+            </tr>
+        </table1>
+    </div>
+
+
+</div>
+
+    <script>
+        function showTable(tableIndex) {
+     // Ocultar todas as tabelas
+     const tables = document.querySelectorAll('.table-container');
+     tables.forEach(table => table.style.display = 'none');
+ 
+     // Mostrar a tabela clicada
+     const selectedTable = document.getElementById('table-' + tableIndex);
+     selectedTable.style.display = 'block';
+ 
+     // Alterar opacidade dos botões (somente os relacionados à navegação entre tabelas)
+     const buttons = document.querySelectorAll('.table-navigation-button'); // Seleciona apenas botões de navegação de tabelas
+     buttons.forEach((btn, index) => {
+         if (index === tableIndex) {
+             btn.classList.remove('inactive');  // Destaca o botão selecionado
+         } else {
+             btn.classList.add('inactive');  // Torna os outros botões mais claros
+         }
+     });
+ }
+ 
+ 
+ 
+ 
+         // Função para alternar entre as páginas
+ function changePage(direction) {
+     if (direction === 'prev') {
+         window.location.href = 'ARVORE DE ESCALONAMENTOS.html'; // Página anterior
+     } else if (direction === 'next') {
+         window.location.href = 'ARVORE DE ESCALONAMENTOS.html'; // Página seguinte
+     }
+ }
+ 
+    </script>
+</body>
+</html>
+
+
+<div class="sair">
+    <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
+    <span>Sair</span>
+</div>
+
+<style>
+    .sair {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        z-index: 9999; /* Fica sempre no topo */
+        background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
+        padding: 5px;
+        border-radius: 8px;
+    }
+
+    .icone-porta {
+        width: 30px;
+        height: 30px;
+        margin-right: 5px;
+    }
+
+    .sair span {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .sair:hover {
+        opacity: 0.8;
+    }
+</style>
+
+<script>
+    document.querySelector('.sair').addEventListener('click', function() {
+        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+    });
+</script>
