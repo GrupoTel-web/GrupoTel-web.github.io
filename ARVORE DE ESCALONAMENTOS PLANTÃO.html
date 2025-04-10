@@ -133,18 +133,6 @@
     line-height: 1.5;
 }
 
-.pulsating-text {
-        animation: pulse 2s infinite;
-    }
-
-@keyframes pulse {
-        0%, 100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.1);
-        }
-    }
 
     </style>
 </head>
@@ -166,32 +154,51 @@
         <button class="table-navigation-button" onclick="showTable(4)">8 Horas</button>
     </div>
 
-    <div class="table-container" id="table-0">
-        <h1 style="font-size: 30px; margin-top: 10px;"> </h1>
-        <table>
-            <tr>
-                <th>N1 (Ability)</th><th>N1 (Tel)</th><th>Rede (Icomon)</th><th>Rede (TEL)</th><th>NOC</th><th>NOC Móvel</th><th>Sobressalentes (Chamado interno - Merinod)</th>
-                <th>Sobressalentes (C/ o Fornecedor)</th><th>SWAP EXTERNO</th>                
-            </tr>
-            <tr>
-                <td>Conferir Plantonistas da Área</td>
-                    
-                    
-                    <td>Conferir Plantonistas da Área</td>
-
-
-
-<td>Jose mauro ou Quinalia</td><td>Jose mauro ou Quinalia</td>
-<td>Quinteiro, Aldo ou Celso</td><td>Quinteiro, Aldo ou Celso</td><td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td><td>Quinteiro, Aldo ou Celso</td>
-        </table>
-        <br>
-        <table>
-            <tr>
-                <th>SWAP INTERNO (VIVO)</th><th>Operação Banda Larga</th><th>Operação DWDM</th><th>Operação Rede IP</th><th>CO-N1 (NOC-BL)</th><th>Operação Móvel Backhaul (Metro Baixa)</th><th>Rede Sudeste</th><th>Operação Móvel RF (Radio / Enlace)</th>
-            </tr>
-            <tr>
-                <td>Quinteiro, Aldo ou Celso</td>
+<div class="table-container" id="table-0">
+<h1 style="font-size: 30px; margin-top: 10px;"> </h1>
+<table>
+<!-- Primeira linha da tabela de 1h -->
+<tr>
+<th>N1 (Ability)</th>
+<th>N1 (Tel)</th>
+<th>N1 (Capital)</th>
+<th>Rede (Capital)</th>
+<th>Rede (Icomon)</th>
+<th>Rede (TEL)</th>
+<th>NOC</th>
+<th>NOC Móvel</th>
+<th>Sobressalentes (Chamado interno - Merinod)</th>
+<th>Sobressalentes (C/ o Fornecedor)</th>                
+</tr>
+<tr>
+<td>Conferir Plantonistas da Área</td>
+<td>Conferir Plantonistas da Área</td>
+<td>Reinaldo Escalonar Capital</td>
+<td>Palamin escalonar Capital</td>
+<td>Jose mauro ou Quinalia</td>
+<td>Jose mauro ou Quinalia</td>
+<td>Quinteiro, Aldo ou Celso</td>
+<td>Quinteiro, Aldo ou Celso</td>
+<td>Quinteiro, Aldo ou Celso</td>
+<td>Quinteiro, Aldo ou Celso</td>
+</table>
+<br>
+<table>
+<!-- Segunda linha da tabela de 1h -->
+<tr>
+<th>SWAP EXTERNO</th>
+<th>SWAP INTERNO (VIVO)</th>
+<th>Operação Banda Larga</th>
+<th>Operação DWDM</th>
+<th>Operação Rede IP</th>
+<th>CO-N1 (NOC-BL)</th>
+<th>Operação Móvel Backhaul (Metro Baixa)</th>
+<th>Rede Sudeste</th>
+<th>Operação Móvel RF (Radio / Enlace)</th>
+</tr>
+<tr>
+<td>Quinteiro, Aldo ou Celso</td>
+<td>Quinteiro, Aldo ou Celso</td>
 <td>Quinteiro, Aldo ou Celso</td>
 <td>Quinteiro, Aldo ou Celso</td>
 <td>Quinteiro, Aldo ou Celso</td>
@@ -202,85 +209,103 @@
 </tr>
 </table>
 
+<!-- Terceira linha da tabela de 1h (lista de plantonistas por area) -->
+
 <br>
 <h1 style="font-size: 15px; text-shadow: 1px 1px 2px #00fff7;">LISTA DOS PLANTONISTAS: ❗VERIFICAR SEMANALMENTE❗</h1>
 <div class="container3">
-    <div class="area">
-        <div class="title">12</div>
-        <div class="content">
-            Luiz Antonio dos Santos<br>
-            Fernando Lelis Brito Rocha<br>
-            Rogerio Alves Tavares
-        </div>
-    </div>
-
-    <div class="area">
-        <div class="title">15 e 19</div>
-        <div class="content">
-            Alexandre Pichutti Binatti<br>
-            Vanderlei Marques de Oliveira<br>
-            Mauro Proença Junior<br>
-            Luciano Ribeiro da Silva<br>
-            Claudinei Henrique dos Santos<br>
-            Leandro Barrutia
-        </div>
-    </div>
-
-    <div class="area">
-        <div class="title">14 e 18</div>
-        <div class="content">
-            Ciro Tadashi Shiguematsu<br>
-            Ricardo Marcos Gonçalves<br>
-            Júlio César Leme<br>
-            Reginaldo Barbosa Santana<br>
-            Edilson Rodrigues Bezerra<br>
-            André Fábio Gama
-        </div>
-    </div>
-
-    <div class="area">
-        <div class="title">16 e 17</div>
-        <div class="content">
-            André Luis Molesini Galan<br>
-            José Ricardo Rodrigues Alves<br>
-            Edimilson Rosa<br>
-            Claudionor Máximo Souza<br>
-            Airton César Longhi Baliero<br>
-            Edgar Rizzo de Matos<br>
-            Elvis Rodrigues Lopes
-        </div>
-    </div>
+<div class="area">
+<div class="title">12</div>
+<div class="content">
+Luiz Antonio dos Santos<br>
+Fernando Lelis Brito Rocha<br>
+Rogerio Alves Tavares
+</div>
+</div>
+<div class="area">
+<div class="title">15 e 19</div>
+<div class="content">
+Alexandre Pichutti Binatti<br>
+Vanderlei Marques de Oliveira<br>
+Mauro Proença Junior<br>
+Luciano Ribeiro da Silva<br>
+Claudinei Henrique dos Santos<br>
+Leandro Barrutia
+</div>
+</div>
+<div class="area">
+<div class="title">14 e 18</div>
+<div class="content">
+Ciro Tadashi Shiguematsu<br>
+Ricardo Marcos Gonçalves<br>
+Júlio César Leme<br>
+Reginaldo Barbosa Santana<br>
+Edilson Rodrigues Bezerra<br>
+André Fábio Gama
+</div>
+</div>
+<div class="area">
+<div class="title">16 e 17</div>
+<div class="content">
+André Luis Molesini Galan<br>
+José Ricardo Rodrigues Alves<br>
+Edimilson Rosa<br>
+Claudionor Máximo Souza<br>
+Airton César Longhi Baliero<br>
+Edgar Rizzo de Matos<br>
+Elvis Rodrigues Lopes
+</div>
+</div>
+</div>
 </div>
 
 
-    </div>
-
-    <div class="table-container" id="table-1">
-        <h1 style="font-size: 30px; margin-top: 100px;"> </h1>
-        <table>
-            <tr>
-                <th>N1 (Ability)</th><th>N1 (Tel)</th><th>Rede (Icomon)</th><th>Rede (TEL)</th><th>NOC</th><th>NOC Móvel</th><th>Sobressalentes (Chamado interno - Merinod)</th>
-                <th>Sobressalentes (C/ o Fornecedor)</th><th>SWAP EXTERNO</th>                
-            </tr>
-            <tr>
-                <td>Escalonar Gabanela (11)96481-7433</td>
-                <td>Escalonar Adenilson (19)99724-3654</td>
-                <td>Palamin escalonar Alex Ferraz (11)97469-2530</td>
-                <td>Palamin escalonar Alexandre do Bem</td>
-                <td>Renato escalonar Diego Barbosa</td>
-                <td>Rodrigo padilha escalonar Lidiane Ribeiro</td>
-                <td>Reinaldo escalonar Gustavo Siqueira</td>
-                <td>Reinaldo escalonar Paulo Sergio De Lima - BL / Lucio - IP</td>
-                <td>Escalonar Marcelo Figlarz</td>
-            </tr>
-        </table>
-        <br>
-        <table>
-            <tr>
-                <th>SWAP INTERNO (VIVO)</th><th>Operação Banda Larga</th><th>Operação DWDM</th><th>Operação Rede IP</th><th>CO-N1 (NOC-BL)</th><th>Operação Móvel Backhaul (Metro Baixa)</th><th>Rede Sudeste</th><th>Operação Móvel RF (Radio / Enlace)</th>
-            </tr>
-            <tr>
-                <td>Escalonar Fernanda Marize</td>
+<div class="table-container" id="table-1">
+<h1 style="font-size: 30px; margin-top: 100px;"> </h1>
+<table>
+<!-- Primeira linha da tabela de 2h -->
+<tr>
+<th>N1 (Ability)</th>
+<th>N1 (Tel)</th>
+<th>N1 (Capital)</th>
+<th>Rede (Capital)</th>
+<th>Rede (Icomon)</th>
+<th>Rede (TEL)</th>
+<th>NOC</th>
+<th>NOC Móvel</th>
+<th>Sobressalentes (Chamado interno - Merinod)</th>
+<th>Sobressalentes (C/ o Fornecedor)</th>              
+</tr>
+<tr>
+<td>Escalonar Gabanela (11)96481-7433</td>
+<td>Escalonar Adenilson (19)99724-3654</td>
+<td>Reinaldo escalonar Cleverson Capital</td>
+<td>Palamin escalonar Cleverson Capital</td>
+<td>Palamin escalonar Alex Ferraz (11)97469-2530</td>
+<td>Palamin escalonar Alexandre do Bem</td>
+<td>Renato escalonar Diego Barbosa</td>
+<td>Rodrigo padilha escalonar Lidiane Ribeiro</td>
+<td>Reinaldo escalonar Gustavo Siqueira</td>
+<td>Reinaldo escalonar Paulo Sergio De Lima - BL / Lucio - IP</td>
+</tr>
+</table>
+<br>
+<table>
+<!-- Segunda linha da tabela de 2h -->
+<tr>
+<th>SWAP EXTERNO</th>
+<th>SWAP INTERNO (VIVO)</th>
+<th>Operação Banda Larga</th>
+<th>Operação DWDM</th>
+<th>Operação Rede IP</th>
+<th>CO-N1 (NOC-BL)</th>
+<th>Operação Móvel Backhaul (Metro Baixa)</th>
+<th>Rede Sudeste</th>
+<th>Operação Móvel RF (Radio / Enlace)</th>
+</tr>
+<tr>
+<td>Escalonar Marcelo Figlarz</td>
+<td>Escalonar Fernanda Marize</td>
 <td>Renato escalonar Paulo Sergio</td>
 <td>Renato escalonar Marcelo Monteiro</td>
 <td>Renato escalonar Lucio Pinto</td>
@@ -288,35 +313,56 @@
 <td>Renato escalonar Itamar Burato</td>
 <td>Palamin escalonar Fred</td>
 <td>Renato escalonar Wanderley Duarte</td>
-        </table>
-    </div>
+</table>
+</div>
 
-    <div class="table-container" id="table-2">
-        <h1 style="font-size: 30px; margin-top: 100px;"> </h1>
-        <table>
-            <tr>
-                <th>N1 (Ability)</th><th>N1 (Tel)</th><th>Rede (Icomon)</th><th>Rede (TEL)</th><th>NOC</th><th>NOC Móvel</th><th>Sobressalentes (Chamado interno - Merinod)</th>
-                <th>Sobressalentes (C/ o Fornecedor)</th><th>SWAP EXTERNO</th>                
-            </tr>
-            <tr>
-                <td>Escalonar Leandro Kolaya (11)97204-2687</td>
-                <td>Escalonar Antonio Cesar (16)99991-4255</td>
-                <td>Escalonar Odirlei (11)96496-5286</td>
-                <td>Escalonar Vetoretti (17)99618-2197</td>
-                <td>Renato escalonar Geraldo Ramazotti</td>
-                <td>Rodrigo Padilha escalonar Geraldo Ramazotti</td>
-                <td>Reinaldo escalonar DEL REY</td>
-                <td>Reinaldo escalonar Menon - IP</td>
-                <td>Renato escalonar Geraldo Ramazotti</td>
-            </tr>                
-        </table>
-        <br>
-        <table>
-            <tr>
-                <th>SWAP INTERNO (VIVO)</th><th>Operação Banda Larga</th><th>Operação DWDM</th><th>Operação Rede IP</th><th>CO-N1 (NOC-BL)</th><th>Operação Móvel Backhaul (Metro Baixa)</th><th>Rede Sudeste</th><th>Operação Móvel RF (Radio / Enlace)</th>
-            </tr>
-            <tr>
-                <td>Renato escalonar Fernanda Marize</td>
+
+<div class="table-container" id="table-2">
+<h1 style="font-size: 30px; margin-top: 100px;"> </h1>
+<table>
+<!-- Primeira linha da tabela de 4h -->
+<tr>
+<th>N1 (Ability)</th>
+<th>N1 (Tel)</th>
+<th>N1 (Capital)</th>
+<th>Rede (Capital)</th>
+<th>Rede (Icomon)</th>
+<th>Rede (TEL)</th>
+<th>NOC</th>
+<th>NOC Móvel</th>
+<th>Sobressalentes (Chamado interno - Merinod)</th>
+<th>Sobressalentes (C/ o Fornecedor)</th>                
+</tr>
+<tr>
+<td>Escalonar Leandro Kolaya (11)97204-2687</td>
+<td>Escalonar Antonio Cesar (16)99991-4255</td>
+<td>Renato escalonar Robinson da Capital</td>
+<td>Palamin escalonar Robinson da Capital</td>
+<td>Escalonar Odirlei (11)96496-5286</td>
+<td>Escalonar Vetoretti (17)99618-2197</td>
+<td>Renato escalonar Geraldo Ramazotti</td>
+<td>Rodrigo Padilha escalonar Geraldo Ramazotti</td>
+<td>Reinaldo escalonar DEL REY</td>
+<td>Reinaldo escalonar Menon - IP</td>
+</tr>                
+</table>
+<br>
+<table>
+<!-- Segunda linha da tabela de 4h -->
+<tr>
+<th>SWAP EXTERNO</th>
+<th>SWAP INTERNO (VIVO)</th>
+<th>Operação Banda Larga</th>
+<th>Operação DWDM</th>
+<th>Operação Rede IP</th>
+<th>CO-N1 (NOC-BL)</th>
+<th>Operação Móvel Backhaul (Metro Baixa)</th>
+<th>Rede Sudeste</th>
+<th>Operação Móvel RF (Radio / Enlace)</th>
+</tr>
+<tr>
+<td>Renato escalonar Geraldo Ramazotti</td>
+<td>Renato escalonar Fernanda Marize</td>
 <td>Renato escalonar Márcio Fagundes</td>
 <td>Renato escalonar Menon</td>
 <td>Renato escalonar Menon</td>
@@ -324,35 +370,57 @@
 <td>Renato escalonar Leandro Amaral</td>
 <td>Palamin escalonar Fred</td>
 <td>Renato escalonar Leandro Amaral</td>
-        </table>
-    </div>
+</table>
+</div>
 
-    <div class="table-container" id="table-3">
-        <h1 style="font-size: 30px; margin-top: 100px;"> </h1>
-        <table>
-            <tr>
-                <th>N1 (Ability)</th><th>N1 (Tel)</th><th>Rede (Icomon)</th><th>Rede (TEL)</th><th>NOC</th><th>NOC Móvel</th><th>Sobressalentes (Chamado interno - Merinod)</th>
-                <th>Sobressalentes (C/ o Fornecedor)</th><th>SWAP EXTERNO</th>                
-            </tr>
-            <tr>
-                <td>Escalonar Ricardo Boccatto (11)99972-3510</td>
+
+<div class="table-container" id="table-3">
+<h1 style="font-size: 30px; margin-top: 100px;"> </h1>
+<table>
+<!-- Primeira linha da tabela de 5h -->
+<tr>
+<th>N1 (Ability)</th>
+<th>N1 (Tel)</th>
+<th>N1 (Capital)</th>
+<th>Rede (Capital)</th>
+<th>Rede (Icomon)</th>
+<th>Rede (TEL)</th>
+<th>NOC</th>
+<th>NOC Móvel</th>
+<th>Sobressalentes (Chamado interno - Merinod)</th>
+<th>Sobressalentes (C/ o Fornecedor)</th>
+              
+</tr>
+<tr>
+<td>Escalonar Ricardo Boccatto (11)99972-3510</td>
 <td>Escalonar José Aparecido Cardoso (16)99961-8028</td>
+<td>Renato escalonar Diretor Capital Elizeu</td>
+<td>Palamin escalonar Diretor Capital Elizeu</td>
 <td>Escalonar Sorrilha (11)99654-1671</td>
 <td>Escalonar José Aparecido Cardoso (16)99961-8028</td>
 <td>Renato escalonar Marcelo Figlarz</td>
 <td>Renato escalonar Marcelo Figlarz</td>
 <td>Reinaldo escalonar DEL REY</td>
 <td>Reinaldo escalonar Marcelo Figlarz</td>
-<td>Renato Escalonar Marcelo Figlarz</td>
-            </tr>
+</tr>
 </table>
-        <br>
-        <table>
-            <tr>
-                <th>SWAP INTERNO (VIVO)</th><th>Operação Banda Larga</th><th>Operação DWDM</th><th>Operação Rede IP</th><th>CO-N1 (NOC-BL)</th><th>Operação Móvel Backhaul (Metro Baixa)</th><th>Rede Sudeste</th><th>Operação Móvel RF (Radio / Enlace)</th>
-            </tr>
-            <tr>
-                <td>Renato escalonar Fernanda Marize</td>
+<br>
+<table>
+<!-- Segunda linha da tabela de 5h -->
+<tr>
+<th>SWAP EXTERNO</th>  
+<th>SWAP INTERNO (VIVO)</th>
+<th>Operação Banda Larga</th>
+<th>Operação DWDM</th>
+<th>Operação Rede IP</th>
+<th>CO-N1 (NOC-BL)</th>
+<th>Operação Móvel Backhaul (Metro Baixa)</th>
+<th>Rede Sudeste</th>
+<th>Operação Móvel RF (Radio / Enlace)</th>
+</tr>
+<tr>
+<td>Renato Escalonar Marcelo Figlarz</td>
+<td>Renato escalonar Fernanda Marize</td>
 <td>Renato escalonar Marcelo Figlarz</td>
 <td>Renato escalonar Marcelo Figlarz</td>
 <td>Renato escalonar Marcelo Figlarz</td>
@@ -361,21 +429,20 @@
 <td>Escalonar Aparecido</td>
 <td>Renato escalonar Marcelo Figlarz</td>
 </tr>
-
-        </table>
-    </div>
-
-    <div class="table-container" id="table-4">
-        <table1>
-            <tr>
-                <h1 class="pulsating-text" style="font-size: 30px; margin-top: 250px;">
-                    Independente do Gestor atual escalonar Renato Farias se TA com 8h
-                </h1>
-            </tr>
-        </table1>
-    </div>
+</table>
+</div>
 
 
+<div class="table-container" id="table-4">
+<table>
+<!-- Escalonamento 8H RENATO -->
+<tr>
+<h1 style="font-size: 30px; margin-top: 250px;">
+Independente do Gestor atual escalonar Renato Farias se TA com 8h
+</h1>
+</tr>
+</table>
+<div>
 </div>
 
     <script>
