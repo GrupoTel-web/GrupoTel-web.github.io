@@ -443,30 +443,28 @@ Independente do Gestor atual escalonar Renato Farias se TA com 8h
 </h1>
 </tr>
 </table>
-<div>
 </div>
 
     <script>
-        function showTable(tableIndex) {
-     // Ocultar todas as tabelas
-     const tables = document.querySelectorAll('.table-container');
-     tables.forEach(table => table.style.display = 'none');
- 
-     // Mostrar a tabela clicada
-     const selectedTable = document.getElementById('table-' + tableIndex);
-     selectedTable.style.display = 'block';
- 
-     // Alterar opacidade dos botões (somente os relacionados à navegação entre tabelas)
-     const buttons = document.querySelectorAll('.table-navigation-button'); // Seleciona apenas botões de navegação de tabelas
-     buttons.forEach((btn, index) => {
-         if (index === tableIndex) {
-             btn.classList.remove('inactive');  // Destaca o botão selecionado
-         } else {
-             btn.classList.add('inactive');  // Torna os outros botões mais claros
-         }
-     });
- }
- 
+          function showTable(tableIndex) {
+    // Ocultar todas as tabelas
+    const tables = document.querySelectorAll('.table-container');
+    tables.forEach(table => table.style.display = 'none');
+
+    // Mostrar a tabela clicada
+    const selectedTable = document.getElementById('table-' + tableIndex);
+    selectedTable.style.display = 'block';
+
+    // Alterar opacidade dos botões (somente os relacionados à navegação entre tabelas)
+    const buttons = document.querySelectorAll('.table-navigation-button'); // Seleciona apenas botões de navegação de tabelas
+    buttons.forEach((btn, index) => {
+        if (index === tableIndex) {
+            btn.classList.remove('inactive');  // Destaca o botão selecionado
+        } else {
+            btn.classList.add('inactive');  // Torna os outros botões mais claros
+        }
+    });
+}
  
  
  
