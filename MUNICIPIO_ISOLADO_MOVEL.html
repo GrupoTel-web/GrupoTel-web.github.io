@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="icons/nt.png">
-    <title>Formulário com Carimbo</title>
+    <title>Afetação Móvel</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -31,7 +30,7 @@
             border: 2px solid #000;
             padding: 10px;
             margin-top: 20px;
-            display: none;
+            display: block;
         }
         .carimboTitulo {
             background-color: #380450; /* Roxo */
@@ -86,43 +85,37 @@
 <body>
     <div class="container-principal">
     <div class="container">
-        <div class="titulo">NT-SPI 🗼 Municipio Isolado Móvel 🗼</div>
-        <h1>Formulário</h1>
+        <div class="titulo">NT-SPI 🗼 Afetação Móvel 🗼</div>
+        <h1>Formulário</h1><br>
         <form id="meuFormulario">
             
             <label for="taRaiz">TA Raiz:</label>
             <input type="text" id="taRaiz" name="taRaiz" required><br><br>
 
             <label for="causa" style="margin-top: 5px;">Causa:</label>
-        <select id="causa" name="causa" required>
-          <option value="" hidden>SELECIONAR</option>
-          <option value="HL5">HL5</option>
-          <option value="HL4">HL4</option>
-          <option value="DWDM">DWDM</option>
-          <option value="GWD">GWD</option>
-        </select><br><br>
+            <input type="text" id="causa" name="causa" required><br><br>
 
-            <label for="cidade">Cidade:</label>
+            <label for="cidade">Municipio:</label>
             <input type="text" id="cidade" name="cidade" required><br><br>
 
-            <label for="erbAfetacao">ERB Afetação:</label>
+            <label for="erbAfetacao">Elementos Afetados:</label>
             <input type="text" id="erbAfetacao" name="erbAfetacao" required><br><br>
 
-            <label for="indisponibilidade">Indisponibilidade (%):</label>
-            <input type="number" id="indisponibilidade" name="indisponibilidade" required min="0" max="100" step="0.01" placeholder="0.00"><br><br>
+            <label for="qtdsiteAfetado">Sites Afetados:</label>
+            <input type="text" id="qtdsiteAfetado" name="qtdsiteAfetado" required><br><br>
 
-            <label for="siteAfetado">Site Afetado:</label>
-            <input type="text" id="siteAfetado" name="siteAfetado" required><br><br>
-
-            <label for="dataCriacao">Data Criação:</label>
+            <label for="dataCriacao">Data da Falha:</label>
             <input type="datetime-local" id="dataCriacao" name="dataCriacao" required><br><br>
+
+            <label for="status">Status:</label><br>
+            <textarea style="height: 70px; max-width: 596px;" id="status" name="status" required></textarea><br><br>
 
             
             <button type="submit">Enviar</button>
         </form>
         
         <div class="carimbo" id="carimbo">
-            <div class="carimboTitulo">NT-SPI 🗼 Municipio Isolado Móvel 🗼</div>
+            <div class="carimboTitulo">NT-SPI 🗼  Afetação Móvel 🗼</div>
             <table>
                 <tr>
                     <th>Descrição</th>
@@ -137,25 +130,25 @@
                     <td><span id="carimboCausa"></span></td>
                 </tr>
                 <tr>
-                    <td>Cidade</td>
+                    <td>Municipio</td>
                     <td><span id="carimboCidade"></span></td>
                 </tr>
                 <tr>
-                    <td>ERB Afetação</td>
+                    <td>Elementos Afetados</td>
                     <td><span id="carimboERBAfetacao"></span></td>
                 </tr>
                 <tr>
-                    <td>Indisponibilidade (%)</td>
-                    <td><span id="carimboIndisponibilidade"></span></td>
+                    <td>Sites Afetados</td>
+                    <td><span id="carimboqtdsiteAfetado"></span></td>
                 </tr>
                 <tr>
-                    <td>Site Afetado</td>
-                    <td><span id="carimboSiteAfetado"></span></td>
-                </tr>
-                <tr>
-                    <td>Data Criação</td>
+                    <td>Data Falha</td>
                     <td><span id="carimboDataCriacao"></span></td>
-                </tr> 
+                </tr>
+                <tr>
+                  <td>Status</td>
+                  <td><span id="carimbostatus"></span></td>
+              </tr>  
             </table>
 
             <div class='botoes'>
@@ -167,23 +160,35 @@
     </div>
 </div>
     <script>
+
+function formatarDataHora(dataCriacao) {
+ if (!dataCriacao) return '';
+ var data = new Date(dataCriacao);
+ var dia = String(data.getDate()).padStart(2, '0');
+ var mes = String(data.getMonth() + 1).padStart(2, '0');
+ var ano = data.getFullYear();
+ var horas = String(data.getHours()).padStart(2, '0');
+ var minutos = String(data.getMinutes()).padStart(2, '0');
+ return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+ }
+
         document.getElementById('meuFormulario').addEventListener('submit', function(event) {
             event.preventDefault();
             var taRaiz = document.getElementById('taRaiz').value;
             var causa = document.getElementById('causa').value;
             var cidade = document.getElementById('cidade').value;
             var erbAfetacao = document.getElementById('erbAfetacao').value;
-            var indisponibilidade = document.getElementById('indisponibilidade').value + '%';
-            var siteAfetado = document.getElementById('siteAfetado').value;
+            var qtdsiteAfetado = document.getElementById('qtdsiteAfetado').value;
             var dataCriacao = document.getElementById('dataCriacao').value.replace('T', ' ');
+            var status = document.getElementById('status').value;
 
             document.getElementById('carimboTARaiz').textContent = taRaiz;
             document.getElementById('carimboCausa').textContent = causa;
             document.getElementById('carimboCidade').textContent = cidade;
             document.getElementById('carimboERBAfetacao').textContent = erbAfetacao;
-            document.getElementById('carimboIndisponibilidade').textContent = indisponibilidade;
-            document.getElementById('carimboSiteAfetado').textContent = siteAfetado;
-            document.getElementById('carimboDataCriacao').textContent = dataCriacao;
+            document.getElementById('carimboqtdsiteAfetado').textContent = qtdsiteAfetado;
+            document.getElementById('carimboDataCriacao').textContent = formatarDataHora(dataCriacao)
+            document.getElementById('carimbostatus').textContent = status;
 
             document.getElementById('carimbo').style.display = 'block';
         });
