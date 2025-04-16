@@ -176,6 +176,9 @@
  <label for="ta">TA:</label>
  <input type="text" id="ta" name="ta" required><br><br>
  
+ <label for="SitesAfetados">Sites Afetados:</label>
+ <input type="text" id="Sites" name="SitesAfetados" required><br><br>
+
  <label for="dataAbertura">Data Abertura:</label>
  <input type="datetime-local" id="dataAbertura" name="dataAbertura" required><br><br>
  
@@ -260,6 +263,10 @@
         <td><span id="carimboTA"></span></td>
       </tr>
       <tr>
+        <td>Sites Afetados</td>
+        <td><span id="carimboSites"></span></td>
+      </tr>
+      <tr>
         <td>Data Abertura</td>
         <td><span id="carimboDataAbertura"></span></td>
       </tr>
@@ -329,6 +336,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (colunas.length < 4) return; // Garante que tem colunas suficientes antes de preencher
 
         let ta = colunas[0].textContent.trim(); // Coluna DWDM LINHA
+        let Sites = colunas[1].textContent.trim(); // Coluna DWDM LINHA
         let taRaiz = colunas[2].textContent.trim(); // Coluna TA RAIZ (REDE)
         let dataAbertura = colunas[5].textContent.trim(); // Coluna DATA ALARME
         let gestorAtual = colunas[9].textContent.trim(); // Coluna DATA ALARME
@@ -340,6 +348,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Preenchendo os campos do formulário
         document.getElementById("ta").value = ta;
         document.getElementById("taRaiz").value = taRaiz;
+        document.getElementById("Sites").value = Sites;
         document.getElementById("dataAbertura").value = formatarData(dataAbertura);
         document.getElementById("municipio").value = municipio; // Adicionando o município
         document.getElementById("gestorAtual").value = gestorAtual; // Adicionando o município
@@ -507,6 +516,7 @@ function toggleOutroOptions() {
  var escalonamento = document.getElementById('escalonamento').value;
  var municipio = document.getElementById('municipio').value;
  var ta = document.getElementById('ta').value;
+ var Sites = document.getElementById('Sites').value;
  var dataAbertura = document.getElementById('dataAbertura').value;
  var taRaiz = document.getElementById('taRaiz').value;
  var gestorAtual = document.getElementById('gestorAtual').value;
@@ -554,6 +564,7 @@ function toggleOutroOptions() {
  document.getElementById('carimboEscalonamento').textContent = escalonamento;
  document.getElementById('carimboMunicipio').textContent = municipio;
  document.getElementById('carimboTA').textContent = ta;
+ document.getElementById('carimboSites').textContent = Sites;
  document.getElementById('carimboDataAbertura').textContent = formatarDataHora(dataAbertura);
  document.getElementById('carimboTARaiz').textContent = taRaiz;
  document.getElementById('carimboGestorAtual').textContent = gestorAtual;
