@@ -1,0 +1,2160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consulta de Rodovias</title>
+  <link rel="icon" type="image/png" href="icons/road.png" />
+
+  <!-- Bootstrap & DataTables CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- AOS & Leaflet CSS -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"
+  />
+
+  <style>
+    :root {
+      --primary: #186c96;
+      --bg: #f4f0ff;
+      --text: #2c3e50;
+    }
+    [data-theme="dark"] {
+      --bg: #2c2c2c;
+      --text: #e5e5e5;
+      --primary: #228fc5;
+    }
+    html,
+    body {
+      height: auto;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .hero {
+      background: var(--primary);
+      color: #fff;
+      padding: 3rem 1rem;
+      text-align: center;
+    }
+  
+    .table-container {
+      overflow-x: auto;
+    }
+
+    /* DataTables overrides */
+    table.dataTable th,
+    table.dataTable td {
+      vertical-align: middle;
+      padding: 0.75rem;
+    }
+    .dataTables_wrapper .dataTables_filter input {
+      border-radius: 0.5rem;
+    }
+    .btn-theme {
+      background-color: var(--primary);
+      border: none;
+      color: #fff;
+    }
+
+    div.dataTables_filter {
+    display: none;
+  }
+
+  </style>
+</head>
+<body data-theme="light">
+  <div id="loader">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--primary)">
+    <div class="container-fluid">
+      <button
+        id="themeToggle"
+        class="btn btn-light btn-sm ms-auto"
+        aria-label="Alternar tema"
+      >
+        🌙
+      </button>
+    </div>
+  </nav>
+
+  <section class="hero" data-aos="fade-down">
+    <div class="container">
+        <span data-aos="fade-up" data-aos-delay="200" style="font-size: 30px; font-weight: bold;">
+          <img style="width: 70px; height: 70px;" alt="Imagem" src="icons/road.png"/>
+          Contatos Concessionárias de Rodovias
+        </span>
+      </div>
+      
+  </section>
+
+  <main class="container my-4">
+    <div class="row mb-3" data-aos="fade-right"></div>
+      <div class="col-12">
+        <input
+          id="globalSearch"
+          class="form-control form-control-lg"
+          placeholder="🔍 Pesquisar lote ou rodovia..."
+          aria-label="Pesquisa global"
+        />
+      </div>
+    </div><br>
+
+    <div class="row" data-aos="fade-up" data-aos-delay="200">
+      <div class="col-12 table-container">
+        <table
+          id="rodoviasTable"
+          class="table table-hover table-striped w-100"
+        ></table>
+      </div>
+    </div>
+
+   </main>
+ 
+  <!-- JS Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+  <!-- Initialization Script -->
+  <script>
+    // Hide loader
+    window.addEventListener('load', () => {
+      document.getElementById('loader').style.display = 'none';
+    });
+
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      const body = document.body;
+      body.dataset.theme = body.dataset.theme === 'light' ? 'dark' : 'light';
+      themeToggle.textContent = body.dataset.theme === 'light' ? '🌙' : '☀️';
+    });
+
+    // Sample data
+    const rodoviasData = [
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 01 - AutoBAn",
+        "Contato CCO": "0800 055 55 50",
+        "Contato Faixa de Dominio": "Alex da Silva - alex.dasilva@grupoccr.com.br",
+        "Contato Dominio": "11-94166-7919",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "Concessionária do Sistema Anhanguera Bandeirantes S.A. - AutoBAn",
+        "Rodovias": "Rodovia Anhanguera (SP-330) - Do km 11 ao km 158",
+        "LAT LONG INICIAL": "-23.5095, -46.7376",
+        "LAT LONG FINAL": "-22.4785, -47.4513"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 01 - AutoBAn",
+        "Contato CCO": "0800 055 55 50",
+        "Contato Faixa de Dominio": "Alex da Silva - alex.dasilva@grupoccr.com.br",
+        "Contato Dominio": "11-94166-7919",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "Concessionária do Sistema Anhanguera Bandeirantes S.A. - AutoBAn",
+        "Rodovias": "Rodovia dos Bandeirantes (SP-348) - Do km 13 ao km 173",
+        "LAT LONG INICIAL": "-23.5110, -46.7420",
+        "LAT LONG FINAL": "-22.4780, -47.4510"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 01 - AutoBAn",
+        "Contato CCO": "0800 055 55 50",
+        "Contato Faixa de Dominio": "Alex da Silva - alex.dasilva@grupoccr.com.br",
+        "Contato Dominio": "11-94166-7919",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "Concessionária do Sistema Anhanguera Bandeirantes S.A. - AutoBAn",
+        "Rodovias": "Dom Gabriel Paulino Bueno Couto (SP-300) - Do km 62 ao km 64",
+        "LAT LONG INICIAL": "-23.1850, -46.8800",
+        "LAT LONG FINAL": "-23.1830, -46.8830"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 01 - AutoBAn",
+        "Contato CCO": "0800 055 55 50",
+        "Contato Faixa de Dominio": "Alex da Silva - alex.dasilva@grupoccr.com.br",
+        "Contato Dominio": "11-94166-7919",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "Concessionária do Sistema Anhanguera Bandeirantes S.A. - AutoBAn",
+        "Rodovias": "Adalberto Panzan (SPI-102/330) - Do km 1 ao km 7",
+        "LAT LONG INICIAL": "-22.8933, -47.1342",
+        "LAT LONG FINAL": "-22.8783, -47.1000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 06 - Intervias",
+        "Contato CCO": "0800 707 14 14",
+        "Contato Faixa de Dominio": "Menegazzo, Guilherme Henrique (intervias) - guilherme.menegazzo@arteris.com.br",
+        "Contato Dominio": "19-992720-9031",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Rodovias do Interior Paulista S.A. - Intervias\n",
+        "Rodovias": "Rodovia Anhanguera (SP-330) - Do km 158+500 ao km 240+500",
+        "LAT LONG INICIAL": "-22.4785, -47.4513",
+        "LAT LONG FINAL": "-21.7920, -47.8850"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 06 - Intervias",
+        "Contato CCO": "0800 707 14 14",
+        "Contato Faixa de Dominio": "Menegazzo, Guilherme Henrique (intervias) - guilherme.menegazzo@arteris.com.br",
+        "Contato Dominio": "19-992720-9031",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Rodovias do Interior Paulista S.A. - Intervias\n",
+        "Rodovias": "Rodovias Deputado Laércio Corte, Engenheiro João Tosello e Monsenhor Clodoaldo de Paiva (SP-147) - Do km 041+360 ao km 060+700, do km 062+450 ao km 106+320 e do km 111+748 ao km 143+000",
+        "LAT LONG INICIAL": "-22.5580, -47.4000",
+        "LAT LONG FINAL": "-22.2900, -47.1700"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 06 - Intervias",
+        "Contato CCO": "0800 707 14 14",
+        "Contato Faixa de Dominio": "Menegazzo, Guilherme Henrique (intervias) - guilherme.menegazzo@arteris.com.br",
+        "Contato Dominio": "19-992720-9031",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Rodovias do Interior Paulista S.A. - Intervias\n",
+        "Rodovias": "Anel Viário Prefeito Jamil Bacar (SPI-054/147) - Do km 0 ao km 011+500",
+        "LAT LONG INICIAL": "-22.8900, -47.2000",
+        "LAT LONG FINAL": "-22.8700, -47.1500"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 06 - Intervias",
+        "Contato CCO": "0800 707 14 14",
+        "Contato Faixa de Dominio": "Menegazzo, Guilherme Henrique (intervias) - guilherme.menegazzo@arteris.com.br",
+        "Contato Dominio": "19-992720-9031",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Rodovias do Interior Paulista S.A. - Intervias\n",
+        "Rodovias": "Rodovia Wilson Finardi (SP-191) - Do km 0 ao km 046+900 e do km 049+700 ao km 074+721",
+        "LAT LONG INICIAL": "-22.5500, -47.4000",
+        "LAT LONG FINAL": "-22.3000, -47.1000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 06 - Intervias",
+        "Contato CCO": "0800 707 14 14",
+        "Contato Faixa de Dominio": "Menegazzo, Guilherme Henrique (intervias) - guilherme.menegazzo@arteris.com.br",
+        "Contato Dominio": "19-992720-9031",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Rodovias do Interior Paulista S.A. - Intervias\n",
+        "Rodovias": "Rodovias Vicente Botta e Dr. Paulo Lauro (SP-215) - Do km 051+350 ao km 097+370, do km 099+600 ao km 131+000 e do km 131+000 ao km 146+700",
+        "LAT LONG INICIAL": "-22.2200, -47.5000",
+        "LAT LONG FINAL": "-22.0500, -47.3000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 06 - Intervias",
+        "Contato CCO": "0800 707 14 14",
+        "Contato Faixa de Dominio": "Menegazzo, Guilherme Henrique (intervias) - guilherme.menegazzo@arteris.com.br",
+        "Contato Dominio": "19-992720-9031",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Rodovias do Interior Paulista S.A. - Intervias\n",
+        "Rodovias": "Rodovia Comendador Virgolino de Oliveira (SP-352) - Do km 162+540 ao km 185+171",
+        "LAT LONG INICIAL": "-22.7320, -46.7680",
+        "LAT LONG FINAL": "-22.6400, -46.7000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 06 - Intervias",
+        "Contato CCO": "0800 707 14 14",
+        "Contato Faixa de Dominio": "Menegazzo, Guilherme Henrique (intervias) - guilherme.menegazzo@arteris.com.br",
+        "Contato Dominio": "19-992720-9031",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Rodovias do Interior Paulista S.A. - Intervias\n",
+        "Rodovias": "Rodovia Gilberto Sila Telles (SPI-165/330) - Do km 0 ao km 4+670",
+        "LAT LONG INICIAL": "-22.9000, -47.2000",
+        "LAT LONG FINAL": "-22.8800, -47.1800"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 07 - Rotas das Bandeiras",
+        "Contato CCO": "0800 770 80 70",
+        "Contato Faixa de Dominio": "Tamires Vieira - tamiresvieira@rotadasbandeiras.com.br",
+        "Contato Dominio": "11-94161-9399",
+        "Escalonamento": "Viviane Lima - vivianelima@rotadasbandeiras.com.br",
+        "Contato Escalonamento": "11-99910-2532",
+        "Razão Social": "Concessionária Rota das Bandeiras S.A.",
+        "Rodovias": "Rodovia Romildo Prado (SP-063) - Do km 0 ao km 15+700",
+        "LAT LONG INICIAL": "-23.0878, -46.9410",
+        "LAT LONG FINAL": "-23.0000, -46.8500"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 07 - Rotas das Bandeiras",
+        "Contato CCO": "0800 770 80 70",
+        "Contato Faixa de Dominio": "Tamires Vieira - tamiresvieira@rotadasbandeiras.com.br",
+        "Contato Dominio": "11-94161-9399",
+        "Escalonamento": "Viviane Lima - vivianelima@rotadasbandeiras.com.br",
+        "Contato Escalonamento": "11-99910-2532",
+        "Razão Social": "Concessionária Rota das Bandeiras S.A.",
+        "Rodovias": "Rodovia D. Pedro I (SP-065) - Do km 0 ao km 145+500",
+        "LAT LONG INICIAL": "-23.2000, -46.9000",
+        "LAT LONG FINAL": "-23.0000, -45.9000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 07 - Rotas das Bandeiras",
+        "Contato CCO": "0800 770 80 70",
+        "Contato Faixa de Dominio": "Tamires Vieira - tamiresvieira@rotadasbandeiras.com.br",
+        "Contato Dominio": "11-94161-9399",
+        "Escalonamento": "Viviane Lima - vivianelima@rotadasbandeiras.com.br",
+        "Contato Escalonamento": "11-99910-2532",
+        "Razão Social": "Concessionária Rota das Bandeiras S.A.",
+        "Rodovias": "Rodovia José Roberto Magalhães Teixeira (SP-083) - Do km 0 ao km 18+280",
+        "LAT LONG INICIAL": "-22.9000, -47.1000",
+        "LAT LONG FINAL": "-22.8000, -47.0000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 07 - Rotas das Bandeiras",
+        "Contato CCO": "0800 770 80 70",
+        "Contato Faixa de Dominio": "Tamires Vieira - tamiresvieira@rotadasbandeiras.com.br",
+        "Contato Dominio": "11-94161-9399",
+        "Escalonamento": "Viviane Lima - vivianelima@rotadasbandeiras.com.br",
+        "Contato Escalonamento": "11-99910-2532",
+        "Razão Social": "Concessionária Rota das Bandeiras S.A.",
+        "Rodovias": "Rodovia Professor Zeferino Vaz (SP-332) - Do km 110+280 ao km 187+310",
+        "LAT LONG INICIAL": "-22.8000, -47.1000",
+        "LAT LONG FINAL": "-22.6000, -47.0000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 07 - Rotas das Bandeiras",
+        "Contato CCO": "0800 770 80 70",
+        "Contato Faixa de Dominio": "Tamires Vieira - tamiresvieira@rotadasbandeiras.com.br",
+        "Contato Dominio": "11-94161-9399",
+        "Escalonamento": "Viviane Lima - vivianelima@rotadasbandeiras.com.br",
+        "Contato Escalonamento": "11-99910-2532",
+        "Razão Social": "Concessionária Rota das Bandeiras S.A.",
+        "Rodovias": "Rodovia Engenheiro Constâncio Cintra (SP-360) - Do km 61+900 ao km 81+220",
+        "LAT LONG INICIAL": "-23.1250, -46.6100",
+        "LAT LONG FINAL": "-23.1000, -46.5800"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 07 - Rotas das Bandeiras",
+        "Contato CCO": "0800 770 80 70",
+        "Contato Faixa de Dominio": "Tamires Vieira - tamiresvieira@rotadasbandeiras.com.br",
+        "Contato Dominio": "11-94161-9399",
+        "Escalonamento": "Viviane Lima - vivianelima@rotadasbandeiras.com.br",
+        "Contato Escalonamento": "11-99910-2532",
+        "Razão Social": "Concessionária Rota das Bandeiras S.A.",
+        "Rodovias": "Acesso Valinhos (SPA-122/065) - Do km 0 ao km 4+250",
+        "LAT LONG INICIAL": "-22.9700, -47.0500",
+        "LAT LONG FINAL": "-22.9500, -47.0300"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 07 - Rotas das Bandeiras",
+        "Contato CCO": "0800 770 80 70",
+        "Contato Faixa de Dominio": "Tamires Vieira - tamiresvieira@rotadasbandeiras.com.br",
+        "Contato Dominio": "11-94161-9399",
+        "Escalonamento": "Viviane Lima - vivianelima@rotadasbandeiras.com.br",
+        "Contato Escalonamento": "11-99910-2532",
+        "Razão Social": "Concessionária Rota das Bandeiras S.A.",
+        "Rodovias": "Acesso Jundiaí (SPA-067/360) - Do km 0 ao km 2+400",
+        "LAT LONG INICIAL": "-23.2000, -46.9000",
+        "LAT LONG FINAL": "-23.1800, -46.8800"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 07 - Rotas das Bandeiras",
+        "Contato CCO": "0800 770 80 70",
+        "Contato Faixa de Dominio": "Tamires Vieira - tamiresvieira@rotadasbandeiras.com.br",
+        "Contato Dominio": "11-94161-9399",
+        "Escalonamento": "Viviane Lima - vivianelima@rotadasbandeiras.com.br",
+        "Contato Escalonamento": "11-99910-2532",
+        "Razão Social": "Concessionária Rota das Bandeiras S.A.",
+        "Rodovias": "Acesso Barão Geraldo (SPA-114/332) - Do km 0 ao km 0+600",
+        "LAT LONG INICIAL": "-22.8200, -47.1000",
+        "LAT LONG FINAL": "-22.8100, -47.0900"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 11 - Renovias",
+        "Contato CCO": "0800 055 96 96",
+        "Contato Faixa de Dominio": "Leo Henrique de Paula Bueno (Engenharia) - leo.bueno@renovias.com.br",
+        "Contato Dominio": "19-3548-2148",
+        "Escalonamento": "alexandre.bueno@renovias.com.br",
+        "Contato Escalonamento": "19-99221-9646",
+        "Razão Social": "Renovias Concessionária S.A.",
+        "Rodovias": "Rodovias Gov. Dr. Adhemar Pereira de Barros, Deputado Mário Beni, Prof. Boanerges Nogueira de Lima e Prefeito José André de Lima (SP-340) - Do km 114+100 ao km 281+770",
+        "LAT LONG INICIAL": "-22.1261, -46.5675",
+        "LAT LONG FINAL": "-21.7802, -46.5663"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 11 - Renovias",
+        "Contato CCO": "0800 055 96 96",
+        "Contato Faixa de Dominio": "Leo Henrique de Paula Bueno (Engenharia) - leo.bueno@renovias.com.br",
+        "Contato Dominio": "19-3548-2148",
+        "Escalonamento": "alexandre.bueno@renovias.com.br",
+        "Contato Escalonamento": "19-99221-9646",
+        "Razão Social": "Renovias Concessionária S.A.",
+        "Rodovias": "Rodovia Gov. Dr. Adhemar Pereira de Barros (SP-342) - Do km 171+500 ao km 251+150",
+        "LAT LONG INICIAL": "-21.7885, -46.5660",
+        "LAT LONG FINAL": "-21.7753, -46.8704"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 11 - Renovias",
+        "Contato CCO": "0800 055 96 96",
+        "Contato Faixa de Dominio": "Leo Henrique de Paula Bueno (Engenharia) - leo.bueno@renovias.com.br",
+        "Contato Dominio": "19-3548-2148",
+        "Escalonamento": "alexandre.bueno@renovias.com.br",
+        "Contato Escalonamento": "19-99221-9646",
+        "Razão Social": "Renovias Concessionária S.A.",
+        "Rodovias": "Rodovias Vereador Rubens Leme Asprino e Dom Tomás Vaquero (SP-344) - Do km 200+100 ao km 242+600",
+        "LAT LONG INICIAL": "-21.7800, -47.1150",
+        "LAT LONG FINAL": "-21.7725, -47.4160"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 11 - Renovias",
+        "Contato CCO": "0800 055 96 96",
+        "Contato Faixa de Dominio": "Leo Henrique de Paula Bueno (Engenharia) - leo.bueno@renovias.com.br",
+        "Contato Dominio": "19-3548-2148",
+        "Escalonamento": "alexandre.bueno@renovias.com.br",
+        "Contato Escalonamento": "19-99221-9646",
+        "Razão Social": "Renovias Concessionária S.A.",
+        "Rodovias": "Rodovia Hélio Moreira Salles (SP-215) - Do km 029+755 ao km 049+940",
+        "LAT LONG INICIAL": "-22.1730, -47.3520",
+        "LAT LONG FINAL": "-22.2200, -47.5000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 11 - Renovias",
+        "Contato CCO": "0800 055 96 96",
+        "Contato Faixa de Dominio": "Leo Henrique de Paula Bueno (Engenharia) - leo.bueno@renovias.com.br",
+        "Contato Dominio": "19-3548-2148",
+        "Escalonamento": "alexandre.bueno@renovias.com.br",
+        "Contato Escalonamento": "19-99221-9646",
+        "Razão Social": "Renovias Concessionária S.A.",
+        "Rodovias": "Rodovia Deputado Eduardo Vicente Nasser (SP-350) - Do km 238+412 ao km 272+100",
+        "LAT LONG INICIAL": "-21.9500, -47.4000",
+        "LAT LONG FINAL": "-21.8400, -47.7000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 13 - Colinas",
+        "Contato CCO": "0800 703 50 80",
+        "Contato Faixa de Dominio": "Priscila Soares Da Silva - priscila.silva@viaappia.com.br",
+        "Contato Dominio": "11-98521-0084",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Rodovias das Colinas S.A.",
+        "Rodovias": "Rodovias Dep. Arquimedes Lammoglia, Pref. Hélio Steffen, Eng. Ermênio de Oliveira Penteado e Santos Dumont (SP-075) - Do km 15 ao km 77+600",
+        "LAT LONG INICIAL": "-23.4035, -47.4418",
+        "LAT LONG FINAL": "-23.1071, -47.1591"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 13 - Colinas",
+        "Contato CCO": "0800 703 50 80",
+        "Contato Faixa de Dominio": "Priscila Soares Da Silva - priscila.silva@viaappia.com.br",
+        "Contato Dominio": "11-98521-0084",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Rodovias das Colinas S.A.",
+        "Rodovias": "Rodovias Fausto Santomauro, Cornélio Pires e Antônio Romano Schincariol (SP-127) - Do km 0 ao km 32+026 e do km 39+900 ao km 105+900",
+        "LAT LONG INICIAL": "-23.5460, -47.4760",
+        "LAT LONG FINAL": "-23.0040, -47.8700"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 13 - Colinas",
+        "Contato CCO": "0800 703 50 80",
+        "Contato Faixa de Dominio": "Priscila Soares Da Silva - priscila.silva@viaappia.com.br",
+        "Contato Dominio": "11-98521-0084",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Rodovias das Colinas S.A.",
+        "Rodovias": "Rodovia Castello Branco (SP-280) - Do km 79+380 ao km 129+600",
+        "LAT LONG INICIAL": "-23.3576, -47.2402",
+        "LAT LONG FINAL": "-23.0645, -47.7167"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 13 - Colinas",
+        "Contato CCO": "0800 703 50 80",
+        "Contato Faixa de Dominio": "Priscila Soares Da Silva - priscila.silva@viaappia.com.br",
+        "Contato Dominio": "11-98521-0084",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Rodovias das Colinas S.A.",
+        "Rodovias": "Rodovia Marechal Rondon (SP-300) - Do km 64+600 ao km 103 e do km 108+900 ao km 158+650",
+        "LAT LONG INICIAL": "-22.8836, -48.4535",
+        "LAT LONG FINAL": "-22.6900, -48.1170"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 13 - Colinas",
+        "Contato CCO": "0800 703 50 80",
+        "Contato Faixa de Dominio": "Priscila Soares Da Silva - priscila.silva@viaappia.com.br",
+        "Contato Dominio": "11-98521-0084",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Rodovias das Colinas S.A.",
+        "Rodovias": "Rodovia Eng. Herculano Godoy Passos (SPI-102/300) - Do km 0 ao km 7+900",
+        "LAT LONG INICIAL": "-22.5500, -49.0550",
+        "LAT LONG FINAL": "-21.9581, -50.5091"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 16 - CART",
+        "Contato CCO": "0800 773 00 90",
+        "Contato Faixa de Dominio": "Barbara Santiago Pereira - Barbara.Pereira@cartsp.com.br",
+        "Contato Dominio": "14-99608-0398",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "Concessionária Auto Raposo Tavares S.A.",
+        "Rodovias": "Rodovia João Baptista Cabral Rennó (SP-225) - Do km 235+040 ao km 317+800",
+        "LAT LONG INICIAL": "-22.6900, -48.1170",
+        "LAT LONG FINAL": "-22.6830, -48.0470"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 16 - CART",
+        "Contato CCO": "0800 773 00 90",
+        "Contato Faixa de Dominio": "Barbara Santiago Pereira - Barbara.Pereira@cartsp.com.br",
+        "Contato Dominio": "14-99608-0398",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "Concessionária Auto Raposo Tavares S.A.",
+        "Rodovias": "Rodovia Orlando Quagliato (SP-327) - Do km 0 ao km 32+433",
+        "LAT LONG INICIAL": "-22.2530, -49.4240",
+        "LAT LONG FINAL": "-22.1070, -50.0090"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 16 - CART",
+        "Contato CCO": "0800 773 00 90",
+        "Contato Faixa de Dominio": "Barbara Santiago Pereira - Barbara.Pereira@cartsp.com.br",
+        "Contato Dominio": "14-99608-0398",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "Concessionária Auto Raposo Tavares S.A.",
+        "Rodovias": "Rodovia Raposo Tavares (SP-270) - Do km 381+703 ao km 654+703",
+        "LAT LONG INICIAL": "-22.9000, -50.4400",
+        "LAT LONG FINAL": "-23.0830, -50.8830"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "Rodovia Marechal Rondon (SP-300) - Do km 336+500 ao km 667+630",
+        "LAT LONG INICIAL": "-22.2250, -51.4180",
+        "LAT LONG FINAL": "-21.9940, -53.0190"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 376/300 - Avaí",
+        "LAT LONG INICIAL": "-22.2893, -49.0505",
+        "LAT LONG FINAL": "-21.9940, -53.0190"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 388/300 - Presidente Alves",
+        "LAT LONG INICIAL": "-22.2975, -49.3400",
+        "LAT LONG FINAL": "-22.2940, -49.3270"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 396/300 - Pirajuí",
+        "LAT LONG INICIAL": "-22.2780, -49.4300",
+        "LAT LONG FINAL": "-22.2690, -49.4200"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 397/300 - Pirajuí",
+        "LAT LONG INICIAL": "-22.2790, -49.4500",
+        "LAT LONG FINAL": "-22.2700, -49.4450"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 422/300 - Cafelândia",
+        "LAT LONG INICIAL": "-22.2705, -49.4450",
+        "LAT LONG FINAL": "-22.2650, -49.4380"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 425/300 - Cafelândia",
+        "LAT LONG INICIAL": "-21.8050, -49.6200",
+        "LAT LONG FINAL": "-21.8020, -49.6150"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 460/300 - Promissão",
+        "LAT LONG INICIAL": "-21.8000, -49.6120",
+        "LAT LONG FINAL": "-21.7950, -49.6100"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 476/300 - Avanhandava",
+        "LAT LONG INICIAL": "-21.4640, -49.9500",
+        "LAT LONG FINAL": "-21.4600, -49.9400"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 483/300 - Penápolis",
+        "LAT LONG INICIAL": "-21.4190, -50.0700",
+        "LAT LONG FINAL": "-21.4150, -50.0600"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 501/300 - Glicério",
+        "LAT LONG INICIAL": "-21.3800, -50.1500",
+        "LAT LONG FINAL": "-21.3750, -50.1400"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 509/300 - Coroados",
+        "LAT LONG INICIAL": "-21.3628, -50.2931",
+        "LAT LONG FINAL": "-21.3600, -50.2900"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 516/300 - Birigui",
+        "LAT LONG INICIAL": "-21.3000, -50.3400",
+        "LAT LONG FINAL": "-21.2950, -50.3300"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 553/300 - Guararapes",
+        "LAT LONG INICIAL": "-21.2200, -50.6450",
+        "LAT LONG FINAL": "-21.2150, -50.6400"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 561/300 - Rubiácea",
+        "LAT LONG INICIAL": "-21.1800, -50.7000",
+        "LAT LONG FINAL": "-21.1750, -50.6900"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 568/300 - Bento de Abreu",
+        "LAT LONG INICIAL": "-21.2367, -50.8006",
+        "LAT LONG FINAL": "-21.2300, -50.7900"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 576/300 - Valparaíso",
+        "LAT LONG INICIAL": "-21.2200, -50.9000",
+        "LAT LONG FINAL": "-21.2150, -50.8900"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 594/300 - Lavínia",
+        "LAT LONG INICIAL": "-21.1700, -51.0000",
+        "LAT LONG FINAL": "-21.1650, -50.9900"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 601/300 - Mirandópolis",
+        "LAT LONG INICIAL": "-21.1300, -51.0500",
+        "LAT LONG FINAL": "-21.1250, -51.0400"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 607/300 - Mirandópolis",
+        "LAT LONG INICIAL": "-21.1200, -51.1000",
+        "LAT LONG FINAL": "-21.1150, -51.0900"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 615/300 - Guaraçaí",
+        "LAT LONG INICIAL": "-21.0800, -51.1500",
+        "LAT LONG FINAL": "-21.0750, -51.1400"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 624/300 - Muritinga do Sul",
+        "LAT LONG INICIAL": "-21.0300, -51.2000",
+        "LAT LONG FINAL": "-21.0250, -51.1900"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 653/300 - Castilho",
+        "LAT LONG INICIAL": "-20.9800, -51.2500",
+        "LAT LONG FINAL": "-20.9750, -51.2400"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 19 - ViaRondon",
+        "Contato CCO": "0800 72 99 300",
+        "Contato Faixa de Dominio": "Júlia Namura Cellani - julia.cellani@viarondon.com.br",
+        "Contato Dominio": "14-99151-9001",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "ViaRondon Concessionária de Rodovia S.A.",
+        "Rodovias": "SPA 486/300 - Boa Esperança à Penápolis",
+        "LAT LONG INICIAL": "-21.4000, -50.1000",
+        "LAT LONG FINAL": "-21.3950, -50.0900"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 20 - SPVias",
+        "Contato CCO": "0800 703 50 30",
+        "Contato Faixa de Dominio": "Maria Gabriela Sperandio Camargo Mathias - maria.sperandio@grupoccr.com.br",
+        "Contato Dominio": "15-99732-0579",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "​Concessionária Rodovias Integradas do Oeste S.A. - SPVias",
+        "Rodovias": "Rodovia Castello Branco (SP-280) - Do km 129+600 ao km 315+034",
+        "LAT LONG INICIAL": "-23.0645, -47.7167",
+        "LAT LONG FINAL": "-22.5000, -48.0000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 20 - SPVias",
+        "Contato CCO": "0800 703 50 30",
+        "Contato Faixa de Dominio": "Maria Gabriela Sperandio Camargo Mathias - maria.sperandio@grupoccr.com.br",
+        "Contato Dominio": "15-99732-0579",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "​Concessionária Rodovias Integradas do Oeste S.A. - SPVias",
+        "Rodovias": "Rodovia João Mellão (SP-255) - Do km 237+770 ao km 288+190",
+        "LAT LONG INICIAL": "-22.5000, -48.0000",
+        "LAT LONG FINAL": "-22.0000, -48.5000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 20 - SPVias",
+        "Contato CCO": "0800 703 50 30",
+        "Contato Faixa de Dominio": "Maria Gabriela Sperandio Camargo Mathias - maria.sperandio@grupoccr.com.br",
+        "Contato Dominio": "15-99732-0579",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "​Concessionária Rodovias Integradas do Oeste S.A. - SPVias",
+        "Rodovias": "Rodovias Antônio Romano Schincariol e Professor Francisco da Silva Pontes (SP-127) - Do km 105+900 ao km 213+150",
+        "LAT LONG INICIAL": "-23.0000, -47.8000",
+        "LAT LONG FINAL": "-22.5000, -48.0000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 20 - SPVias",
+        "Contato CCO": "0800 703 50 30",
+        "Contato Faixa de Dominio": "Maria Gabriela Sperandio Camargo Mathias - maria.sperandio@grupoccr.com.br",
+        "Contato Dominio": "15-99732-0579",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "​Concessionária Rodovias Integradas do Oeste S.A. - SPVias",
+        "Rodovias": "Rodovia Raposo Tavares (SP-270) - Do km 115+500 ao km 168+210",
+        "LAT LONG INICIAL": "-22.5000, -48.0000",
+        "LAT LONG FINAL": "-22.0000, -48.5000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 20 - SPVias",
+        "Contato CCO": "0800 703 50 30",
+        "Contato Faixa de Dominio": "Maria Gabriela Sperandio Camargo Mathias - maria.sperandio@grupoccr.com.br",
+        "Contato Dominio": "15-99732-0579",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "​Concessionária Rodovias Integradas do Oeste S.A. - SPVias",
+        "Rodovias": "Rodovia Francisco Alves Negrão (SP-258) - Do km 222+800 ao km 342+670",
+        "LAT LONG INICIAL": "-23.5000, -49.0000",
+        "LAT LONG FINAL": "-23.0000, -49.5000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 21 - Rodovias do Tietê",
+        "Contato CCO": "0800 770 33 22",
+        "Contato Faixa de Dominio": "Luiz Andre Sartori - luiz.sartori@rodoviasdotiete.com.br",
+        "Contato Dominio": "11-97305-1773",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Rodovias do Tiete S.A.",
+        "Rodovias": "Rodovia Jornalista Aguirre Proença (SP-101) - Do km 0 ao km 71+250",
+        "LAT LONG INICIAL": "-22.8000, -47.2000",
+        "LAT LONG FINAL": "-22.5000, -47.5000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 21 - Rodovias do Tietê",
+        "Contato CCO": "0800 770 33 22",
+        "Contato Faixa de Dominio": "Luiz Andre Sartori - luiz.sartori@rodoviasdotiete.com.br",
+        "Contato Dominio": "11-97305-1773",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Rodovias do Tiete S.A.",
+        "Rodovias": "Rodovia Dr. João José Rodrigues (SP-113) - Do km 0 ao km 14+400",
+        "LAT LONG INICIAL": "-22.7000, -47.3000",
+        "LAT LONG FINAL": "-22.6000, -47.4000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 21 - Rodovias do Tietê",
+        "Contato CCO": "0800 770 33 22",
+        "Contato Faixa de Dominio": "Luiz Andre Sartori - luiz.sartori@rodoviasdotiete.com.br",
+        "Contato Dominio": "11-97305-1773",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Rodovias do Tiete S.A.",
+        "Rodovias": "Rodovia Prof. João Hipólito Martins (SP-209) - Do km 0 ao km 21+090",
+        "LAT LONG INICIAL": "-22.9000, -47.1000",
+        "LAT LONG FINAL": "-22.8000, -47.2000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 21 - Rodovias do Tietê",
+        "Contato CCO": "0800 770 33 22",
+        "Contato Faixa de Dominio": "Luiz Andre Sartori - luiz.sartori@rodoviasdotiete.com.br",
+        "Contato Dominio": "11-97305-1773",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Rodovias do Tiete S.A.",
+        "Rodovias": "Rodovia Marechal Rondon (SP-300) - Do km 158+650 ao km 336+500",
+        "LAT LONG INICIAL": "-22.8000, -48.0000",
+        "LAT LONG FINAL": "-22.0000, -49.0000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 21 - Rodovias do Tietê",
+        "Contato CCO": "0800 770 33 22",
+        "Contato Faixa de Dominio": "Luiz Andre Sartori - luiz.sartori@rodoviasdotiete.com.br",
+        "Contato Dominio": "11-97305-1773",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Rodovias do Tiete S.A.",
+        "Rodovias": "Rodovia Comendador Mário Dedini / Rodovia do Açúcar (SP-308) - Do km 102+200 ao km 162+000",
+        "LAT LONG INICIAL": "-22.7000, -47.6000",
+        "LAT LONG FINAL": "-22.5000, -47.8000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 21 - Rodovias do Tietê",
+        "Contato CCO": "0800 770 33 22",
+        "Contato Faixa de Dominio": "Luiz Andre Sartori - luiz.sartori@rodoviasdotiete.com.br",
+        "Contato Dominio": "11-97305-1773",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Rodovias do Tiete S.A.",
+        "Rodovias": "Rodovia Ernesto Paterniani / Contorno de Piracicaba (SPI-162/308) - Do km 0 ao km 8+875",
+        "LAT LONG INICIAL": "-22.7000, -47.6000",
+        "LAT LONG FINAL": "-22.6000, -47.7000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 22 - Ecovias",
+        "Contato CCO": "0800 019 78 78",
+        "Contato Faixa de Dominio": "Renan Gomes Magrino - Renan.Magrino@ecovias.com.br",
+        "Contato Dominio": "11-99995-3715",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Ecovias dos Imigrantes S.A.",
+        "Rodovias": "Rodovia Anchieta (SP-150) - Do km 9+700 ao km 65+600",
+        "LAT LONG INICIAL": "-23.7000, -46.6000",
+        "LAT LONG FINAL": "-23.5000, -46.8000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 22 - Ecovias",
+        "Contato CCO": "0800 019 78 78",
+        "Contato Faixa de Dominio": "Renan Gomes Magrino - Renan.Magrino@ecovias.com.br",
+        "Contato Dominio": "11-99995-3715",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Ecovias dos Imigrantes S.A.",
+        "Rodovias": "Rodovia dos Imigrantes (SP-160) - Do km 11+460 ao km 70",
+        "LAT LONG INICIAL": "-23.7000, -46.6000",
+        "LAT LONG FINAL": "-23.5000, -46.8000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 22 - Ecovias",
+        "Contato CCO": "0800 019 78 78",
+        "Contato Faixa de Dominio": "Renan Gomes Magrino - Renan.Magrino@ecovias.com.br",
+        "Contato Dominio": "11-99995-3715",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Ecovias dos Imigrantes S.A.",
+        "Rodovias": "Interligação Planalto (SP-041) - Do km 0 ao km 8",
+        "LAT LONG INICIAL": "-23.6000, -46.7000",
+        "LAT LONG FINAL": "-23.5000, -46.8000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 22 - Ecovias",
+        "Contato CCO": "0800 019 78 78",
+        "Contato Faixa de Dominio": "Renan Gomes Magrino - Renan.Magrino@ecovias.com.br",
+        "Contato Dominio": "11-99995-3715",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Ecovias dos Imigrantes S.A.",
+        "Rodovias": "Interligação Baixada (SP-059) - Do km 0 ao km 1+800",
+        "LAT LONG INICIAL": "–23.8960, –46.4100",
+        "LAT LONG FINAL": "–23.8890, –46.4120"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 22 - Ecovias",
+        "Contato CCO": "0800 019 78 78",
+        "Contato Faixa de Dominio": "Renan Gomes Magrino - Renan.Magrino@ecovias.com.br",
+        "Contato Dominio": "11-99995-3715",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Ecovias dos Imigrantes S.A.",
+        "Rodovias": "Rodovia Cônego Domênico Rangoni (SP-248/55) - Do km 0 ao km 8+400",
+        "LAT LONG INICIAL": "–23.8950, –46.4105",
+        "LAT LONG FINAL": "–23.9900, –46.2760"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 22 - Ecovias",
+        "Contato CCO": "0800 019 78 78",
+        "Contato Faixa de Dominio": "Renan Gomes Magrino - Renan.Magrino@ecovias.com.br",
+        "Contato Dominio": "11-99995-3715",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Ecovias dos Imigrantes S.A.",
+        "Rodovias": "Rodovia Padre Manoel da Nóbrega (SP-055) - Do km 248+500 ao km 270+600 e do km 270+600 ao 292+200",
+        "LAT LONG INICIAL": "–23.8950, –46.4120",
+        "LAT LONG FINAL": "–24.2200, –46.9000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 23 - Ecopistas",
+        "Contato CCO": "0800 777 00 70",
+        "Contato Faixa de Dominio": "Erica Cortiz - Erica.Cortiz@ecopistas.com.br",
+        "Contato Dominio": "11-93299-4808",
+        "Escalonamento": "Rafael Aparecido Dos Santos Didone - Rafael.Didone@ecopistas.com.br",
+        "Contato Escalonamento": "11-96926-7499",
+        "Razão Social": "Concessionária das Rodovias Ayrton Senna e Carvalho Pinto S.A. - Ecopistas",
+        "Rodovias": "Rodovias Ayrton Senna e Governador Carvalho Pinto (SP-070) - Do km 11+190 ao km 134+700",
+        "LAT LONG INICIAL": "–23.5280, –46.6160",
+        "LAT LONG FINAL": "–23.3000, –45.5400"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 23 - Ecopistas",
+        "Contato CCO": "0800 777 00 70",
+        "Contato Faixa de Dominio": "Erica Cortiz - Erica.Cortiz@ecopistas.com.br",
+        "Contato Dominio": "11-93299-4808",
+        "Escalonamento": "Rafael Aparecido Dos Santos Didone - Rafael.Didone@ecopistas.com.br",
+        "Contato Escalonamento": "11-96926-7499",
+        "Razão Social": "Concessionária das Rodovias Ayrton Senna e Carvalho Pinto S.A. - Ecopistas",
+        "Rodovias": "Rodovia Hélio Smidt (SP-019) - Do km 0 ao km 2+400",
+        "LAT LONG INICIAL": "–23.6100, –46.6220",
+        "LAT LONG FINAL": "–23.6300, –46.6000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 23 - Ecopistas",
+        "Contato CCO": "0800 777 00 70",
+        "Contato Faixa de Dominio": "Erica Cortiz - Erica.Cortiz@ecopistas.com.br",
+        "Contato Dominio": "11-93299-4808",
+        "Escalonamento": "Rafael Aparecido Dos Santos Didone - Rafael.Didone@ecopistas.com.br",
+        "Contato Escalonamento": "11-96926-7499",
+        "Razão Social": "Concessionária das Rodovias Ayrton Senna e Carvalho Pinto S.A. - Ecopistas",
+        "Rodovias": "Rodovia dos Tamoios (SP-099) - Do km 4+500 ao km 11+500",
+        "LAT LONG INICIAL": "–23.0900, –45.9200",
+        "LAT LONG FINAL": "–23.6200, –45.4200"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 23 - Ecopistas",
+        "Contato CCO": "0800 777 00 70",
+        "Contato Faixa de Dominio": "Erica Cortiz - Erica.Cortiz@ecopistas.com.br",
+        "Contato Dominio": "11-93299-4808",
+        "Escalonamento": "Rafael Aparecido Dos Santos Didone - Rafael.Didone@ecopistas.com.br",
+        "Contato Escalonamento": "11-96926-7499",
+        "Razão Social": "Concessionária das Rodovias Ayrton Senna e Carvalho Pinto S.A. - Ecopistas",
+        "Rodovias": "SPI-179/060 - Do km 0 ao km 5+400",
+        "LAT LONG INICIAL": "–23.6600, –46.2400",
+        "LAT LONG FINAL": "–23.6550, –46.2000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 23 - Ecopistas",
+        "Contato CCO": "0800 777 00 70",
+        "Contato Faixa de Dominio": "Erica Cortiz - Erica.Cortiz@ecopistas.com.br",
+        "Contato Dominio": "11-93299-4808",
+        "Escalonamento": "Rafael Aparecido Dos Santos Didone - Rafael.Didone@ecopistas.com.br",
+        "Contato Escalonamento": "11-96926-7499",
+        "Razão Social": "Concessionária das Rodovias Ayrton Senna e Carvalho Pinto S.A. - Ecopistas",
+        "Rodovias": "SPI-035/056 - Do km 0 ao km 0+880",
+        "LAT LONG INICIAL": "–23.6620, –46.2480",
+        "LAT LONG FINAL": "–23.6610, –46.2390"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 23 - Ecopistas",
+        "Contato CCO": "0800 777 00 70",
+        "Contato Faixa de Dominio": "Erica Cortiz - Erica.Cortiz@ecopistas.com.br",
+        "Contato Dominio": "11-93299-4808",
+        "Escalonamento": "Rafael Aparecido Dos Santos Didone - Rafael.Didone@ecopistas.com.br",
+        "Contato Escalonamento": "11-96926-7499",
+        "Razão Social": "Concessionária das Rodovias Ayrton Senna e Carvalho Pinto S.A. - Ecopistas",
+        "Rodovias": "SPI-117/060 - Do km 0 ao km 4+700",
+        "LAT LONG INICIAL": "–23.6560, –46.2380",
+        "LAT LONG FINAL": "–23.6520, –46.1920"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 24 - RodoAnel",
+        "Contato CCO": "0800 773 66 99",
+        "Contato Faixa de Dominio": "",
+        "Contato Dominio": "",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária do RodoAnel Oeste S.A.",
+        "Rodovias": "Rodoanel Mario Covas (SP-021) - Do km 0+000 ao km 30+000 - Trecho Oeste",
+        "LAT LONG INICIAL": "–23.5130, –46.7000",
+        "LAT LONG FINAL": "–23.3000, –46.3000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 25 - SPMar",
+        "Contato CCO": "0800 774 88 77",
+        "Contato Faixa de Dominio": "",
+        "Contato Dominio": "",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária SPMAR S.A.",
+        "Rodovias": "Rodoanel Mario Covas (SP-021) - Do km 30+000 ao km 86+000 - Trecho Sul",
+        "LAT LONG INICIAL": "–23.3000, –46.3000",
+        "LAT LONG FINAL": "–23.4000, –46.1000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 25 - SPMar",
+        "Contato CCO": "0800 774 88 77",
+        "Contato Faixa de Dominio": "",
+        "Contato Dominio": "",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária SPMAR S.A.",
+        "Rodovias": "Rodoanel Mario Covas (SP-021) - Do km 86+000 ao km 124+000 - Trecho Leste",
+        "LAT LONG INICIAL": "–23.4000, –46.1000",
+        "LAT LONG FINAL": "–23.3200, –46.1000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 25 - SPMar",
+        "Contato CCO": "0800 774 88 77",
+        "Contato Faixa de Dominio": "",
+        "Contato Dominio": "",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária SPMAR S.A.",
+        "Rodovias": "Interligação com a Papa João XXIII (SPA-086/21) - Do km 0+000 ao km 4+300",
+        "LAT LONG INICIAL": "–23.3200, –46.1000",
+        "LAT LONG FINAL": "–23.5130, –46.7000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 26 -SPSerra",
+        "Contato CCO": "0800 000 40 75",
+        "Contato Faixa de Dominio": "",
+        "Contato Dominio": "",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "CONCESSIONARIA RODOANEL NORTE SPE S. A.​",
+        "Rodovias": "Rodoanel Mario Covas (SP-021) - Do km 129+106 ao km 172",
+        "LAT LONG INICIAL": "–23.5250, –46.5000",
+        "LAT LONG FINAL": "–23.5250, –46.4750"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 28 - Entrevias",
+        "Contato CCO": "0800 300 03 33",
+        "Contato Faixa de Dominio": "Rafael Pereira - Entrevias S/A - rafael.pereira@entrevias.com.br",
+        "Contato Dominio": "16-99705-9209",
+        "Escalonamento": "Alexandre Melo – Entrevias S/A - alexandre.melo@entrevias.com.br",
+        "Contato Escalonamento": "16-99721-4847",
+        "Razão Social": "Entrevias Concessionária de Rodovias S.A.",
+        "Rodovias": " Rodovias José de Almeida e Eng. Hélder de Sá (SP-266) - Do km 486+492 ao km 509+036.",
+        "LAT LONG INICIAL": "–21.9600, –51.1000",
+        "LAT LONG FINAL": "–21.8400, –50.9000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 28 - Entrevias",
+        "Contato CCO": "0800 300 03 33",
+        "Contato Faixa de Dominio": "Rafael Pereira - Entrevias S/A - rafael.pereira@entrevias.com.br",
+        "Contato Dominio": "16-99705-9209",
+        "Escalonamento": "Alexandre Melo – Entrevias S/A - alexandre.melo@entrevias.com.br",
+        "Contato Escalonamento": "16-99721-4847",
+        "Razão Social": "Entrevias Concessionária de Rodovias S.A.",
+        "Rodovias": "• Rodovia Cmt. João Ribeiro de Barros (SP-294) - Do km 451+700 ao 458.",
+        "LAT LONG INICIAL": "–21.7600, –49.4200",
+        "LAT LONG FINAL": "–21.7400, –49.3500"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 28 - Entrevias",
+        "Contato CCO": "0800 300 03 33",
+        "Contato Faixa de Dominio": "Rafael Pereira - Entrevias S/A - rafael.pereira@entrevias.com.br",
+        "Contato Dominio": "16-99705-9209",
+        "Escalonamento": "Alexandre Melo – Entrevias S/A - alexandre.melo@entrevias.com.br",
+        "Contato Escalonamento": "16-99721-4847",
+        "Razão Social": "Entrevias Concessionária de Rodovias S.A.",
+        "Rodovias": "• Rodovias Attílio Balbo, Armando de Salles Oliveira e Prefeito Antônio Duarte Nogueira (SP-322).",
+        "LAT LONG INICIAL": "–20.9500, –47.7500",
+        "LAT LONG FINAL": "–20.6500, –48.3000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 28 - Entrevias",
+        "Contato CCO": "0800 300 03 33",
+        "Contato Faixa de Dominio": "Rafael Pereira - Entrevias S/A - rafael.pereira@entrevias.com.br",
+        "Contato Dominio": "16-99705-9209",
+        "Escalonamento": "Alexandre Melo – Entrevias S/A - alexandre.melo@entrevias.com.br",
+        "Contato Escalonamento": "16-99721-4847",
+        "Razão Social": "Entrevias Concessionária de Rodovias S.A.",
+        "Rodovias": "• Rodovia Alexandre Balbo (SP-328). ",
+        "LAT LONG INICIAL": "–20.9300, –47.8800",
+        "LAT LONG FINAL": "–20.8800, –47.8500"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 28 - Entrevias",
+        "Contato CCO": "0800 300 03 33",
+        "Contato Faixa de Dominio": "Rafael Pereira - Entrevias S/A - rafael.pereira@entrevias.com.br",
+        "Contato Dominio": "16-99705-9209",
+        "Escalonamento": "Alexandre Melo – Entrevias S/A - alexandre.melo@entrevias.com.br",
+        "Contato Escalonamento": "16-99721-4847",
+        "Razão Social": "Entrevias Concessionária de Rodovias S.A.",
+        "Rodovias": "• Rodovia Anhanguera (SP-330).",
+        "LAT LONG INICIAL": "–23.5500, –46.7300",
+        "LAT LONG FINAL": "–20.3500, –47.8900"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 28 - Entrevias",
+        "Contato CCO": "0800 300 03 33",
+        "Contato Faixa de Dominio": "Rafael Pereira - Entrevias S/A - rafael.pereira@entrevias.com.br",
+        "Contato Dominio": "16-99705-9209",
+        "Escalonamento": "Alexandre Melo – Entrevias S/A - alexandre.melo@entrevias.com.br",
+        "Contato Escalonamento": "16-99721-4847",
+        "Razão Social": "Entrevias Concessionária de Rodovias S.A.",
+        "Rodovias": "• Rodovias Dr. Mario Gentil, Dona Leonor Mendes de Barros, Rachid Rayes e Miguel Jubran (SP-333) - Do km 212+450 ao km 327+200, do km 333+500 ao km 400+988 e do km 404+251 ao km 450+990. ",
+        "LAT LONG INICIAL": "–21.4500, –49.0200",
+        "LAT LONG FINAL": "–20.3500, –50.3100"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 28 - Entrevias",
+        "Contato CCO": "0800 300 03 33",
+        "Contato Faixa de Dominio": "Rafael Pereira - Entrevias S/A - rafael.pereira@entrevias.com.br",
+        "Contato Dominio": "16-99705-9209",
+        "Escalonamento": "Alexandre Melo – Entrevias S/A - alexandre.melo@entrevias.com.br",
+        "Contato Escalonamento": "16-99721-4847",
+        "Razão Social": "Entrevias Concessionária de Rodovias S.A.",
+        "Rodovias": "• Rodovia Laureanous Brogna (SP-351).​",
+        "LAT LONG INICIAL": "–21.3000, –48.0200",
+        "LAT LONG FINAL": "–21.2000, –47.9000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 27 - Tamoios",
+        "Contato CCO": "0800 545 00 00",
+        "Contato Faixa de Dominio": "faixadedominio@concessionariatamoios.com.br",
+        "Contato Dominio": "12-9 9722-0456",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Rodovias dos Tamoios S.A.",
+        "Rodovias": "Rodovia dos Tamoios (SP-099) - Do km 11+500 ao km 83+400",
+        "LAT LONG INICIAL": "–23.6200, –45.4200",
+        "LAT LONG FINAL": "–23.3840, –45.4300"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 27 - Tamoios",
+        "Contato CCO": "0800 545 00 00",
+        "Contato Faixa de Dominio": "faixadedominio@concessionariatamoios.com.br",
+        "Contato Dominio": "12-9 9722-0456",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Rodovias dos Tamoios S.A.",
+        "Rodovias": "SPA 032/099, 033/099, 035/099, 037/099",
+        "LAT LONG INICIAL": "–23.4000, –45.3000",
+        "LAT LONG FINAL": "–23.3600, –45.2900"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 27 - Tamoios",
+        "Contato CCO": "0800 545 00 00",
+        "Contato Faixa de Dominio": "faixadedominio@concessionariatamoios.com.br",
+        "Contato Dominio": "12-9 9722-0456",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Rodovias dos Tamoios S.A.",
+        "Rodovias": "Contorno de Caraguatatuba e São Sebastião",
+        "LAT LONG INICIAL": "–23.8000, –45.3800",
+        "LAT LONG FINAL": "–23.7800, –45.3800"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia Antônio Machado Sant’Anna (SP-255) - Do km 2+800 ao km 83+200  ",
+        "LAT LONG INICIAL": "–21.6000, –48.1000",
+        "LAT LONG FINAL": "–22.3200, –49.0200"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia Comandante João Ribeiro de Barros (SP-255) - Do km 83+200 ao km 147+300  ",
+        "LAT LONG INICIAL": "–22.3200, –49.0200",
+        "LAT LONG FINAL": "–23.0000, –49.5000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia Otávio Pacheco de Almeida Prado (SP-255) - Do km 155+770 ao km 179+600  ",
+        "LAT LONG INICIAL": "–23.0000, –49.5000",
+        "LAT LONG FINAL": "–23.3500, –49.6000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia Deputado João Lázaro de Almeida Prado (SP-255) - Do km 179+600 ao km 198+700  ",
+        "LAT LONG INICIAL": "–23.3500, –49.6000",
+        "LAT LONG FINAL": "–23.5500, –49.6800"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia João Mellão (SP-255) - Do km 198+700 ao km 237+770  ",
+        "LAT LONG INICIAL": "–23.5500, –49.6800",
+        "LAT LONG FINAL": "–23.7000, –49.7000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia Eduardo Saigh (SP-255) - Do km 288+190 ao km 320  ",
+        "LAT LONG INICIAL": "-22.2750, -49.0000",
+        "LAT LONG FINAL": "-22.1000, -48.8000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia Jurandir Siciliano (SP-255) - Do km 334+250 ao km 357+430  ",
+        "LAT LONG INICIAL": "-22.1000, -48.8000",
+        "LAT LONG FINAL": "-21.9000, -48.6000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia Engenheiro Agrônomo Constante Pavan Júnior (SP-249) - Do km 144+150 ao km 158+400  ",
+        "LAT LONG INICIAL": "-23.0000, -49.5000",
+        "LAT LONG FINAL": "-22.8000, -49.3000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia Aparício Biglia Filho (SP-281) - Do km 43+360 ao km 70+850  ",
+        "LAT LONG INICIAL": "-23.3000, -49.8000",
+        "LAT LONG FINAL": "-23.1000, -49.6000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia Antônio Prado Galvão de Barros (SP-304) - Do km 293+910 ao km 295+930  ",
+        "LAT LONG INICIAL": "-22.6000, -48.5000",
+        "LAT LONG FINAL": "-22.4000, -48.3000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia Deputado Aldo Lupo (SP-257) - Do km 0 ao km 19+500  ",
+        "LAT LONG INICIAL": "-22.0000, -48.0000",
+        "LAT LONG FINAL": "-21.8000, -47.8000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia Engenheiro Thales de Lorena Peixoto Júnior (SP-318) - Do km 235+400 ao km 280  ",
+        "LAT LONG INICIAL": "-22.2000, -47.8000",
+        "LAT LONG FINAL": "-22.0000, -47.6000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia José Fregonese (SP-328) - Do km 289+830 ao km 302+060  ",
+        "LAT LONG INICIAL": "-21.8000, -47.5000",
+        "LAT LONG FINAL": "-21.6000, -47.3000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia José Fregonese (SP-328) - Do km 304+310 ao km 306+820  ",
+        "LAT LONG INICIAL": "-21.6000, -47.3000",
+        "LAT LONG FINAL": "-21.4000, -47.1000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia José Fregonese (SP-328) - Do km 307+600 ao km 311+930  ",
+        "LAT LONG INICIAL": "-21.4000, -47.1000",
+        "LAT LONG FINAL": "-21.2000, -46.9000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia Cândido Portinari (SP-334) - Do km 318 ao km 406  ",
+        "LAT LONG INICIAL": "-21.0000, -47.0000",
+        "LAT LONG FINAL": "-20.8000, -46.8000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia Engenheiro Ronan Rocha (SP-345) - Do km 10+500 ao km 39+100  ",
+        "LAT LONG INICIAL": "-20.8000, -46.8000",
+        "LAT LONG FINAL": "-20.6000, -46.6000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 29 - Viapaulista",
+        "Contato CCO": "0800 001 12 55",
+        "Contato Faixa de Dominio": "Vitor Rezende Vendrame, Joao (viapaulista) - joao.vendrame@arteris.com.br",
+        "Contato Dominio": "16-99627-8762",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "​ViaPaulista S.A.",
+        "Rodovias": "Rodovia Anhanguera (SP-330) - Do km 240+500 ao km 318+500  ",
+        "LAT LONG INICIAL": "-22.0000, -47.0000",
+        "LAT LONG FINAL": "-21.8000, -46.8000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Engenheiro Paulo Nilo Romano (SP-225) - Do km 91+430 ao km 235+040  ",
+        "LAT LONG INICIAL": "-22.2000, -47.2000",
+        "LAT LONG FINAL": "-22.0000, -47.0000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Washington Luís (SP-310) - Do km 153+250 ao km 227+800  ",
+        "LAT LONG INICIAL": "-21.8000, -47.0000",
+        "LAT LONG FINAL": "-21.6000, -46.8000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Osni Mateus (SP-261) - Do km 150+600 ao km 183+650  ",
+        "LAT LONG INICIAL": "-22.4000, -47.2000",
+        "LAT LONG FINAL": "-22.2000, -47.0000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Geraldo de Barros (SP-304) - Do km 256+760 ao km 293+910  ",
+        "LAT LONG INICIAL": "-22.6000, -47.4000",
+        "LAT LONG FINAL": "-22.4000, -47.2000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Geraldo de Barros (SP-304) - Do km 198+140 ao km 256+760  ",
+        "LAT LONG INICIAL": "-22.4000, -47.2000",
+        "LAT LONG FINAL": "-22.2000, -47.0000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Geraldo de Barros (SP-304) - Do km 168+512 ao km 198+140  ",
+        "LAT LONG INICIAL": "-22.2000, -47.0000",
+        "LAT LONG FINAL": "-22.0000, -46.8000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Dr. Américo Piva (SP-197) - Do km 0 ao km 20+020  ",
+        "LAT LONG INICIAL": "-22.0000, -46.8000",
+        "LAT LONG FINAL": "-21.8000, -46.6000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Wilson Finardi (SP-191) - Do km 74+720 ao km 98+490  ",
+        "LAT LONG INICIAL": "-22.4000, -47.6000",
+        "LAT LONG FINAL": "-22.2000, -47.4000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Wilson Finardi (SP-191) - Do km 99 ao km 115+610  ",
+        "LAT LONG INICIAL": "-22.2000, -47.4000",
+        "LAT LONG FINAL": "-22.0000, -47.2000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Hermínio Petrin (SP-308) - Do km 173+622 ao km 194+200  ",
+        "LAT LONG INICIAL": "-22.6000, -47.8000",
+        "LAT LONG FINAL": "-22.4000, -47.6000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Comandante João Ribeiro de Barros (SP-294) - Do km 347+030 ao km 451+700  ",
+        "LAT LONG INICIAL": "-22.0000, -49.0000",
+        "LAT LONG FINAL": "-21.8000, -48.8000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Comandante João Ribeiro de Barros (SP-294) - Do km 458 ao km 685+300  ",
+        "LAT LONG INICIAL": "-21.8000, -48.8000",
+        "LAT LONG FINAL": "-21.6000, -48.6000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Deputado Victor Maeda (SP-331) - Do km 165 ao km 206+532  ",
+        "LAT LONG INICIAL": "-21.6000, -48.6000",
+        "LAT LONG FINAL": "-21.4000, -48.4000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Lourenço Lozano (SP-293) - Do km 0+010 ao km 24+850  ",
+        "LAT LONG INICIAL": "-21.4000, -48.4000",
+        "LAT LONG FINAL": "-21.2000, -48.2000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Assis Chateaubriand (SP-425) - Do km 374+350 ao km 450+300  ",
+        "LAT LONG INICIAL": "-21.0000, -48.0000",
+        "LAT LONG FINAL": "-20.8000, -47.8000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Homero Severo Lins (SP-284) - Do km 447+238 ao km 550+530  ",
+        "LAT LONG INICIAL": "-22.0000, -50.0000",
+        "LAT LONG FINAL": "-21.8000, -49.8000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 30 - EixoSP",
+        "Contato CCO": "0800 17 89 98",
+        "Contato Faixa de Dominio": "Lucas da Cunha Pereira - lucas.pereira@eixosp.com.br",
+        "Contato Dominio": "16-99630-1542",
+        "Escalonamento": "Rosangela Langraphi - Entrevias S/A - rosangela.langraphi@ibhservicos.com.br",
+        "Contato Escalonamento": "16-99605-5814",
+        "Razão Social": "​Eixo SP​​ S.A.",
+        "Rodovias": "Rodovia Prefeito José Gigliardi (SP-284) - Do km 447+238 ao km 550+530  ",
+        "LAT LONG INICIAL": "-21.8000, -49.8000",
+        "LAT LONG FINAL": "-21.6000, -49.6000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 31 - EcoNoroeste",
+        "Contato CCO": "0800 326 36 63",
+        "Contato Faixa de Dominio": "Faixa de Dominio Econoroeste - faixadedominio@econoroeste.com.br",
+        "Contato Dominio": "11-99684-9374",
+        "Escalonamento": "juliano.pereira@ecovias.com.br",
+        "Contato Escalonamento": "11-91266-0372",
+        "Razão Social": "EcoNoroeste​.",
+        "Rodovias": "Rodovia Washington Luís (SP-310) - Do km 227+800 ao km 454+300  ",
+        "LAT LONG INICIAL": "-21.6000, -49.6000",
+        "LAT LONG FINAL": "-21.4000, -49.4000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 31 - EcoNoroeste",
+        "Contato CCO": "0800 326 36 63",
+        "Contato Faixa de Dominio": "Faixa de Dominio Econoroeste - faixadedominio@econoroeste.com.br",
+        "Contato Dominio": "11-99684-9374",
+        "Escalonamento": "juliano.pereira@ecovias.com.br",
+        "Contato Escalonamento": "11-91266-0372",
+        "Razão Social": "EcoNoroeste​.",
+        "Rodovias": "Rodovia Brigadeiro Faria Lima (SP-326) - Do km 293 ao km 379+266  ",
+        "LAT LONG INICIAL": "-21.4000, -49.4000",
+        "LAT LONG FINAL": "-21.2000, -49.2000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 31 - EcoNoroeste",
+        "Contato CCO": "0800 326 36 63",
+        "Contato Faixa de Dominio": "Faixa de Dominio Econoroeste - faixadedominio@econoroeste.com.br",
+        "Contato Dominio": "11-99684-9374",
+        "Escalonamento": "juliano.pereira@ecovias.com.br",
+        "Contato Escalonamento": "11-91266-0372",
+        "Razão Social": "EcoNoroeste​.",
+        "Rodovias": "Rodovia Carlos Tonani (SP-333) - Do km 83+020 ao km 212+450  ",
+        "LAT LONG INICIAL": "-21.2000, -49.2000",
+        "LAT LONG FINAL": "-21.0000, -49.0000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 31 - EcoNoroeste",
+        "Contato CCO": "0800 326 36 63",
+        "Contato Faixa de Dominio": "Faixa de Dominio Econoroeste - faixadedominio@econoroeste.com.br",
+        "Contato Dominio": "11-99684-9374",
+        "Escalonamento": "juliano.pereira@ecovias.com.br",
+        "Contato Escalonamento": "11-91266-0372",
+        "Razão Social": "EcoNoroeste​.",
+        "Rodovias": "Rodovia Nemésio Cadetti (SP-333) - Do km 83+020 ao km 212+450  ",
+        "LAT LONG INICIAL": "-21.0000, -49.0000",
+        "LAT LONG FINAL": "-20.8000, -48.8000"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 31 - EcoNoroeste",
+        "Contato CCO": "0800 326 36 63",
+        "Contato Faixa de Dominio": "Faixa de Dominio Econoroeste - faixadedominio@econoroeste.com.br",
+        "Contato Dominio": "11-99684-9374",
+        "Escalonamento": "juliano.pereira@ecovias.com.br",
+        "Contato Escalonamento": "11-91266-0372",
+        "Razão Social": "EcoNoroeste​.",
+        "Rodovias": "Rodovia Laurentino Mascari (SP-333) - Do km 83+020 ao km 212+450  ",
+        "LAT LONG INICIAL": "-21.398876, -48.530079",
+        "LAT LONG FINAL": "-20.783050, -48.067886"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 31 - EcoNoroeste",
+        "Contato CCO": "0800 326 36 63",
+        "Contato Faixa de Dominio": "Faixa de Dominio Econoroeste - faixadedominio@econoroeste.com.br",
+        "Contato Dominio": "11-99684-9374",
+        "Escalonamento": "juliano.pereira@ecovias.com.br",
+        "Contato Escalonamento": "11-91266-0372",
+        "Razão Social": "EcoNoroeste​.",
+        "Rodovias": "Rodovia Dr. Mario Gentil (SP-333) - Do km 83+020 ao km 212+450  ",
+        "LAT LONG INICIAL": "-23.409928, -46.058450",
+        "LAT LONG FINAL": "-23.363207, -46.034207"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 32 - Novo Litoral",
+        "Contato CCO": "0800 098 88 55",
+        "Contato Faixa de Dominio": "pedro.malinosqui@novolitoral.com.br",
+        "Contato Dominio": "11-91954-5647",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "CONCESSIONARIA NOVO LITORAL",
+        "Rodovias": "Rodovia Pedro Eroles (SP-088) - Do km 32+000 ao km 39+450  ",
+        "LAT LONG INICIAL": "-23.352226, -46.025414",
+        "LAT LONG FINAL": "-23.289927, -45.982543"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 32 - Novo Litoral",
+        "Contato CCO": "0800 098 88 55",
+        "Contato Faixa de Dominio": "pedro.malinosqui@novolitoral.com.br",
+        "Contato Dominio": "11-91954-5647",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "CONCESSIONARIA NOVO LITORAL",
+        "Rodovias": "Rodovia Pedro Eroles (SP-088) - Do km 40+500 ao km 49+500  ",
+        "LAT LONG INICIAL": "-23.224999, -45.939884",
+        "LAT LONG FINAL": "-22.964184, -45.488155"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 32 - Novo Litoral",
+        "Contato CCO": "0800 098 88 55",
+        "Contato Faixa de Dominio": "pedro.malinosqui@novolitoral.com.br",
+        "Contato Dominio": "11-91954-5647",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "CONCESSIONARIA NOVO LITORAL",
+        "Rodovias": "Rodovia Dom Paulo Rolim Loureiro (SP-088) - Do km 56+650 ao km 98+100  ",
+        "LAT LONG INICIAL": "-23.740445, -45.402832",
+        "LAT LONG FINAL": "-24.056677, -46.381779"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 32 - Novo Litoral",
+        "Contato CCO": "0800 098 88 55",
+        "Contato Faixa de Dominio": "pedro.malinosqui@novolitoral.com.br",
+        "Contato Dominio": "11-91954-5647",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "CONCESSIONARIA NOVO LITORAL",
+        "Rodovias": "Rodovia Doutor Manuel Hipólito Rego (SP-055) - Do km 211+400 ao km 248+100  ",
+        "LAT LONG INICIAL": "-24.295456, -46.983756",
+        "LAT LONG FINAL": "-24.755619, -47.911888"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 32 - Novo Litoral",
+        "Contato CCO": "0800 098 88 55",
+        "Contato Faixa de Dominio": "pedro.malinosqui@novolitoral.com.br",
+        "Contato Dominio": "11-91954-5647",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "CONCESSIONARIA NOVO LITORAL",
+        "Rodovias": "Rodovia Padre Manuel da Nóbrega (SP-055) - Do km 292+200 ao km 389+800  ",
+        "LAT LONG INICIAL": "-23.456987, -47.478312",
+        "LAT LONG FINAL": "-23.227654, -48.232601"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Rodovia SP-079 (Castelinho) - Do km 97+650 ao km 213+565  ",
+        "LAT LONG INICIAL": "-23.648099, -47.153276",
+        "LAT LONG FINAL": "-23.702874, -47.447400"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Rodovia SP-250 (Raposo Tavares) - Do km 45+000 ao km 68+700  ",
+        "LAT LONG INICIAL": "-23.711101, -47.474095",
+        "LAT LONG FINAL": "-23.755334, -47.852351"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Rodovia SP-250 (Raposo Tavares) - Do km 70+994 ao km 101+180  ",
+        "LAT LONG INICIAL": "-23.758731, -47.870381",
+        "LAT LONG FINAL": "-23.940820, -48.590246"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Rodovia SP-250 (Raposo Tavares) - Do km 102+280 ao km 176+550  ",
+        "LAT LONG INICIAL": "-23.351870, -47.278389",
+        "LAT LONG FINAL": "-23.345188, -47.292752"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Acesso SPA 103/079 - Do km 0 ao km 2+495  ",
+        "LAT LONG INICIAL": "-23.345803, -47.292436",
+        "LAT LONG FINAL": "-23.312267, -47.345070"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Acesso SPA 104/079 - Do km 0 ao km 11+800  ",
+        "LAT LONG INICIAL": "-23.714838, -47.457379",
+        "LAT LONG FINAL": "-23.772750, -47.538103"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Acesso SPA 160/250 - Do km 0 ao km 15+900  ",
+        "LAT LONG INICIAL": "-23.598262, -47.145712",
+        "LAT LONG FINAL": "-23.623551, -47.191758"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Acesso SPA 053/280 - Do km 0 ao km 8+800  ",
+        "LAT LONG INICIAL": "-23.655135, -47.223153",
+        "LAT LONG FINAL": "-23.645809, -47.213826"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Avenida Antônio Falci - Município de Ibiúna/SP  ",
+        "LAT LONG INICIAL": "-23.520987, -47.466014",
+        "LAT LONG FINAL": "-23.435138, -47.500627"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Rodovia SP-075 (Castelinho) - Do km 0 ao km 15+695  ",
+        "LAT LONG INICIAL": "-23.617891, -47.034260",
+        "LAT LONG FINAL": "-23.645657, -47.285148"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Rodovia SP-270 (Raposo Tavares) - Do km 34+065 ao km 59+435  ",
+        "LAT LONG INICIAL": "-23.650194, -47.323839",
+        "LAT LONG FINAL": "-23.700376, -47.588329"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Rodovia SP-270 (Raposo Tavares) - Do km 63+265 ao km 87+655  ",
+        "LAT LONG INICIAL": "-23.703317, -47.604236",
+        "LAT LONG FINAL": "-23.745378, -47.866885"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Rodovia SP-270 (Raposo Tavares) - Do km 88+675 ao km 115+760  ",
+        "LAT LONG INICIAL": "-23.509598, -47.006782",
+        "LAT LONG FINAL": "-23.388358, -47.330455"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Rodovia SP-280 (Castello Branco) - Do km 54+140 ao km 79+740  ",
+        "LAT LONG INICIAL": "-23.658324, -47.208774",
+        "LAT LONG FINAL": "-23.662399, -47.249335"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Interligação SPI 060/270 - Do km 0 ao km 3+837  ",
+        "LAT LONG INICIAL": "-23.657238, -47.243241",
+        "LAT LONG FINAL": "-23.665312, -47.264820"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Interligação SPI 087/270 - Do km 0 ao km 2+018  ",
+        "LAT LONG INICIAL": "-23.656435, -47.260882",
+        "LAT LONG FINAL": "-23.663746, -47.305074"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 33 - Sorocabana",
+        "Contato CCO": "0800 701 55 55",
+        "Contato Faixa de Dominio": "Rosemeire Regina dos Santos - rosemeire.santos@grupoccr.com.br",
+        "Contato Dominio": "11-91442-9042",
+        "Escalonamento": "Luciano Ramos da Rocha - luciano.rocha@grupoccr.com.br",
+        "Contato Escalonamento": "11-93499-2875",
+        "Razão Social": "CONCESSIONÁRIA ROTA SOROCABANA S.A.",
+        "Rodovias": "Interligação SPI 091/270 - Do km 0 ao km 6+165  ",
+        "LAT LONG INICIAL": "-23.607854, -46.914558",
+        "LAT LONG FINAL": "-23.609841, -47.078394"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 34 - ECOVIAS RAPOSO CASTELlO",
+        "Contato CCO": "0800 019 78 78",
+        "Contato Faixa de Dominio": "juliano.pereira@ecovias.com.br",
+        "Contato Dominio": "11-91266-0372",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Ecovias Raposo Castello S.A.",
+        "Rodovias": "Rodovia Raposo Tavares (SP-270) - Do km 10+900 ao km 34  ",
+        "LAT LONG INICIAL": "-23.507144, -46.864515",
+        "LAT LONG FINAL": "-23.508957, -47.012226"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 34 - ECOVIAS RAPOSO CASTELlO",
+        "Contato CCO": "0800 019 78 78",
+        "Contato Faixa de Dominio": "juliano.pereira@ecovias.com.br",
+        "Contato Dominio": "11-91266-0372",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Ecovias Raposo Castello S.A.",
+        "Rodovias": "Rodovia Presidente Castelo Branco (SP-280) - Do km 13+200 ao km 54+100  ",
+        "LAT LONG INICIAL": "-23.529963, -46.999011",
+        "LAT LONG FINAL": "-23.563403, -47.077060"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 34 - ECOVIAS RAPOSO CASTELlO",
+        "Contato CCO": "0800 019 78 78",
+        "Contato Faixa de Dominio": "juliano.pereira@ecovias.com.br",
+        "Contato Dominio": "11-91266-0372",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Ecovias Raposo Castello S.A.",
+        "Rodovias": "Rodovia Coronel PM Nelson Tranchesi (SP-029) - Do km 34+500 ao km 43+700  ",
+        "LAT LONG INICIAL": "-23.601705, -46.838261",
+        "LAT LONG FINAL": "-23.644762, -46.850747"
+    },
+    {
+        "RODOVIAS E CONCESSIONÁRIAS": "Lote 34 - ECOVIAS RAPOSO CASTELlO",
+        "Contato CCO": "0800 019 78 78",
+        "Contato Faixa de Dominio": "juliano.pereira@ecovias.com.br",
+        "Contato Dominio": "11-91266-0372",
+        "Escalonamento": "",
+        "Contato Escalonamento": "",
+        "Razão Social": "Concessionária Ecovias Raposo Castello S.A.",
+        "Rodovias": "Vias entre Cotia e Embu das Artes - Aproximadamente 20 km",
+        "LAT LONG INICIAL": "",
+        "LAT LONG FINAL": ""
+    }
+];
+
+    // DataTable
+    const table = $('#rodoviasTable').DataTable({
+      data: rodoviasData,
+      columns: [
+        { title: 'Rodovias e Concessionárias', data: 'RODOVIAS E CONCESSIONÁRIAS' },
+        { title: 'Contato CCO', data: 'Contato CCO' },
+        { title: 'Faixa de Domínio', data: 'Contato Faixa de Dominio' },
+        { title: 'Contato Domínio', data: 'Contato Dominio' },
+        { title: 'Escalonamento', data: 'Escalonamento' },
+        { title: 'Contato Escalonamento', data: 'Contato Escalonamento' },
+        { title: 'Razão Social', data: 'Razão Social' },
+        { title: 'Rodovias', data: 'Rodovias' }
+      ],
+      paging: true,
+      searching: true,
+      pageLength: 5 ,
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel'],
+      autoWidth: false,
+      scrollX: false
+    });
+
+    $('#globalSearch').on('keyup', function () {
+  const value = this.value.toLowerCase();
+
+  $.fn.dataTable.ext.search = [];
+  $.fn.dataTable.ext.search.push(function (settings, data) {
+    const lote = data[0].toLowerCase();     // Coluna "RODOVIAS E CONCESSIONÁRIAS"
+    const rodovia = data[7].toLowerCase();  // Coluna "Rodovias"
+    return lote.includes(value) || rodovia.includes(value);
+  });
+
+  table.draw();
+});
+    // Initialize AOS
+    AOS.init({ duration: 800, once: true });
+  </script>
+</body>
+</html>
+
