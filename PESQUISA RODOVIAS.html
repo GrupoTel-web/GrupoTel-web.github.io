@@ -2,188 +2,220 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Consulta de Rodovias</title>
-  <link rel="icon" type="image/png" href="icons/road.png" />
+  <link rel="icon" href="icons/road.png" />
 
-  <!-- Bootstrap & DataTables CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-  <link
-    href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css"
-    rel="stylesheet"
-  />
-  <link
-    href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css"
-    rel="stylesheet"
-  />
-
-  <!-- AOS & Leaflet CSS -->
-  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css"
-  />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css"
-  />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"
-  />
+  <!-- Bootstrap 5 & DataTables CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+  <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet"/>
 
   <style>
     :root {
-      --primary: #186c96;
-      --bg: #f4f0ff;
-      --text: #2c3e50;
+      --primary: #0D47A1;
+      --secondary: #FF6D00;
+      --bg: #ECEFF1;
+      --text: #263238;
+      --hover: rgba(13,71,161,0.1);
+      --shadow: rgba(0,0,0,0.05);
+      --color: #ffffff;
     }
     [data-theme="dark"] {
-      --bg: #2c2c2c;
-      --text: #e5e5e5;
-      --primary: #228fc5;
+      --bg: #2C2C2C;
+      --text: #ffffff;
+      --hover: #9c9c9c;
+      --shadow: rgba(185, 185, 185, 0.05);
+      --color: #1f1f1f;
     }
-    html,
+    * { box-sizing: border-box; }
     body {
-      height: auto;
       margin: 0;
-      padding: 0;
-      background-color: var(--bg);
+      font-family: "Segoe UI", sans-serif;
+      background: var(--bg);
       color: var(--text);
-      transition: background 0.3s, color 0.3s;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
-    #loader {
-      position: fixed;
-      inset: 0;
-      background: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-    .hero {
+
+    /* Header */
+    header {
       background: var(--primary);
       color: #fff;
-      padding: 3rem 1rem;
-      text-align: center;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px var(--shadow);
     }
-  
-    .table-container {
-      overflow-x: auto;
+    header .title {
+      display: flex;
+      align-items: center;
+    }
+    header .title img {
+      width: 32px;
+      margin-right: 0.5rem;
+    }
+    #themeToggle {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
     }
 
-    /* DataTables overrides */
-    table.dataTable th,
-    table.dataTable td {
-      vertical-align: middle;
+    /* Container */
+    .container-fluid {
+      padding: 2rem;
+    }
+
+    /* Filtros */
+    .filters {
+      background: var(--color);
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .filters .form-label {
+      font-weight: 600;
+    }
+    .filters .form-control,
+    .filters .form-select {
+      border-radius: 0.75rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .filters .form-control:focus,
+    .filters .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(13,71,161,0.2);
+    }
+    .btn-reset {
+      border-radius: 0.75rem;
       padding: 0.75rem;
     }
-    .dataTables_wrapper .dataTables_filter input {
-      border-radius: 0.5rem;
+    .btn-reset {
+      background: #fff;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      transition: background .2s, color .2s;
     }
-    .btn-theme {
-      background-color: var(--primary);
-      border: none;
+    .btn-reset:hover {
+      background: var(--primary);
       color: #fff;
     }
 
-    div.dataTables_filter {
-    display: none;
-  }
+    /* Table wrapper arredondado */
+    .table-wrapper {
+      background: var(--color);
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 8px var(--shadow);
+      overflow: hidden;
+    }
 
+    /* DataTable estilos */
+    table.dataTable {
+      width: 100% !important;
+      margin: 0;
+    }
+    .table-wrapper thead th {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 500;
+      padding: 1rem;
+    }
+    .table-wrapper tbody td {
+      background: #fafafa;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--shadow);
+      font-weight: 500;
+      transition: background .2s;
+    }
+    .table-wrapper tbody tr:hover td {
+      background: var(--hover);
+    }
+
+    /* DataTables buttons */
+    .dataTables_wrapper .dt-buttons .btn {
+      background: var(--primary);
+      color: #fff;
+      margin-right: 0.5rem;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+      border: none;
+      display: none;
+      background-color: var(--color);
+    }
   </style>
 </head>
 <body data-theme="light">
-  <div id="loader">
-    <div class="spinner-border text-primary" role="status"></div>
+
+  <header>
+    <div class="title">
+      <img src="icons/road.png" alt="Logo">
+      <h4>Contatos Concessionarias de Rodovias</h4>
+    </div>
+    <button id="themeToggle" aria-label="Alternar tema">🌙</button>
+  </header>
+
+  <div class="container-fluid">
+    <!-- Filtros -->
+    <div class="filters row g-3 align-items-end">
+      <div class="col-md-4">
+        <label for="globalSearch" class="form-label">Pesquisar</label>
+        <input id="globalSearch" type="text" class="form-control" placeholder="Rodovia ou Concessionária">
+      </div>
+      <div class="col-md-3">
+        <label for="lotFilter" class="form-label">Lote</label>
+        <select id="lotFilter" class="form-select">
+          <option value="">Todos</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label for="rangeFilter" class="form-label">Faixa de Domínio</label>
+        <select id="rangeFilter" class="form-select">
+          <option value="">Todas</option>
+        </select>
+      </div>
+         <div class="col-md-1">
+        <button id="resetBtn" class="btn btn-reset w-100">Resetar</button>
+      </div>
+    </div>
+
+    <!-- Tabela em wrapper arredondado -->
+    <div class="table-wrapper">
+      <table id="rodoviasTable" class="table table-borderless table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Concessionária</th>
+            <th>Rodovia</th>
+            <th>CCO</th>
+            <th>Contato Faixa de Domínio</th>
+            <th>Contato Domínio</th>
+            <th>Escalonamento</th>
+            <th>Contato Esc.</th>
+            <th>Razão Social</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </div>
 
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--primary)">
-    <div class="container-fluid">
-      <button
-        id="themeToggle"
-        class="btn btn-light btn-sm ms-auto"
-        aria-label="Alternar tema"
-      >
-        🌙
-      </button>
-    </div>
-  </nav>
-
-  <section class="hero" data-aos="fade-down">
-    <div class="container">
-        <span data-aos="fade-up" data-aos-delay="200" style="font-size: 30px; font-weight: bold;">
-          <img style="width: 70px; height: 70px;" alt="Imagem" src="icons/road.png"/>
-          Contatos Concessionárias de Rodovias
-        </span>
-      </div>
-      
-  </section>
-
-  <main class="container my-4">
-    <div class="row mb-3" data-aos="fade-right"></div>
-      <div class="col-12">
-        <input
-          id="globalSearch"
-          class="form-control form-control-lg"
-          placeholder="🔍 Pesquisar lote ou rodovia..."
-          aria-label="Pesquisa global"
-        />
-      </div>
-    </div><br>
-
-    <div class="row" data-aos="fade-up" data-aos-delay="200">
-      <div class="col-12 table-container">
-        <table
-          id="rodoviasTable"
-          class="table table-hover table-striped w-100"
-        ></table>
-      </div>
-    </div>
-
-   </main>
- 
   <!-- JS Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
-  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
   <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-  <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
-  <!-- Initialization Script -->
   <script>
-    // Hide loader
-    window.addEventListener('load', () => {
-      document.getElementById('loader').style.display = 'none';
-    });
-
-    // Theme toggle
-    const themeToggle = document.getElementById('themeToggle');
-    themeToggle.addEventListener('click', () => {
-      const body = document.body;
-      body.dataset.theme = body.dataset.theme === 'light' ? 'dark' : 'light';
-      themeToggle.textContent = body.dataset.theme === 'light' ? '🌙' : '☀️';
-    });
-
-    // Sample data
-    const rodoviasData = [
+    // JSON de exemplo
+    const rodoviasData =  [
     {
         "RODOVIAS E CONCESSIONÁRIAS": "Lote 01 - AutoBAn",
         "Contato CCO": "0800 055 55 50",
@@ -2118,43 +2150,89 @@
     }
 ];
 
-    // DataTable
+    // Preenche filtros
+    const lotOpt = $('#lotFilter'), rangeOpt = $('#rangeFilter');
+    [...new Set(rodoviasData.map(d => d["RODOVIAS E CONCESSIONÁRIAS"]))].forEach(v => lotOpt.append(`<option>${v}</option>`));
+    [...new Set(rodoviasData.map(d => d["Rodovias"]))].forEach(v => rangeOpt.append(`<option>${v}</option>`));
+
+    // Inicializa DataTable
     const table = $('#rodoviasTable').DataTable({
-      data: rodoviasData,
+      data: rodoviasData.map(d => ({
+        concessionaria: d["RODOVIAS E CONCESSIONÁRIAS"],
+        rodovia: d["Rodovias"],
+        cco: d["Contato CCO"],
+        faixa: d["Contato Faixa de Dominio"],
+        dominio: d["Contato Dominio"],
+        escalonamento: d["Escalonamento"],
+        contatoEsc: d["Contato Escalonamento"],
+        razaoSocial: d["Razão Social"]
+      })),
       columns: [
-        { title: 'Rodovias e Concessionárias', data: 'RODOVIAS E CONCESSIONÁRIAS' },
-        { title: 'Contato CCO', data: 'Contato CCO' },
-        { title: 'Faixa de Domínio', data: 'Contato Faixa de Dominio' },
-        { title: 'Contato Domínio', data: 'Contato Dominio' },
-        { title: 'Escalonamento', data: 'Escalonamento' },
-        { title: 'Contato Escalonamento', data: 'Contato Escalonamento' },
-        { title: 'Razão Social', data: 'Razão Social' },
-        { title: 'Rodovias', data: 'Rodovias' }
+        { data: 'concessionaria' },
+        { data: 'rodovia' },
+        { data: 'cco' },
+        { data: 'faixa' },
+        { data: 'dominio' },
+        { data: 'escalonamento' },
+        { data: 'contatoEsc' },
+        { data: 'razaoSocial' }
       ],
-      paging: true,
-      searching: true,
-      pageLength: 5 ,
       dom: 'Bfrtip',
-      buttons: ['copy', 'csv', 'excel'],
+      buttons: ['copy','csv','excel'],
+      responsive: true,
+      searching: true, 
       autoWidth: false,
-      scrollX: false
+      paging: true,
+      pageLength: 20,
+      lengthChange: false,
+      ordering: true,
+      order: [[0, 'asc']],
+      scrollX: true,
+      searching: true, 
+      language: {
+        search: "", 
+        paginate: {
+          previous: "Anterior",
+          next: "Próximo"
+        },
+        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+        infoEmpty: "Mostrando 0 a 0 de 0 registros",
+        zeroRecords: "Nenhum registro encontrado"
+      }
     });
 
+    // Filtros
     $('#globalSearch').on('keyup', function () {
-  const value = this.value.toLowerCase();
+  const searchTerm = this.value.toLowerCase();
 
   $.fn.dataTable.ext.search = [];
+
   $.fn.dataTable.ext.search.push(function (settings, data) {
-    const lote = data[0].toLowerCase();     // Coluna "RODOVIAS E CONCESSIONÁRIAS"
-    const rodovia = data[7].toLowerCase();  // Coluna "Rodovias"
-    return lote.includes(value) || rodovia.includes(value);
+    const concessionaria = data[0]?.toLowerCase() || '';
+    const rodovia = data[1]?.toLowerCase() || '';
+
+    return concessionaria.includes(searchTerm) || rodovia.includes(searchTerm);
   });
 
   table.draw();
 });
-    // Initialize AOS
-    AOS.init({ duration: 800, once: true });
+
+    $('#lotFilter').on('change', () => table.column(0).search($('#lotFilter').val()).draw());
+    $('#rangeFilter').on('change', () => table.column(1).search($('#rangeFilter').val()).draw());
+    $('#resetBtn').on('click', () => {
+  $('#globalSearch, #lotFilter, #rangeFilter').val('');
+  $.fn.dataTable.ext.search = []; // <- Isso limpa o filtro global customizado
+  table.search('').columns().search('').draw();
+});
+
+
+    // Alternar tema
+    $('#themeToggle').on('click', () => {
+      const b = $('body');
+      const t = b.attr('data-theme') === 'light' ? 'dark' : 'light';
+      b.attr('data-theme', t);
+      $('#themeToggle').text(t === 'light' ? '🌙' : '☀️');
+    });
   </script>
 </body>
 </html>
-
