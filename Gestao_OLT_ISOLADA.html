@@ -14,6 +14,8 @@
  font-family: 'Poppins', sans-serif;
  padding-top: 5px; /* Empurra o conteúdo para baixo */
  background-color: #935993;
+ background: linear-gradient(to left, #935993,  #ffb9ff, #935993);
+
 }
  .chart-container {
  display: flex;
@@ -215,7 +217,7 @@ td {
 </div><br/><br/>
 <div class="chart-container">
 <div class="chart-table">
-<div class="chart-title">OLT's ISOLADA A</div>
+<div class="chart-title">OLT's ISOLADA</div>
 <canvas class="chart" id="doughnutChart"></canvas>
 <div class="values-container">
 <div class="value-box ok-box" id="okValue">OK: 715</div>
@@ -344,7 +346,16 @@ function resetAll() {
 }
 
  // Set current date and time
- document.getElementById('currentDateTime').innerText = new Date().toLocaleString();
+ function updateDateTime() {
+    document.getElementById('currentDateTime').innerText = new Date().toLocaleString();
+  }
+
+  // Atualiza o horário imediatamente ao carregar
+  updateDateTime();
+
+  // Atualiza o horário a cada segundo (1000ms)
+  setInterval(updateDateTime, 1000);
+  
 </script>
 <table border="1" style="width:100%; margin-top:20px;">
   <thead>

@@ -14,6 +14,8 @@
  font-family: 'Poppins', sans-serif;
  padding-top: 5px; /* Empurra o conteúdo para baixo */
  background-color: #656895;
+ background: linear-gradient(to left, #656895,  #c8ccff, #656895);
+
 }
  .chart-container {
  display: flex;
@@ -343,7 +345,15 @@ function resetAll() {
 }
 
  // Set current date and time
- document.getElementById('currentDateTime').innerText = new Date().toLocaleString();
+ function updateDateTime() {
+    document.getElementById('currentDateTime').innerText = new Date().toLocaleString();
+  }
+
+  // Atualiza o horário imediatamente ao carregar
+  updateDateTime();
+
+  // Atualiza o horário a cada segundo (1000ms)
+  setInterval(updateDateTime, 1000);
 </script>
 <table border="1" style="width:100%; margin-top:20px;">
   <thead>
@@ -555,6 +565,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <script>
   document.querySelector('.sair').addEventListener('click', function() {
-      window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+      window.location.href = "login_test bonitinho.html"; // Substitua com o caminho da sua página
   });
 </script>
