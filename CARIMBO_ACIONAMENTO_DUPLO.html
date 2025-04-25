@@ -102,12 +102,10 @@
             <input type="text" id="gestorRede" name="gestorRede" required><br><br>
             <label for="gestorRedeVivo">Gestor de Rede Vivo:</label>
             <input type="text" id="gestorRedeVivo" name="gestorRedeVivo" required><br><br>
-            <label for="prevDesloca">Previsão de deslocamento:</label>
-            <input type="text" id="prevDesloca" name="prevDesloca"><br><br>
+            <label for="localidade">Localidade:</label>
+            <input type="text" id="localidade" name="localidade" required><br><br>
             <label for="dataAcionamento">Data do Acionamento:</label>
             <input type="datetime-local" id="dataAcionamento" name="dataAcionamento" readonly><br><br>            
-            <label for="acionadoPor">Acionado por:</label>
-            <input type="text" id="acionadoPor" name="acionadoPor"><br><br>
             <button type="submit">Enviar</button>
         </form>
         <div class="carimbo" id="carimbo">
@@ -130,16 +128,12 @@
                     <td><span id="camrimbogestorRedeVivo"></span></td>
                 </tr>
                 <tr>
-                    <td>Previsão Deslocamento</td>
-                    <td><span id="camrimboprevDesloca"></span></td>
+                    <td>Localidade</td>
+                    <td><span id="camrimboLocalidade"></span></td>
                 </tr>
                 <tr>
                     <td>Data Acionamento</td>
                     <td><span id="camrimbodataAcionamento"></span></td>
-                </tr>
-                <tr>
-                    <td>Acionado Por</td>
-                    <td><span id="camrimboacionadoPor"></span></td>
                 </tr>
             </table>
             <div class="textoCompleto">
@@ -178,9 +172,8 @@ function getCurrentDateTimeLocal() {
         var numeroTA = document.getElementById('numeroTA').value;
         var gestorRede = document.getElementById('gestorRede').value;
         var gestorRedeVivo = document.getElementById('gestorRedeVivo').value;
-        var prevDesloca = document.getElementById('prevDesloca').value;
+        var localidade = document.getElementById('localidade').value;
         var dataAcionamento  = new Date().toISOString();
-        var acionadoPor = document.getElementById('acionadoPor').value;
 
         function formatarDataHora(dataHora) {
             if (!dataHora) return '';
@@ -195,18 +188,16 @@ function getCurrentDateTimeLocal() {
     document.getElementById('carimboNumeroTA').textContent = numeroTA;
     document.getElementById('camrimbogestorRede').textContent = gestorRede;
     document.getElementById('camrimbogestorRedeVivo').textContent = gestorRedeVivo;
-    document.getElementById('camrimboprevDesloca').textContent = prevDesloca;
+    document.getElementById('camrimboLocalidade').textContent = localidade;
     document.getElementById('camrimbodataAcionamento').textContent = formatarDataHora(dataAcionamento);
-    document.getElementById('camrimboacionadoPor').textContent = acionadoPor;
     document.getElementById('carimbo').style.display = 'block';
 
     var conteudoTexto = `##### ACIONAMENTO DUPLO #####
     Numero TA: ${numeroTA}
     Gestor de Rede: ${gestorRede}
     Gestor de Rede Vivo: ${gestorRedeVivo}
-    Deslocamento previsto: ${prevDesloca}
+    Localidade: ${localidade}
     Data do acionamento: ${formatarDataHora(dataAcionamento)}
-    Acionado por: ${acionadoPor}
     ##### ACIONAMENTO DUPLO #####`.split('\n').map(linha => linha.trim()).join('\n');
 
 document.getElementById('conteudoTexto').value = conteudoTexto;
