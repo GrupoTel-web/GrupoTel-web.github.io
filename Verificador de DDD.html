@@ -236,9 +236,9 @@ function obterCoordenadoresAdicionais(municipio) {
     );
     
     if (coordenadorExtra) {
-        return `\nCoordenador Rede: ${coordenadorExtra["Coordenador Rede"]}\n` +
-               `Supervisor EPS: ${coordenadorExtra["Supervisor EPS"]}\n` +
-               `Supervisor VIVO: ${coordenadorExtra["Supervisor VIVO"]}`;
+        return `\nCoordenador Rede: ${coordenadorExtra["COORD VIVO"]}\n` +
+    `Supervisor EPS: ${coordenadorExtra["SUP EPS"]}\n` +
+    `Supervisor VIVO: ${coordenadorExtra["Sup Vivo"]}`;
     }
     return "";
 }
