@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -168,6 +169,9 @@
             <label for="atCentralSite">AT/Central/Site:</label>
             <input type="text" id="atCentralSite" name="atCentralSite" required><br><br>
 
+            <label for="ta">DDD Area:</label>
+            <input type="number" id="ddd" name="ddd" required><br><br>
+
             <input type="hidden" id="envio" name="envio" value="">
             <button type="submit">Enviar</button>
         </form>
@@ -197,6 +201,10 @@
                 <tr>
                     <td>AT/Central/Site</td>
                     <td><span id="carimboATCentralSite"></span></td>
+                </tr>
+                <tr>
+                  <td>DDD Area</td>
+                  <td><span id="carimboDDD"></span></td>
                 </tr>
                 <tr>
                     <td>Envio</td>
@@ -284,6 +292,7 @@ function criarLinha(celulas = 11, valores = []) {
     document.getElementById("responsavel").value = "";
     document.getElementById("ta").value = "";
     document.getElementById("tipoAlarme").value = "";
+    document.getElementById("ddd").value = "";
     document.getElementById("dataAbertura").value = "";
     document.getElementById("atCentralSite").value = "";
 
@@ -334,6 +343,7 @@ function criarLinha(celulas = 11, valores = []) {
         let dataAbertura = document.getElementById("dataAbertura").value;
         let tipoAlarme = document.getElementById("tipoAlarme").value;
         let atCentralSite = document.getElementById("atCentralSite").value;
+        let ddd = document.getElementById("ddd").value;
 
         if (dataAbertura) {
             let partes = dataAbertura.split(" ");
@@ -372,6 +382,7 @@ function criarLinha(celulas = 11, valores = []) {
             var dataAbertura = document.getElementById('dataAbertura').value;
             var tipoAlarme = document.getElementById('tipoAlarme').value;
             var atCentralSite = document.getElementById('atCentralSite').value;
+            var ddd = document.getElementById('ddd').value;
             var envio = new Date();
             var envioFormatado = formatarDataEnvio(envio);
             var tempoTA = calcularTempoTA(dataAbertura, envio);
@@ -415,6 +426,7 @@ function formatarDataEnvio(dataHora) {
             document.getElementById('carimboDataAbertura').textContent = formatarDataHora(dataAbertura);
             document.getElementById('carimboTipoAlarme').textContent = tipoAlarme;
             document.getElementById('carimboATCentralSite').textContent = atCentralSite;
+            document.getElementById('carimboDDD').textContent = ddd;
             document.getElementById('carimboEnvio').textContent = envioFormatado;
             document.getElementById('carimboTempoTA').textContent = tempoTA;
             document.getElementById('carimbo').style.display = 'block';
