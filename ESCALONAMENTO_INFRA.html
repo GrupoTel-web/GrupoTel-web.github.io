@@ -446,6 +446,27 @@ document.getElementById('botaoLimpar').addEventListener('click', function() {
     limparFormulario(); 
 });
 
+
+const coordenadores = {
+  "15": "Americo Gumercindo",
+  "19": "Americo Gumercindo",
+  "14": "Helena Hanawa Tanaka",
+  "18": "Helena Hanawa Tanaka",
+  "11": "Aurelio Dias de Moura",
+  "12": "Aurelio Dias de Moura",
+  "16": "Carlos Alberto Toniolli Domench",
+  "17": "Carlos Alberto Toniolli Domench"
+};
+
+document.getElementById("ddd").addEventListener("input", function () {
+  const ddd = this.value;
+  const responsavelInput = document.getElementById("responsavel");
+  
+  if (coordenadores[ddd]) {
+    responsavelInput.value = coordenadores[ddd];
+  }
+});
+
 </script>
 
 </body>
