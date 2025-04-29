@@ -183,19 +183,19 @@ td {
             <input id="ok" name="ok" readonly type="number" value="165" class="full-width-input"/>
             
             <label for="nok">NOK:</label>
-            <input id="nok" name="nok" oninput="updateOK()" type="number" min="0" max="165" class="full-width-input"/>
+            <input id="nok" name="nok" oninput="updateMaxValues()" type="number" min="0" max="165" class="full-width-input"/>
             
             <label for="lessThan8">
                 <span style="display: block;">Menos</span>
                 <span>8 horas</span>
             </label>
-            <input id="lessThan8" name="lessThan8" type="number" class="full-width-input" min="0" max="165"/>
+            <input id="lessThan8" name="lessThan8" type="number" class="full-width-input" min="0" max="165" oninput="updateRemaining('lessThan8')"/>
             
             <label for="moreThan8">
                 <span style="display: block;">Mais</span>
                 <span>8 horas</span>
             </label>
-            <input id="moreThan8" name="moreThan8" type="number" class="full-width-input" min="0" max="165"/>
+            <input id="moreThan8" name="moreThan8" type="number" class="full-width-input" min="0" max="165" oninput="updateRemaining('moreThan8')"/>
         </div>
 
             <div style="margin-top: 10px;">
@@ -238,6 +238,42 @@ td {
 <div>NT-SPI GESTÃO de UPLINK OLT's REMOTAS DESC </div>
 </div>
 <script>
+
+function updateMaxValues() {
+        const nokValue = parseInt(document.getElementById('nok').value) || 0;
+        const lessThan8 = document.getElementById('lessThan8');
+        const moreThan8 = document.getElementById('moreThan8');
+
+        // Atualiza o valor máximo dos campos
+        lessThan8.max = nokValue;
+        moreThan8.max = nokValue;
+
+        // Reseta os valores se ultrapassarem o novo máximo
+        if (parseInt(lessThan8.value) > nokValue) lessThan8.value = nokValue;
+        if (parseInt(moreThan8.value) > nokValue) moreThan8.value = nokValue;
+
+        // Atualiza os valores restantes
+        updateRemaining();
+    }
+
+    function updateRemaining(changedField) {
+        const nokValue = parseInt(document.getElementById('nok').value) || 0;
+        const lessThan8 = document.getElementById('lessThan8');
+        const moreThan8 = document.getElementById('moreThan8');
+
+        const lessValue = parseInt(lessThan8.value) || 0;
+        const moreValue = parseInt(moreThan8.value) || 0;
+
+        if (changedField === 'lessThan8') {
+            // Atualiza o campo moreThan8 com o restante
+            moreThan8.value = Math.max(0, nokValue - lessValue);
+        } else if (changedField === 'moreThan8') {
+            // Atualiza o campo lessThan8 com o restante
+            lessThan8.value = Math.max(0, nokValue - moreValue);
+        }
+    }
+
+
  function updateOK() {
  const nok = document.getElementById('nok').value;
  const ok = 165 - nok;
