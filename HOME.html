@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -89,7 +88,7 @@
 
 @media (max-width: 600px) {
     .button-grid {
-        grid-template-columns: repeat(3, 1fr); /* 2 colunas em telas menores */
+        grid-template-columns: repeat(2, 1fr); /* 2 colunas em telas menores */
         max-width: 100%;
         gap: 8px;
     }
@@ -417,6 +416,13 @@
                     dot.textContent = '⬤';
                     dot.style.margin = '0 5px';
                     dot.style.opacity = (i === currentPage) ? '1' : '0.3';
+                    dot.style.cursor = 'pointer';
+                    dot.addEventListener('click', function() {
+                        if (currentPage !== i) {
+                            currentPage = i;
+                            updateButtons();
+                        }
+                    });
                     paginationDots.appendChild(dot);
                 }
             }
