@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -121,6 +120,16 @@
         max-width: 1200px; /* Limita a largura máxima */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
         }
+        .iframe-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
     </style>
 </head>
 <body>
@@ -477,6 +486,18 @@ document.getElementById("ddd").addEventListener("input", function () {
     <span>Sair</span>
 </div>
 
+<div class="verificador-ddd">
+    <button id="abrirIframe">DDD</button>
+</div>
+
+<div id="iframeOverlay" class="iframe-overlay"></div>
+<div id="iframeContainer" class="iframe-container">
+    <div class="iframe-header">
+        <button id="fecharIframe">X</button>
+    </div>
+    <iframe src="https://grupotel-web.github.io/DDD.html" frameborder="0"></iframe>
+</div>
+
 <style>
     .sair {
         position: fixed;
@@ -505,10 +526,90 @@ document.getElementById("ddd").addEventListener("input", function () {
     .sair:hover {
         opacity: 0.8;
     }
+
+    .verificador-ddd {
+        position: fixed;
+        top: 60px;
+        left: 10px;
+        z-index: 9998;
+    }
+
+    .verificador-ddd button {
+        background-color: #6d6765;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    .verificador-ddd button:hover {
+        background-color: #5a5756;
+    }
+
+    .iframe-container {
+        display: none;
+        position: fixed;
+        top: 35%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
+        height: 50%;
+        background-color: #fff;
+        border: 4px solid #000;
+        border-radius: 10px;
+        z-index: 10000;
+        box-shadow: 0 10px 80px rgba(0, 0, 0, 0.5);
+    }
+
+    .iframe-header {
+        display: flex;
+        justify-content: flex-end;
+        background-color: #6d6765;
+        padding: 5px;
+        border-bottom: 2px solid #000;
+    }
+
+    .iframe-header button {
+        background-color: #ff5c5c;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .iframe-header button:hover {
+        background-color: #ff3b3b;
+    }
+
+    .iframe-container iframe {
+        width: 100%;
+        height: calc(100% - 40px);
+        border: none;
+        border-radius: 0 0 10px 10px;
+    }
 </style>
 
 <script>
     document.querySelector('.sair').addEventListener('click', function() {
         window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+    });
+
+    document.getElementById('abrirIframe').addEventListener('click', function () {
+        document.getElementById('iframeOverlay').style.display = 'block';
+        document.getElementById('iframeContainer').style.display = 'block';
+    });
+
+    document.getElementById('fecharIframe').addEventListener('click', function () {
+        document.getElementById('iframeOverlay').style.display = 'none';
+        document.getElementById('iframeContainer').style.display = 'none';
+    });
+
+    document.getElementById('iframeOverlay').addEventListener('click', function () {
+        document.getElementById('iframeOverlay').style.display = 'none';
+        document.getElementById('iframeContainer').style.display = 'none';
     });
 </script>
