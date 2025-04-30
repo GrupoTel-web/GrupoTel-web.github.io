@@ -1,524 +1,506 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="icons/nt.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <title>Escalonamento Plantão</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Carimbos</title>
     <style>
         body {
+            font-family: 'Poppins', sans-serif;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 900px;
+            height: 120vh;
             margin: 0;
-            background: linear-gradient(to left, #096b9c,  #7dd4ff, #096b9c);
-
-            font-family: 'Poppins', sans-serif;
-            zoom: 70%;
+            background-color: #bae6df;
+            margin-top: 120px;
+            margin-bottom: 70px;
+            zoom: 65%;
+            background-image: url('sua-imagem.jpg'); /* Caminho da imagem */
+    background-size: cover; /* Faz a imagem cobrir toda a tela */
+    background-repeat: no-repeat; /* Evita a repetição */
+    background-position: center center; /* Centraliza a imagem */
+    background-attachment: fixed;
         }
-        .button-container {
-            display: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        button {
-            padding: 15px 30px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            background-color: #096b9c;
-            color: rgb(255, 255, 255);
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s, opacity 0.3s;
-        }
-        button:hover {
-            background-color: #0e3392;
-            color: #fff;
-        }
-        button.inactive {
-            opacity: 0.4; /* Deixa os botões inativos mais claros */
-        }
-
-        .table-container {
-            display: none;
-            margin-left: 20px;
-            margin-right: 20px;
-            zoom: 90%;
-            
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 5px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
-            text-align: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        th, td {
-            padding: 8px;
-            text-align: center;
-            
-        }
-        th {
-            background-color: #85fff9; /* Roxo */
-            color: #000; 
-        }
-        td {
-            background-color: #fff; /* Branco */
-            
-        }
-
         .container {
             text-align: center;
-            background-color: #fff;
+            background-color: #ffffffa2;
             padding: 60px;
             border-radius: 40px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 1);
-            height: 650px;
+            box-shadow: 0 0 30px rgb(0, 0, 0);
+            height: auto;
             width: 1700px;
+            user-select: none; 
+            cursor: default; 
+        }
+        h1 {
+            color: #252525;
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+        button {
+           background-color: #4caf50;
+           color: white;
+           padding: 25px;
+           margin: 10px 0;
+           border: none;
+           border-radius: 5px;
+           cursor: pointer;
+           font-size: 15px;
+           transition: background-color 0.3s ease;
+           font-family: Arial, Helvetica, sans-serif;
+           width: 200px;
+           height: 85px; /* Tamanho fixo de altura */
+          font-weight: bold;
+        }
+        button:hover {
+            font-size: 15px;
+            background-color: #4caf50;
+            font-weight: bold;
         }
 
-        .navigation-container {
-    display: flex;
-    align-items: center; /* Alinha os itens verticalmente ao centro */
-    justify-content: center; /* Centraliza os itens horizontalmente */
-    gap: 10px; /* Espaço entre os itens */
-    font-size: 40px;
-    margin-bottom: 30px;
-}
 
-.custom-button {
-    padding: 5px 10px; /* Padding dentro do botão */
-    font-size: 18px; /* Tamanho da fonte */
-    cursor: pointer; /* Indicador de que o botão pode ser clicado */
-    border-radius: 5px; /* Cantos arredondados */
-    font-size: 40px;
-}
-
-.custom-button:hover {
-    background-color: #e0e0e0; /* Mudança na cor do fundo ao passar o mouse */
-}
-
-.container3 {
-    display: flex;
+        .button-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr); /* Padrão: 6 colunas */
+    grid-template-rows: repeat(2, auto); /* 2 linhas ajustáveis */
+    gap: 15px; /* Espaçamento fixo */
+    max-width: 80%; /* Mantém os botões centralizados */
+    margin: 0 auto;
     justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
 }
 
-.area {
-    width: 300px;
-    margin: 10px;
-    text-align: center;
-    border: 2px solid #0c0141;
-    padding: 15px;
-    background-color: #ffffff; 
-    border-radius: 10px;
+/* Responsividade para telas menores */
+@media (max-width: 1200px) {
+    .button-grid {
+        grid-template-columns: repeat(5, 1fr); /* Reduz para 4 colunas */
+    }
 }
 
-.title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
+@media (max-width: 900px) {
+    .button-grid {
+        grid-template-columns: repeat(4, 1fr); /* Reduz para 3 colunas */
+        max-width: 90%; /* Acompanha a tela */
+        gap: 10px; /* Diminui o espaçamento */
+    }
 }
 
-.content {
-    font-size: 15px;
-    line-height: 1.5;
+@media (max-width: 600px) {
+    .button-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 colunas em telas menores */
+        max-width: 100%;
+        gap: 8px;
+    }
 }
+
+@media (max-width: 400px) {
+    .button-grid {
+        grid-template-columns: repeat(1, 1fr); /* Empilha os botões em telas bem pequenas */
+        max-width: 100%;
+        gap: 5px;
+    }
+}
+
+
+     
+
+
+        .scroll-button {
+            cursor: pointer;
+            font-size: 24px;
+            margin: 0 10px;
+            color: #333;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+        .scroll-button.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .hidden-buttons {
+            display: none;
+        }
+        .button-grid button {
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(210deg, #4caf4f,  #318634, #4CAF50);
+            color: rgb(255, 255, 255);
+            position: relative;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .button-grid button.hover-bg {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: transparent;
+        }
+
+        .button-grid button.hover-color {
+            background-color: #1c9850;
+        }
+
+
+        .background-button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    padding: 3px 6px; /* Reduzindo o padding */
+    background-color: #8c8c8c73;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 10px; /* Reduzindo a fonte */
+    transition: background 0.3s;
+    height: 25px; /* Ajuste de altura */
+    width: 60px;
+    min-width: 80px; /* Definir um tamanho mínimo */
+    user-select: none;  
+}
+
+.background-button:hover {
+    background-color: #65a66f;
+    font-size: 10px; /* Reduzindo a fonte */
+    user-select: none;
+}
+
+
 
 
     </style>
 </head>
-
-<div class="navigation-container">
-    <button class="custom-button" onclick="changePage('prev')">⯇</button>
-    <span id="page-title" style="font-weight: bold;">TABELA DE ESCALONAMENTO (PLANTÃO)</span>
-    <button class="custom-button" onclick="changePage('next')">⯈</button>
-</div>
-
-
-<div class="container">
 <body>
-    <div class="button-container">
-        <button class="table-navigation-button" onclick="showTable(0)">1 Hora</button>
-        <button class="table-navigation-button" onclick="showTable(1)">2 Horas</button>
-        <button class="table-navigation-button" onclick="showTable(2)">4 Horas</button>
-        <button class="table-navigation-button" onclick="showTable(3)">5 Horas</button>
-        <button class="table-navigation-button" onclick="showTable(4)">8 Horas</button>
+
+    <button id="background-btn" class="background-button">Selecionar</button>
+    <input type="file" id="image-input" accept="image/*" style="display: none;">
+
+    <div class="container" readonly>
+        <h1 id="title">
+            <span class="scroll-button" id="prev-btn" onclick="changePage('prev')">⯇</span>
+            <span id="page-title">Gestão de Carimbos NT - SPI</span>
+            <span class="scroll-button" id="next-btn" onclick="changePage('next')">⯈</span>
+        </h1><br><br><br>
+        
+        <div class="button-grid" id="buttons">
+            <!-- Botões da primeira página (arquivos locais) -->
+            <button onclick="location.href='CARIMBO_OLT_ISOLADA_FINAL.html'" data-image="BTNBG/Pag1 - OLT ISOLADA.png">CARIMBO OLT ISOLADA</button>
+            <button onclick="location.href='CARIMBO_UPLINK_OLT_SWD_HL4.html'" data-image="BTNBG/Pag1 - ADJ.png">ADJACÊNCIA (OLT, SWD, HL4)</button>
+            <button onclick="location.href='CARIMBO_ESCALONAMENTO.html'" data-image="BTNBG/Pag1 - ESCAL.png">CARIMBO ESCALONAMENTO</button>
+            <button onclick="location.href='CARIMBO_ESCALONAMENTO BAIRRO.html'" data-image="BTNBG/Pag1 - ESCMO.png">CARIMBO ESCALONAMENTO BAIRRO</button>
+            <button onclick="location.href='DUPLA_FALHA.html'" data-image="BTNBG/Pag1 - 2FALHA.png">CARIMBO DUPLA FALHA</button>
+            <button onclick="location.href='ESCALONAMENTO_INFRA.html'" data-image="BTNBG/Pag1 - INFRA.png">CARIMBO INFRA</button>
+            <button onclick="location.href='CARIMBO_RISCO_ISOLAMENTO.html'" data-image="BTNBG/Pag1 - RISCO.png">RISCO ISOLAMENTO</button>
+            <button onclick="location.href='Gestao_OLT_UPLINK.html'" data-image="BTNBG/Pag1 - GLINK.png">GESTÃO OLT UPLINK</button>
+            <button onclick="location.href='Gestao_OLT_ISOLADA.html'" data-image="BTNBG/Pag1 - GDOWN.png">GESTÃO OLT ISOLADA</button>
+            <button onclick="location.href='CARIMBO_AXT_LINK.html'" data-image="BTNBG/Pag1 - AXTLK.png">AXT FRANQUIA LINK</button>
+            <button onclick="location.href='CARIMBO_AXT_DOWN.html'" data-image="BTNBG/Pag1 - AXTDW.png">AXT FRANQUIA ISOLADA</button>
+            <button onclick="location.href='ESCALONAMENTO_MOVEL_PENDENCIA_REDE.html'" data-image="BTNBG/Pag1 - RDMOV.png">PENDENCIA REDE EXTERNA MÓVEL</button>
+            <button onclick="location.href='MUNICIPIO_ISOLADO_MOVEL.html'" data-image="BTNBG/Pag1 - MUNIDW.png">CARIMBO AFETAÇÃO MÓVEL</button>
+            <button onclick="location.href='CARIMBO_AST_GPON.html'" data-image="BTNBG/Pag1 - OUTLIER.png">CARIMBO OUTLIER AST</button>
+            <button onclick="location.href='CARIMBO_ACIONAMENTO_DUPLO.html'" data-image="BTNBG/Pag1 - ACIODP.png">ACIONAMENTO DUPLO</button>
+            <button onclick="location.href='#'" data-image="#"></button>
+        </div>
+        
+        <div class="button-grid hidden-buttons" id="hidden-buttons-2">
+            <!-- Botões da segunda página (links para páginas da web) -->
+            <button onclick="window.open('http://10.26.35.126/dash-dwdm_ocorrencia', '_blank')"  data-image="BTNBG/Pag2 - PDWDM.png">PORTAL DWDM</button>
+            <button onclick="window.open('http://10.26.35.126/dash-metro_alta_ocorrencia', '_blank')" data-image="BTNBG/Pag2 - PMETRO.png">PORTAL METRO</button>
+            <button onclick="window.open('http://10.26.35.126/dash-mun_isolados_ocorrencia', '_blank')" data-image="BTNBG/Pag2 - PMUNIDW.png">PORTAL MUNI ISOLADOS</button>
+            <button onclick="window.open('http://10.215.39.31:7772/portal_hl4/inicio.php', '_blank')" data-image="BTNBG/Pag2 - PAHL4.png">ACOMPANHAMENTO HL4</button>
+            <button onclick="window.open('http://10.26.35.126/dash-geo_oper_ocor/principal-pagina', '_blank')" data-image="BTNBG/Pag2 - GHL4.png">GESTÃO HL4 </button>
+            <button onclick="window.open('http://10.124.100.13:9091/', '_blank')" data-image="BTNBG/Pag2 - 4FIELD.png">4FIELD</button>
+            <button onclick="window.open('https://10.200.36.116/cactiFusion/plugins/weathermap/weathermap-cacti-plugin.php', '_blank')" data-image="BTNBG/Pag2 - CACTIF.png">CACTI FUSION</button>
+            <button onclick="window.open('https://cactiagregador.telesp.net.br/cacti/graph_view.php?action=tree&node=tree_anchor-3&site_id=-1&host_id=-1&host_template_id=-1&hgd=&hyper=true', '_blank')" data-image="BTNBG/Pag2 - CACTIA.png">CACTI AGREGADOR</button>
+            <button onclick="window.open('https://vivosmart.tdata.com.br/Orion/Login.aspx?sessionTimeout=yes&ReturnUrl=%2fOrion%2fSummaryView.aspx%3fViewID%3d97', '_blank')" data-image="BTNBG/Pag2 - AXTSM.png">AXT</button>
+            <button onclick="window.open('https://sigitm.vivo.com.br/app/index.jsp', '_blank')" data-image="BTNBG/Pag2 - SIGITM.png">SIGITM</button>
+            <button onclick="window.open('http://sigitm.redecorp.br/SIGITMWeb/index.jsf;jsessionid=btCU-Fco7trqzWzIdkee-j1sVwj580ciDn07Nx4NtlmJzqgkSmUU!1842956776!1395024305', '_blank')" data-image="BTNBG/Pag2 - SIGBD.png">SIGITM BD</button>
+            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/_layouts/15/Doc.aspx?sourcedoc=%7B3ca09476-ad3a-4fbe-b9d5-c58ac0f3900e%7D&action=default&CID=57f4946a-1f28-40ad-bc73-b29e1228ceeb&_SRM=2%3AS%3A560', '_blank')" data-image="BTNBG/Pag2 - RELATHL4.png">RELATÓRIO HL4</button>
+            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/g/personal/aldo_stoffel_telefonica_com/EblPxkiJm-JEnSQChAQd0DsBrdB4A79M0Ta__kchqrcbOg?e=4%3AGHN5kp&at=9', '_blank')" data-image="BTNBG/Pag3 - MUNIISO.png">RELATÓRIO MUNI ISOLADOS</button>
+            <button onclick="window.open('https://telefonicacorp-my.sharepoint.com/:x:/r/personal/aldo_stoffel_telefonica_com/_layouts/15/Doc.aspx?sourcedoc=%7BA7C85442-62BF-467D-9D66-655BD96EA7AB%7D&file=Novo%20Carimbo%20-%205.xlsx&action=default&mobileredirect=true', '_blank')" data-image="BTNBG/Pag3 - RELNT.png">RELATÓRIO NÚCLEO TÉCNICO</button>
+            <button onclick="window.open('https://10.18.77.200/index.php', '_blank')" data-image="BTNBG/Pag3 - GEOF.png">GEO FIBRA</button>
+            <button onclick="location.href='CABOS_OP_Mapa.pdf'" data-image="BTNBG/Pag3 - MPFO.png">MAPA DE CABOS</button>
+        </div>
+
+        <div class="button-grid hidden-buttons" id="hidden-buttons-3">
+            <!-- Botões da terceira página (mais links) -->
+            <button onclick="location.href='Verificador de DDD.html'" data-image="BTNBG/Pag3 - DDD.png">VERIFICADOR DE DDD</button>
+            <button onclick="location.href='PESQUISA OLT.html'" data-image="BTNBG/Pag4 - PSOLT.png">CONSULTA DE OLT</button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+        </div>
+        <div class="button-grid hidden-buttons" id="hidden-buttons-3">
+            <!-- Botões da terceira página (mais links) -->
+            <button onclick="location.href='ARVORE DE ESCALONAMENTOS.html'" data-image="BTNBG/Pag4 - TESCAL.png">ESCALONAMENTOS</button>
+            <button onclick="location.href='CARROSEL TP.html'" data-image="BTNBG/Pag4 - PRTP.png">PROCEDIMENTO DAS TP's</button>
+            <button onclick="location.href='CARROSEL AXT.html'" data-image="BTNBG/Pag4 - RAXT.png">ROTAS AXT</button>
+            <button onclick="location.href='CARROSEL COREIP.html'" data-image="BTNBG/Pag4 - CORIP.png">ROTAS CORE-IP</button>
+            <button onclick="location.href='CARROSEL TOPO.html'" data-image="BTNBG/Pag4 - TOPO.png">TOPOLOGIAS DE REDE</button>
+            <button onclick="location.href='TOPOLOGIAS MOVEL.html'" data-image="BTNBG/Pag4 - TPOMO.png">TOPOLOGIA MÓVEL</button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+            <button onclick="window.open('https://grupotel-web.github.io/HOME.html', '_blank')"></button>
+        </div><br><br>
+        <div id="pagination-dots" style="text-align: center; margin-top: 20px;"></div>
     </div>
 
-<div class="table-container" id="table-0">
-<h1 style="font-size: 30px; margin-top: 10px;"> </h1>
-<table>
-<!-- Primeira linha da tabela de 1h -->
-<tr>
-<th>N1 (Ability)</th>
-<th>N1 (Tel)</th>
-<th>N1 (Capital)</th>
-<th>Rede (Capital)</th>
-<th>Rede (Icomon)</th>
-<th>Rede (TEL)</th>
-<th>NOC</th>
-<th>NOC Móvel</th>
-<th>Sobressalentes (Chamado interno - Merinod)</th>
-<th>Sobressalentes (C/ o Fornecedor)</th>                
-</tr>
-<tr>
-<td>Conferir Plantonistas da Área</td>
-<td>Conferir Plantonistas da Área</td>
-<td>Reinaldo Escalonar Capital</td>
-<td>Palamin escalonar Capital</td>
-<td>Jose mauro ou Quinalia</td>
-<td>Jose mauro ou Quinalia</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-</table>
-<br>
-<table>
-<!-- Segunda linha da tabela de 1h -->
-<tr>
-<th>SWAP EXTERNO</th>
-<th>SWAP INTERNO (VIVO)</th>
-<th>Operação Banda Larga</th>
-<th>Operação DWDM</th>
-<th>Operação Rede IP</th>
-<th>CO-N1 (NOC-BL)</th>
-<th>Operação Móvel Backhaul (Metro Baixa)</th>
-<th>Rede Sudeste</th>
-<th>Operação Móvel RF (Radio / Enlace)</th>
-</tr>
-<tr>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-<td>Quinteiro, Aldo ou Celso</td>
-</tr>
-</table>
-
-<!-- Terceira linha da tabela de 1h (lista de plantonistas por area) -->
-
-<br>
-<h1 style="font-size: 15px; text-shadow: 1px 1px 2px #00fff7;">LISTA DOS PLANTONISTAS: ❗VERIFICAR SEMANALMENTE❗</h1>
-<div class="container3">
-<div class="area">
-<div class="title">12</div>
-<div class="content">
-Luiz Antonio dos Santos<br>
-Fernando Lelis Brito Rocha<br>
-Rogerio Alves Tavares
-</div>
-</div>
-<div class="area">
-<div class="title">15 e 19</div>
-<div class="content">
-Alexandre Pichutti Binatti<br>
-Vanderlei Marques de Oliveira<br>
-Mauro Proença Junior<br>
-Luciano Ribeiro da Silva<br>
-Claudinei Henrique dos Santos<br>
-Leandro Barrutia
-</div>
-</div>
-<div class="area">
-<div class="title">14 e 18</div>
-<div class="content">
-Ciro Tadashi Shiguematsu<br>
-Ricardo Marcos Gonçalves<br>
-Júlio César Leme<br>
-Reginaldo Barbosa Santana<br>
-Edilson Rodrigues Bezerra<br>
-André Fábio Gama
-</div>
-</div>
-<div class="area">
-<div class="title">16 e 17</div>
-<div class="content">
-André Luis Molesini Galan<br>
-José Ricardo Rodrigues Alves<br>
-Edimilson Rosa<br>
-Claudionor Máximo Souza<br>
-Airton César Longhi Baliero<br>
-Edgar Rizzo de Matos<br>
-Elvis Rodrigues Lopes
-</div>
-</div>
-</div>
-</div>
-
-
-<div class="table-container" id="table-1">
-<h1 style="font-size: 30px; margin-top: 100px;"> </h1>
-<table>
-<!-- Primeira linha da tabela de 2h -->
-<tr>
-<th>N1 (Ability)</th>
-<th>N1 (Tel)</th>
-<th>N1 (Capital)</th>
-<th>Rede (Capital)</th>
-<th>Rede (Icomon)</th>
-<th>Rede (TEL)</th>
-<th>NOC</th>
-<th>NOC Móvel</th>
-<th>Sobressalentes (Chamado interno - Merinod)</th>
-<th>Sobressalentes (C/ o Fornecedor)</th>              
-</tr>
-<tr>
-<td>Escalonar Gabanela (11)96481-7433</td>
-<td>Escalonar Adenilson (19)99724-3654</td>
-<td>Reinaldo escalonar Cleverson Capital</td>
-<td>Palamin escalonar Cleverson Capital</td>
-<td>Palamin escalonar Alex Ferraz (11)97469-2530</td>
-<td>Palamin escalonar Alexandre do Bem</td>
-<td>Renato escalonar Diego Barbosa</td>
-<td>Rodrigo padilha escalonar Lidiane Ribeiro</td>
-<td>Reinaldo escalonar Gustavo Siqueira</td>
-<td>Reinaldo escalonar Paulo Sergio De Lima - BL / Lucio - IP</td>
-</tr>
-</table>
-<br>
-<table>
-<!-- Segunda linha da tabela de 2h -->
-<tr>
-<th>SWAP EXTERNO</th>
-<th>SWAP INTERNO (VIVO)</th>
-<th>Operação Banda Larga</th>
-<th>Operação DWDM</th>
-<th>Operação Rede IP</th>
-<th>CO-N1 (NOC-BL)</th>
-<th>Operação Móvel Backhaul (Metro Baixa)</th>
-<th>Rede Sudeste</th>
-<th>Operação Móvel RF (Radio / Enlace)</th>
-</tr>
-<tr>
-<td>Escalonar Marcelo Figlarz</td>
-<td>Escalonar Fernanda Marize</td>
-<td>Renato escalonar Paulo Sergio</td>
-<td>Renato escalonar Marcelo Monteiro</td>
-<td>Renato escalonar Lucio Pinto</td>
-<td>Renato escalonar Wanderley Duarte</td>
-<td>Renato escalonar Itamar Burato</td>
-<td>Palamin escalonar Fred</td>
-<td>Renato escalonar Wanderley Duarte</td>
-</table>
-</div>
-
-
-<div class="table-container" id="table-2">
-<h1 style="font-size: 30px; margin-top: 100px;"> </h1>
-<table>
-<!-- Primeira linha da tabela de 4h -->
-<tr>
-<th>N1 (Ability)</th>
-<th>N1 (Tel)</th>
-<th>N1 (Capital)</th>
-<th>Rede (Capital)</th>
-<th>Rede (Icomon)</th>
-<th>Rede (TEL)</th>
-<th>NOC</th>
-<th>NOC Móvel</th>
-<th>Sobressalentes (Chamado interno - Merinod)</th>
-<th>Sobressalentes (C/ o Fornecedor)</th>                
-</tr>
-<tr>
-<td>Escalonar Leandro Kolaya (11)97204-2687</td>
-<td>Escalonar Antonio Cesar (16)99991-4255</td>
-<td>Renato escalonar Robinson da Capital</td>
-<td>Palamin escalonar Robinson da Capital</td>
-<td>Escalonar Odirlei (11)96496-5286</td>
-<td>Escalonar Vetoretti (17)99618-2197</td>
-<td>Renato escalonar Geraldo Ramazotti</td>
-<td>Rodrigo Padilha escalonar Geraldo Ramazotti</td>
-<td>Reinaldo escalonar DEL REY</td>
-<td>Reinaldo escalonar Menon - IP</td>
-</tr>                
-</table>
-<br>
-<table>
-<!-- Segunda linha da tabela de 4h -->
-<tr>
-<th>SWAP EXTERNO</th>
-<th>SWAP INTERNO (VIVO)</th>
-<th>Operação Banda Larga</th>
-<th>Operação DWDM</th>
-<th>Operação Rede IP</th>
-<th>CO-N1 (NOC-BL)</th>
-<th>Operação Móvel Backhaul (Metro Baixa)</th>
-<th>Rede Sudeste</th>
-<th>Operação Móvel RF (Radio / Enlace)</th>
-</tr>
-<tr>
-<td>Renato escalonar Geraldo Ramazotti</td>
-<td>Renato escalonar Fernanda Marize</td>
-<td>Renato escalonar Márcio Fagundes</td>
-<td>Renato escalonar Menon</td>
-<td>Renato escalonar Menon</td>
-<td>Renato escalonar Sergio Rodrigo de Souza</td>
-<td>Renato escalonar Leandro Amaral</td>
-<td>Palamin escalonar Fred</td>
-<td>Renato escalonar Leandro Amaral</td>
-</table>
-</div>
-
-
-<div class="table-container" id="table-3">
-<h1 style="font-size: 30px; margin-top: 100px;"> </h1>
-<table>
-<!-- Primeira linha da tabela de 5h -->
-<tr>
-<th>N1 (Ability)</th>
-<th>N1 (Tel)</th>
-<th>N1 (Capital)</th>
-<th>Rede (Capital)</th>
-<th>Rede (Icomon)</th>
-<th>Rede (TEL)</th>
-<th>NOC</th>
-<th>NOC Móvel</th>
-<th>Sobressalentes (Chamado interno - Merinod)</th>
-<th>Sobressalentes (C/ o Fornecedor)</th>
-              
-</tr>
-<tr>
-<td>Escalonar Ricardo Boccatto (11)99972-3510</td>
-<td>Escalonar Marcio Dalio<a href="https://wa.me/5511999443956" target="_blank" style="color: #000;">(11)99944-3956</a></td>
-<td>Renato escalonar Diretor Capital Elizeu</td>
-<td>Palamin escalonar Diretor Capital Elizeu</td>
-<td>Escalonar Sorrilha (11)99654-1671</td>
-<td>Escalonar Marcio Dalio<a href="https://wa.me/5511999443956" target="_blank" style="color: #000;">(11)99944-3956</a></td>
-<td>Renato escalonar Marcelo Figlarz</td>
-<td>Renato escalonar Marcelo Figlarz</td>
-<td>Reinaldo escalonar DEL REY</td>
-<td>Reinaldo escalonar Marcelo Figlarz</td>
-</tr>
-</table>
-<br>
-<table>
-<!-- Segunda linha da tabela de 5h -->
-<tr>
-<th>SWAP EXTERNO</th>  
-<th>SWAP INTERNO (VIVO)</th>
-<th>Operação Banda Larga</th>
-<th>Operação DWDM</th>
-<th>Operação Rede IP</th>
-<th>CO-N1 (NOC-BL)</th>
-<th>Operação Móvel Backhaul (Metro Baixa)</th>
-<th>Rede Sudeste</th>
-<th>Operação Móvel RF (Radio / Enlace)</th>
-</tr>
-<tr>
-<td>Renato Escalonar Marcelo Figlarz</td>
-<td>Renato escalonar Fernanda Marize</td>
-<td>Renato escalonar Marcelo Figlarz</td>
-<td>Renato escalonar Marcelo Figlarz</td>
-<td>Renato escalonar Marcelo Figlarz</td>
-<td>Renato escalonar Fabio Stellato</td>
-<td>Renato escalonar Marcelo Figlarz</td>
-<td>Escalonar Aparecido</td>
-<td>Renato escalonar Marcelo Figlarz</td>
-</tr>
-</table>
-</div>
-
-
-<div class="table-container" id="table-4">
-<table>
-<!-- Escalonamento 8H RENATO -->
-<tr>
-<h1 style="font-size: 30px; margin-top: 250px;">
-Independente do Gestor atual escalonar Renato Farias se TA com 8h
-</h1>
-</tr>
-</table>
-</div>
-
     <script>
-          function showTable(tableIndex) {
-    // Ocultar todas as tabelas
-    const tables = document.querySelectorAll('.table-container');
-    tables.forEach(table => table.style.display = 'none');
-
-    // Mostrar a tabela clicada
-    const selectedTable = document.getElementById('table-' + tableIndex);
-    selectedTable.style.display = 'block';
-
-    // Alterar opacidade dos botões (somente os relacionados à navegação entre tabelas)
-    const buttons = document.querySelectorAll('.table-navigation-button'); // Seleciona apenas botões de navegação de tabelas
-    buttons.forEach((btn, index) => {
-        if (index === tableIndex) {
-            btn.classList.remove('inactive');  // Destaca o botão selecionado
-        } else {
-            btn.classList.add('inactive');  // Torna os outros botões mais claros
-        }
-    });
+        document.addEventListener("DOMContentLoaded", function () {
+            const bgButton = document.getElementById("background-btn");
+            const fileInput = document.getElementById("image-input");
+            const buttons = document.querySelectorAll(".button-grid button");
+            const defaultGradient = "linear-gradient(210deg, #4caf4f, #318634, #4CAF50)";
+            let currentGradient = defaultGradient; // Gradiente atual (padrão ou calculado)
+        
+            // Se houver imagem salva, aplica-a e atualiza o gradiente dos botões
+            const savedImage = localStorage.getItem("backgroundImage");
+            if (savedImage) {
+                document.body.style.backgroundImage = `url(${savedImage})`;
+                bgButton.textContent = "Remover";
+                updateButtonGradient(savedImage);
+            } else {
+                resetButtonGradient();
+            }
+        
+            // Ao clicar no botão de fundo: se imagem existe, remove; senão, abre o seletor de arquivo
+            bgButton.addEventListener("click", () => {
+                if (localStorage.getItem("backgroundImage")) {
+                    localStorage.removeItem("backgroundImage");
+                    document.body.style.backgroundImage = "";
+                    bgButton.textContent = "Selecionar";
+                    resetButtonGradient();
+                } else {
+                    fileInput.click();
+                }
+            });
+        
+            // Quando o usuário seleciona uma imagem
+            fileInput.addEventListener("change", (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const imageUrl = e.target.result;
+                        localStorage.setItem("backgroundImage", imageUrl);
+                        document.body.style.backgroundImage = `url(${imageUrl})`;
+                        bgButton.textContent = "Remover";
+                        updateButtonGradient(imageUrl);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        
+            // Atualiza o gradiente dos botões com base na imagem de fundo
+            function updateButtonGradient(imageUrl) {
+                extractAverageColor(imageUrl, (avgColor) => {
+                    currentGradient = getGradientFromColor(avgColor);
+                    buttons.forEach(button => {
+                        button.style.background = currentGradient;
+                        button.style.color = "white"; // Garante que o texto esteja visível
+                    });
+                });
+            }
+        
+            // Restaura os botões para o gradiente padrão
+            function resetButtonGradient() {
+                currentGradient = defaultGradient;
+                buttons.forEach(button => {
+                    button.style.background = defaultGradient;
+                    button.style.color = "white";
+                });
+            }
+        
+            // Função que extrai a cor média da imagem usando canvas
+            function extractAverageColor(imageUrl, callback) {
+                let img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.src = imageUrl;
+                img.onload = function () {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, img.width, img.height);
+                    const imageData = ctx.getImageData(0, 0, img.width, img.height).data;
+                    let r = 0, g = 0, b = 0;
+                    let count = 0;
+                    for (let i = 0; i < imageData.length; i += 4) {
+                        r += imageData[i];
+                        g += imageData[i + 1];
+                        b += imageData[i + 2];
+                        count++;
+                    }
+                    r = Math.floor(r / count);
+                    g = Math.floor(g / count);
+                    b = Math.floor(b / count);
+                    const rgb = `rgb(${r}, ${g}, ${b})`;
+                    callback(rgb);
+                };
+            }
+        
+            // Gera um gradiente a partir de uma cor base, com variações mais claras e escuras
+            function getGradientFromColor(rgb) {
+                const match = rgb.match(/(\d+),\s*(\d+),\s*(\d+)/);
+                if (!match) return defaultGradient;
+                let r = parseInt(match[1]), g = parseInt(match[2]), b = parseInt(match[3]);
+                function adjustColor(value, amount) {
+                    return Math.min(255, Math.max(0, value + amount));
+                }
+                const light = `rgb(${adjustColor(r, 40)}, ${adjustColor(g, 40)}, ${adjustColor(b, 40)})`;
+                const dark = `rgb(${adjustColor(r, -40)}, ${adjustColor(g, -40)}, ${adjustColor(b, -40)})`;
+                return `linear-gradient(210deg, ${light}, ${rgb}, ${dark})`;
+            }
+        
+            // Efeito hover nos botões: exibe a imagem definida em data-image e oculta o texto
+            buttons.forEach(button => {
+                const hoverImage = button.getAttribute("data-image");
+                button.addEventListener("mouseover", function () {
+                    if (hoverImage) {
+                        button.style.backgroundImage = `url('${hoverImage}')`;
+                        button.style.backgroundSize = "cover";
+                        button.style.backgroundPosition = "center";
+                    }
+                    button.style.color = "transparent";
+                });
+                button.addEventListener("mouseout", function () {
+                    button.style.backgroundImage = "";
+                    // Ao sair do hover, volta para o gradiente atual (calculado ou padrão)
+                    button.style.background = currentGradient;
+                    button.style.color = "white";
+                });
+            });
+        
+            // Navegação entre páginas de botões
+            let currentPage = 1;
+            const totalPages = 4;
+        
+            function updatePageTitle() {
+                const pageTitle = document.getElementById('page-title');
+                if (currentPage === 1) {
+                    pageTitle.textContent = 'Gestão de Carimbos NT - SPI';
+                } else if (currentPage === 2) {
+                    pageTitle.textContent = 'Acessos Núcleo Técnico';
+                } else if (currentPage === 3) {
+                    pageTitle.textContent = 'Acessos Núcleo Técnico';
+                } else if (currentPage === 4) {
+                    pageTitle.textContent = 'Procedimentos Ações Núcleo Técnico';
+                }
+            }
+        
+            function renderPaginationDots(totalPages) {
+                const paginationDots = document.getElementById('pagination-dots');
+                paginationDots.innerHTML = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    const dot = document.createElement('span');
+                    dot.textContent = '⬤';
+                    dot.style.margin = '0 5px';
+                    dot.style.opacity = (i === currentPage) ? '1' : '0.3';
+                    dot.style.cursor = 'pointer';
+                    dot.addEventListener('click', function() {
+                        if (currentPage !== i) {
+                            currentPage = i;
+                            updateButtons();
+                        }
+                    });
+                    paginationDots.appendChild(dot);
+                }
+            }
+        
+            function updateButtons() {
+                const allGrids = document.querySelectorAll('.button-grid');
+                allGrids.forEach((grid, index) => {
+                    grid.style.display = (index === currentPage - 1) ? 'grid' : 'none';
+                });
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
+                if (currentPage === 1) {
+                    prevBtn.style.opacity = '0.3';
+                    prevBtn.style.pointerEvents = 'none';
+                } else {
+                    prevBtn.style.opacity = '1';
+                    prevBtn.style.pointerEvents = 'auto';
+                }
+                if (currentPage === allGrids.length) {
+                    nextBtn.style.opacity = '0.3';
+                    nextBtn.style.pointerEvents = 'none';
+                } else {
+                    nextBtn.style.opacity = '1';
+                    nextBtn.style.pointerEvents = 'auto';
+                }
+                updatePageTitle();
+                renderPaginationDots(allGrids.length);
+            }
+        
+            function changePage(direction) {
+    if (direction === 'prev' && currentPage > 1) {
+        currentPage--;
+    } else if (direction === 'next' && currentPage < totalPages) {
+        currentPage++;
+    }
+    updateButtons();
 }
- 
- 
- 
-         // Função para alternar entre as páginas
- function changePage(direction) {
-     if (direction === 'prev') {
-         window.location.href = 'ARVORE DE ESCALONAMENTOS.html'; // Página anterior
-     } else if (direction === 'next') {
-         window.location.href = 'ARVORE DE ESCALONAMENTOS.html'; // Página seguinte
-     }
- }
- 
-    </script>
+
+            // Expondo a função para uso em onclick inline (HTML)
+            window.changePage = changePage;
+        
+            // Navegação por teclado
+            document.addEventListener("keydown", (e) => {
+                if (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
+                    if (e.key === "ArrowRight") {
+                        document.getElementById("next-btn").click();
+                    } else if (e.key === "ArrowLeft") {
+                        document.getElementById("prev-btn").click();
+                    }
+                }
+            });
+        
+            // Controle de swipe para navegação
+            let touchStartX = 0;
+            let touchEndX = 0;
+            document.addEventListener("touchstart", (e) => {
+                touchStartX = e.touches[0].clientX;
+            });
+            document.addEventListener("touchend", (e) => {
+                touchEndX = e.changedTouches[0].clientX;
+                handleSwipe();
+            });
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                if (touchStartX - touchEndX > swipeThreshold) {
+                    document.getElementById("next-btn").click();
+                } else if (touchEndX - touchStartX > swipeThreshold) {
+                    document.getElementById("prev-btn").click();
+                }
+            }
+        
+            // Inicializa a página de botões
+            updateButtons();
+        });
+        </script>
+        
+        
+        
+
 </body>
 </html>
-
-
-<div class="sair">
-    <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
-    <span>Sair</span>
-</div>
-
-<style>
-    .sair {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        z-index: 9999; /* Fica sempre no topo */
-        background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
-        padding: 5px;
-        border-radius: 8px;
-    }
-
-    .icone-porta {
-        width: 30px;
-        height: 30px;
-        margin-right: 5px;
-    }
-
-    .sair span {
-        font-size: 18px;
-        font-weight: bold;
-    }
-
-    .sair:hover {
-        opacity: 0.8;
-    }
-</style>
-
-<script>
-    document.querySelector('.sair').addEventListener('click', function() {
-        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
-    });
-</script>
