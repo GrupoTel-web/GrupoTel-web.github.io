@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de OLTs</title>
+</head>
+<body>
+  <h2>Lista de NOME_REDE_OLT</h2>
+  <ul id="lista-olts"></ul>
+
+  <script>
+    fetch("https://grupotel-web.github.io/PESQUISA%20OLT.html")
+      .then(res => res.text())
+      .then(html => {
+        const regex = /const\s+dadosOLT\s*=\s*(\[[\s\S]*?\]);/;
+        const match = html.match(regex);
+        if (match) {
+          const dadosOLT = eval(match[0].replace("const", "var")); // transforma em variável local
+          const lista = document.getElementById('lista-olts');
+          dadosOLT.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item.NOME_REDE_OLT;
+            lista.appendChild(li);
+          });
+        } else {
+          console.error("Array dadosOLT não encontrado.");
+        }
+      })
+      .catch(err => console.error("Erro ao carregar dados:", err));
+  </script>
+</body>
+</html>
