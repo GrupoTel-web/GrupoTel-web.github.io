@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -224,6 +223,19 @@ document.getElementById('copiarTexto').addEventListener('click', function() {
     <span>Sair</span>
 </div>
 
+<!-- Botão DDD e iframe overlay -->
+<div class="verificador-ddd">
+    <button id="abrirIframe">DDD</button>
+</div>
+
+<div id="iframeOverlay" class="iframe-overlay"></div>
+<div id="iframeContainer" class="iframe-container">
+    <div class="iframe-header">
+        <button id="fecharIframe">X</button>
+    </div>
+    <iframe src="https://grupotel-web.github.io/DDD.html" frameborder="0"></iframe>
+</div>
+
 <style>
     .sair {
         position: fixed;
@@ -232,8 +244,8 @@ document.getElementById('copiarTexto').addEventListener('click', function() {
         display: flex;
         align-items: center;
         cursor: pointer;
-        z-index: 9999; /* Fica sempre no topo */
-        background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
+        z-index: 9999;
+        background-color: rgba(255, 255, 255, 0.8);
         padding: 5px;
         border-radius: 8px;
     }
@@ -252,10 +264,102 @@ document.getElementById('copiarTexto').addEventListener('click', function() {
     .sair:hover {
         opacity: 0.8;
     }
+
+    .verificador-ddd {
+        position: fixed;
+        top: 60px;
+        left: 10px;
+        z-index: 9998;
+    }
+
+    .verificador-ddd button {
+        background-color: #0e7a0092;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    .verificador-ddd button:hover {
+        background-color: #0e7a00ba;
+    }
+
+    .iframe-container {
+        display: none;
+        position: fixed;
+        top: 35%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
+        height: 50%;
+        background-color: #fff;
+        border: 4px solid #000;
+        border-radius: 10px;
+        z-index: 10000;
+        box-shadow: 0 10px 80px rgba(0, 0, 0, 0.5);
+    }
+
+    .iframe-header {
+        display: flex;
+        justify-content: flex-end;
+        background-color: #0e7a0092;
+        padding: 5px;
+        border-bottom: 2px solid #000;
+    }
+
+    .iframe-header button {
+        background-color: #ff5c5c;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .iframe-header button:hover {
+        background-color: #ff3b3b;
+    }
+
+    .iframe-container iframe {
+        width: 100%;
+        height: calc(100% - 40px);
+        border: none;
+        border-radius: 0 0 10px 10px;
+    }
+
+    .iframe-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
 </style>
 
 <script>
     document.querySelector('.sair').addEventListener('click', function() {
-        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+        window.location.href = "HOME.html";
+    });
+
+    // Iframe DDD logic
+    document.getElementById('abrirIframe').addEventListener('click', function () {
+        document.getElementById('iframeOverlay').style.display = 'block';
+        document.getElementById('iframeContainer').style.display = 'block';
+    });
+
+    document.getElementById('fecharIframe').addEventListener('click', function () {
+        document.getElementById('iframeOverlay').style.display = 'none';
+        document.getElementById('iframeContainer').style.display = 'none';
+    });
+
+    document.getElementById('iframeOverlay').addEventListener('click', function () {
+        document.getElementById('iframeOverlay').style.display = 'none';
+        document.getElementById('iframeContainer').style.display = 'none';
     });
 </script>
