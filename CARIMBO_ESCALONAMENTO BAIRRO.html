@@ -208,27 +208,9 @@
 
 <div id="outroOptions" style="display: none;">
     <label for="outrosOPP"></label>
-    <select id="outrosOPP" name="outrosOPP" onchange="atualizarTituloTempoOutro()">
-      <option value="" hidden>Outros</option>
-      <option value="O&M ACESSO VIVO_N1_SPI">O&M ACESSO VIVO_N1_SPI</option>
-      <option value="N2">N2</option>
-      <option value="SUPORTE">SUPORTE</option>
-      <option value="SWAP">SWAP</option>
-      <option value="CO-N1">CO-N1</option>
-      <option value="SOBRESSALENTE CHAMADO INTERNO">SOBRESSALENTE INTERNO</option>
-      <option value="SOBRESSALENTE FORNECEDOR">SOBRESSALENTE FORNECEDOR</option>
-      <option value="OPERACAO RF">OPERACAO RF</option>
-      <option value="OPERACAO MOVEL BACKHAUL">OPERACAO MOVEL BACKHAUL</option>
-      <option value="OPERAÇÃO BANDA LARGA">OPERAÇÃO BANDA LARGA</option>
-      <option value="OPERAÇÃO DWDM">OPERAÇÃO DWDM</option>
-      <option value="OPERAÇÃO REDE IP">OPERAÇÃO REDE IP</option>
-      <option value="N1 CAPITAL">N1 CAPITAL</option>
-      <option value="N1 SUDESTE">N1 SUDESTE</option>
-      <option value="REDE SUDESTE">REDE SUDESTE</option>
-      <option value="REDE CAPITAL">REDE CAPITAL</option>
-    </select>
+    <input type="text" id="outrosOPP" name="outrosOPP" onchange="atualizarTituloTempoOutro()">
     <input type="text" id="tempoOutro" name="tempoOutro" pattern="^[0-9]+:[0-5][0-9]$" placeholder="HH:MM"><br><br>
-  </div>
+</div>
   
   <label for="nivel">Nível:</label>
   <select id="nivel" name="nivel" required>
