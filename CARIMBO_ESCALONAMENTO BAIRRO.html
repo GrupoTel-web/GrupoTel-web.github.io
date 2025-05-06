@@ -3,7 +3,7 @@
 <head>
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Escalonamento Bairro Móvel</title>
+ <title>Escalonamento Móvel P1</title>
  <link rel="icon" type="image/png" href="icons/nt.png">
  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
  <style>
@@ -142,12 +142,11 @@
             <tr>
                 <th style="width: 90px;">TA MÓVEL</th>
                 <th style="width: 70px;">SITES AFETADOS</th>
-                <th style="width: 70px;">TA RAIZ (REDE)</th>
+                <th style="width: 70px;">TA RAIZ</th>
                 <th style="width: 100px;">LOCALIDADE</th>
-                <th style="width: 100px;">ROTA</th>
                 <th style="width: 100px;">DATA ALARME</th>
                 <th style="width: 120px;">TEMPO CORRIDO</th>
-                <th style="width: 90px;">AFETAÇÃO ERB</th>
+                <th style="width: 100px;">SETOR</th>
                 <th style="width: 90px;">AREA RESPONSAVEL</th>
                 <th style="width: 130px;">GESTOR ATUAL</th>
                 </tr>
@@ -161,7 +160,7 @@
 </div>
 
  <div class="container">
- <div class="titulo">NT-SPI 🏙️ Escalonamentos Bairro 🏙️</div>
+ <div class="titulo">NT-SPI 🏙️ Escalonamentos Móvel P1 🏙️</div>
  <h1>Formulário</h1>
  <form id="meuFormulario">
 
@@ -170,7 +169,7 @@
    <option value="MÓVEL BAIRRO">MÓVEL BAIRRO</option>
  </select><br><br>
  
- <label for="municipio">Municipio:</label>
+ <label for="municipio">Localidade:</label>
  <input type="text" id="municipio" name="municipio" required><br><br>
  
  <label for="ta">TA:</label>
@@ -178,6 +177,9 @@
  
  <label for="SitesAfetados">Sites Afetados:</label>
  <input type="text" id="Sites" name="SitesAfetados" required><br><br>
+
+ <label for="Setor">Setor:</label>
+ <input type="text" id="Setor" name="Setor" required><br><br>
 
  <label for="dataAbertura">Data Abertura:</label>
  <input type="datetime-local" id="dataAbertura" name="dataAbertura" required><br><br>
@@ -244,7 +246,7 @@
   <button type="submit">Enviar</button>
   
   <div class="carimbo" id="carimbo">
-    <div class="carimboTitulo">NT-SPI 🏙️ Escalonamentos Bairro 🏙️</div>
+    <div class="carimboTitulo">NT-SPI 🏙️ Escalonamentos Móvel P1 🏙️</div>
     <table>
       <tr>
         <th>Descrição</th>
@@ -255,7 +257,7 @@
         <td><span id="carimboEscalonamento"></span></td>
       </tr>
       <tr>
-        <td>Municipio</td>
+        <td>Localidade</td>
         <td><span id="carimboMunicipio"></span></td>
       </tr>
       <tr>
@@ -265,6 +267,10 @@
       <tr>
         <td>Sites Afetados</td>
         <td><span id="carimboSites"></span></td>
+      </tr>
+      <tr>
+        <td>Setor</td>
+        <td><span id="carimboSetor"></span></td>
       </tr>
       <tr>
         <td>Data Abertura</td>
@@ -337,9 +343,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let ta = colunas[0].textContent.trim(); // Coluna DWDM LINHA
         let Sites = colunas[1].textContent.trim(); // Coluna DWDM LINHA
+        let Setor = colunas[6].textContent.trim(); // Coluna Setor
         let taRaiz = colunas[2].textContent.trim(); // Coluna TA RAIZ (REDE)
-        let dataAbertura = colunas[5].textContent.trim(); // Coluna DATA ALARME
-        let gestorAtual = colunas[9].textContent.trim(); // Coluna DATA ALARME
+        let dataAbertura = colunas[4].textContent.trim(); // Coluna DATA ALARME
+        let gestorAtual = colunas[8].textContent.trim(); // Coluna DATA ALARME
         let municipioCompleto = colunas[3].textContent.trim(); // Coluna LOCALIDADE (Município)
 
         // Pegando apenas o que vem antes do "-" no município
@@ -349,6 +356,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("ta").value = ta;
         document.getElementById("taRaiz").value = taRaiz;
         document.getElementById("Sites").value = Sites;
+        document.getElementById("Setor").value = Setor;
         document.getElementById("dataAbertura").value = formatarData(dataAbertura);
         document.getElementById("municipio").value = municipio; // Adicionando o município
         document.getElementById("gestorAtual").value = gestorAtual; // Adicionando o município
@@ -383,7 +391,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-function criarLinha(celulas = 10, valores = []) {
+function criarLinha(celulas = 9, valores = []) {
             let tabela = document.getElementById("tabela-body");
             let novaLinha = tabela.rows[0];
 
@@ -517,6 +525,7 @@ function toggleOutroOptions() {
  var municipio = document.getElementById('municipio').value;
  var ta = document.getElementById('ta').value;
  var Sites = document.getElementById('Sites').value;
+ var Setor = document.getElementById('Setor').value;
  var dataAbertura = document.getElementById('dataAbertura').value;
  var taRaiz = document.getElementById('taRaiz').value;
  var gestorAtual = document.getElementById('gestorAtual').value;
@@ -565,6 +574,7 @@ function toggleOutroOptions() {
  document.getElementById('carimboMunicipio').textContent = municipio;
  document.getElementById('carimboTA').textContent = ta;
  document.getElementById('carimboSites').textContent = Sites;
+ document.getElementById('carimboSetor').textContent = Setor;
  document.getElementById('carimboDataAbertura').textContent = formatarDataHora(dataAbertura);
  document.getElementById('carimboTARaiz').textContent = taRaiz;
  document.getElementById('carimboGestorAtual').textContent = gestorAtual;
