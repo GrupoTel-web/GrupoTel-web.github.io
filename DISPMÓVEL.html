@@ -378,112 +378,121 @@
 
   </div>
 
-  <!-- Scripts -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+ <!-- Scripts -->
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+ <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-  <script>
-    // --- Fetch data from the provided JSON link ---
-    let dadosDisponibilidade = [];
+ <script>
+   let dadosDisponibilidade = [];
 
-    fetch('https://grupotel-web.github.io/dados.json')
-      .then(response => response.json())
-      .then(data => {
-        dadosDisponibilidade = data;
-        initializeTable(); // Call the function to initialize the table after data is loaded
-      })
-      .catch(error => console.error('Error fetching data:', error));
+   fetch('https://grupotel-web.github.io/dados.json')
+     .then(resp => resp.json())
+     .then(data => { dadosDisponibilidade = data; initializeTable(); })
+     .catch(err => console.error('Error fetching data:', err));
 
-    function initializeTable() {
-      // --- Existing code for initializing the table ---
-      // Formata células com cor
-      function formatCell(value) {
-        if (!value) return '<td></td>';
-        const n = parseFloat(value.replace(',', '.'));
-        let bg = '';
-        if (n <= 96.99) bg = '#f238387d';
-        else if (n <= 98.99) bg = '#f2d3387d';
-        else bg = '#47ab297d';
-        return `<td style="background-color:${bg}">${value}</td>`;
-      }
-
-      $(document).ready(function() {
-        // 1) Gera headers dinâmicos de data
-        const today = new Date();
-        const dateHeaders = [];
-        for (let i = 7; i >= 1; i--) {
-          const d = new Date(today);
-          d.setDate(d.getDate() - i);
-          const dd = String(d.getDate()).padStart(2, '0');
-          const mm = String(d.getMonth() + 1).padStart(2, '0');
-          // key = exatamente a propriedade do JSON, ex: "06/05/2025"
-          const key = `${dd}/${mm}/${d.getFullYear()}`;
-          // display = como vai aparecer no thead, ex: "Disp. 06/05"
-          const display = `Disp. ${dd}/${mm}`;
-          dateHeaders.push({ key, display });
-        }
+     function formatCell(value) {
+  if (value == null || value === '') return '<td></td>';
+  // Converte "x,y" ou x para número
+  const n = parseFloat(value.toString().replace(',', '.'));
+  // Define cor de fundo conforme criticidade
+  const bg = n <= 96.99 ? '#f238387d'
+           : n <= 98.99 ? '#f2d3387d'
+           : '#47ab297d';
+  // Se for exatamente inteiro 100 ou 0, exibe sem decimais
+  let display;
+  if (n === 100 || n === 0) {
+    display = String(n);
+  } else {
+    // senão, sempre duas casas decimais
+    display = n.toFixed(2).replace('.', ',');
+  }
+  return `<td style="background-color:${bg}" data-order="${n}">${display}</td>`;
+}
 
 
-        // 2) Monta headCols e aplica ao <thead>
-        const headCols = [
-          'DDD', 'Município', 'Bairro', 'Site',
-          'Fevereiro', 'Março', 'Abril', 'Maio',
-          ...dateHeaders.map(h => h.display),
-          'Criticidade mês passado', 'Criticidade mês atual',
-          'Proj. Média', 'Proj. Estimulada 100%'
-        ];
-        $('#oltTable thead').html(
-          '<tr>' + headCols.map(c => `<th>${c}</th>`).join('') + '</tr>'
-        );
+   function initializeTable() {
+     $(document).ready(function() {
+       const today = new Date();
+       const dateHeaders = [];
+       for (let i = 8; i >= 1; i--) {
+         const d = new Date(today);
+         d.setDate(d.getDate() - i);
+         const dd = String(d.getDate()).padStart(2,'0');
+         const mm = String(d.getMonth()+1).padStart(2,'0');
+         const key = `${dd}/${mm}/${d.getFullYear()}`;
+         const display = `Disp. ${dd}/${mm}`;
+         dateHeaders.push({ key, display });
+       }
 
+       const headCols = [
+         'DDD','Município','Bairro','Site',
+         'Fevereiro','Março','Abril','Maio',
+         ...dateHeaders.map(h=>h.display),
+         'Criticidade mês passado','Criticidade mês atual',
+         'Proj. Média','Proj. Estimulada 100%'
+       ];
+       $('#oltTable thead').html(
+         '<tr>' + headCols.map(c=>`<th>${c}</th>`).join('') + '</tr>'
+       );
 
-        // 3) Popula o <tbody>
-        let bodyHtml = '';
-        dadosDisponibilidade.forEach(item => {
-          bodyHtml += '<tr>';
-          ['DDD','Município','Bairro','Site'].forEach((f, index) => {
-            if (f === 'Bairro') {
-              bodyHtml += `<td class="bairro-column"><span>${item[f]}</span></td>`;
-            } else {
-              bodyHtml += `<td>${item[f]}</td>`;
-            }
-          });
-          ['fev','mar','abr','mai'].forEach(m => {
-            bodyHtml += formatCell(item[m]);
-          });
-          dateHeaders.forEach(h => {
-            bodyHtml += formatCell(item[h.key]);
-          });
-          bodyHtml += `<td>${item['Criticidade Abril']}</td>`;
-          bodyHtml += `<td>${item['Criticidade Maio']}</td>`;
-          bodyHtml += `<td>${item['Proj. Média']}</td>`;
-          bodyHtml += `<td>${item['Proj. Estimulada 100%']}</td>`;
-          bodyHtml += '</tr>';
-        });
-        $('#oltTable tbody').html(bodyHtml);
+       let bodyHtml = '';
+       dadosDisponibilidade.forEach(item => {
+         bodyHtml += '<tr>';
+         ['DDD','Município','Bairro','Site'].forEach(f => {
+           if (f==='Bairro')
+             bodyHtml += `<td class="bairro-column"><span>${item[f]}</span></td>`;
+           else
+             bodyHtml += `<td>${item[f]}</td>`;
+         });
+         ['fev','mar','abr','mai'].forEach(m => {
+           bodyHtml += formatCell(item[m]);
+         });
+         dateHeaders.forEach(h => {
+           bodyHtml += formatCell(item[h.key]);
+         });
+         // Criticidade sem formatação numérica
+         bodyHtml += `<td>${item['Criticidade Abril']}</td>`;
+         bodyHtml += `<td>${item['Criticidade Maio']}</td>`;
+         // Projeções usando formatCell
+         bodyHtml += formatCell(item['Proj. Média']);
+         bodyHtml += formatCell(item['Proj. Estimulada 100%']);
+         bodyHtml += '</tr>';
+       });
+       $('#oltTable tbody').html(bodyHtml);
 
-        // 4) (Re)inicializa o DataTable
-        if ($.fn.DataTable.isDataTable('#oltTable')) {
-          $('#oltTable').DataTable().destroy();
-        }
-        const table = $('#oltTable').DataTable({
-          paging: true,
-          pageLength: 20,
-          ordering: true,
-          order: [[0, 'asc']],
-          scrollX: true,
-          language: {
-            search: "",
-            paginate: { previous: 'Anterior', next: 'Próximo' },
-            info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
-            zeroRecords: 'Nenhum registro encontrado'
-          }
-        });
+       if ($.fn.DataTable.isDataTable('#oltTable'))
+         $('#oltTable').DataTable().destroy();
 
-        // 5) Popula dropdowns de filtros
+       // Índices das colunas numéricas
+       const numCols = [
+         4,5,6,7,               // fev,mar,abr,mai
+         ...Array.from({length:8},(_,i)=>8+i), // 8 dias
+         18,19                  // Proj. Média, Estimulada
+       ];
+
+       const table = $('#oltTable').DataTable({
+         paging: true,
+         pageLength: 20,
+         ordering: true,
+         order: [[0,'asc']],
+         scrollX: true,
+         language: {
+           search: "", paginate: { previous: 'Anterior', next: 'Próximo' },
+           info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+           zeroRecords: 'Nenhum registro encontrado'
+         },
+         columnDefs: [{
+           targets: numCols,
+           type: 'num',
+           render: function(data, type) {
+             return type === 'display' ? data : parseFloat(data);
+           }
+         }]
+       });
+// 5) Popula dropdowns de filtros
         function populateDropdown(selector, field) {
           const set = new Set(dadosDisponibilidade.map(i => i[field]));
           const drop = $(selector).empty();
@@ -568,8 +577,8 @@
           table.search('').columns().search('').draw();
           table.rows().every(function() { $(this.node()).show(); });
         });
-      });
-    }
-  </script>
+     });
+   }
+ </script>
 </body>
 </html>
