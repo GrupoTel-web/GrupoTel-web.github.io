@@ -414,7 +414,7 @@
         // 1) Gera headers dinâmicos de data
         const today = new Date();
         const dateHeaders = [];
-        for (let i = 8; i >= 1; i--) {
+        for (let i = 7; i >= 1; i--) {
           const d = new Date(today);
           d.setDate(d.getDate() - i);
           const dd = String(d.getDate()).padStart(2, '0');
