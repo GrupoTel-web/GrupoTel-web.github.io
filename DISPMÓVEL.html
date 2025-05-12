@@ -388,7 +388,10 @@
  <script>
    let dadosDisponibilidade = [];
 
-   fetch('https://grupotel-web.github.io/dados.json')
+   // Adicionar timestamp para evitar cache
+   const jsonUrl = `https://grupotel-web.github.io/dados.json?timestamp=${new Date().getTime()}`;
+
+   fetch(jsonUrl)
      .then(resp => resp.json())
      .then(data => { dadosDisponibilidade = data; initializeTable(); })
      .catch(err => console.error('Error fetching data:', err));
@@ -401,15 +404,8 @@
   const bg = n <= 96.99 ? '#f238387d'
            : n <= 98.99 ? '#f2d3387d'
            : '#47ab297d';
-  // Se for exatamente inteiro 100 ou 0, exibe sem decimais
-  let display;
-  if (n === 100 || n === 0) {
-    display = String(n);
-  } else {
-    // senão, sempre duas casas decimais
-    display = n.toFixed(2).replace('.', ',');
-  }
-  return `<td style="background-color:${bg}" data-order="${n}">${display}</td>`;
+  // Exibe o valor exatamente como está no JSON
+  return `<td style="background-color:${bg}" data-order="${n}">${value}</td>`;
 }
 
 
@@ -539,7 +535,14 @@
         // 8) Exporta tabela filtrada para XLSX
         $('#exportExcel').on('click', () => {
           const headers = headCols;
-          const data = table.rows({ search: 'applied' }).data().toArray();
+          const data = table.rows({ search: 'applied' }).nodes().toArray().map(row => {
+            return $(row).find('td').toArray().map(cell => {
+              // Extrair o texto exibido na célula
+              return $(cell).text().trim();
+            });
+          });
+
+          // Criar a planilha com os dados extraídos
           const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
           const wb = XLSX.utils.book_new();
           XLSX.utils.book_append_sheet(wb, ws, 'Disponibilidade');
