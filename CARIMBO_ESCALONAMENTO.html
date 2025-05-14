@@ -204,6 +204,8 @@
  <label for="taRaiz">TA Raiz:</label>
  <input type="text" id="taRaiz" name="taRaiz" required><br><br>
 
+ <label for="taRaiz">OLT's em Risco:</label>
+ <input type="number" id="oltris" name="oltris" required><br><br>
 
  <label for="gestorAtual">Gestor Atual:</label>
 <select id="gestorAtual" name="gestorAtual" required>
@@ -315,6 +317,10 @@
       <tr>
         <td>TA Raiz</td>
         <td><span id="carimboTARaiz"></span></td>
+      </tr>
+      <tr>
+        <td>OLT's em Risco</td>
+        <td><span id="carimbooltris"></span></td>
       </tr>
       <tr>
         <td>Gestor Atual</td>
@@ -556,6 +562,7 @@ function toggleOutroOptions() {
  var ta = document.getElementById('ta').value;
  var dataAbertura = document.getElementById('dataAbertura').value;
  var taRaiz = document.getElementById('taRaiz').value;
+ var oltris = document.getElementById('oltris').value;
  var gestorAtual = document.getElementById('gestorAtual').value;
  var tempoNoc = document.getElementById('tempoNoc').value;
  var tempoN1 = document.getElementById('tempoN1').value;
@@ -603,6 +610,7 @@ function toggleOutroOptions() {
  document.getElementById('carimboTA').textContent = ta;
  document.getElementById('carimboDataAbertura').textContent = formatarDataHora(dataAbertura);
  document.getElementById('carimboTARaiz').textContent = taRaiz;
+ document.getElementById('carimbooltris').textContent = oltris;
  document.getElementById('carimboGestorAtual').textContent = gestorAtual;
  document.getElementById('carimboTempoNoc').textContent = tempoNoc;
  document.getElementById('carimboTempoN1').textContent = tempoN1;
