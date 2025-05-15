@@ -562,6 +562,8 @@
       });
 
       // Atualiza os itens visíveis e define o foco no primeiro item
+      dropdown.children().hide(); // Esconde todos os itens
+      items.show(); // Mostra apenas os itens que correspondem à pesquisa
       items.removeClass('focused');
       if (items.length > 0) {
         focusedIndex = 0; // Foca no primeiro item visível
