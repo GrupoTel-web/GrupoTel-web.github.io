@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <link rel="icon" type="image/png" href="icons/nt.png">
+  <link rel="icon" type="image/png" href="icons/rede.gif">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Disponibilidade Móvel</title>
   <!-- Bootstrap CSS -->
@@ -12,7 +12,7 @@
   <style>
     /* Corpo e fontes */
     body {
-      zoom: 43%;
+      zoom: 53%;
       background-color: #d5d5d5;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #333;
@@ -46,7 +46,7 @@
   position: relative;
   color: #fff;
   z-index: 1;
-  max-width: 700px;
+  max-width: 800px;
 }
 .hero-content h1 {
   font-size: 2.75rem;
@@ -85,7 +85,7 @@
       justify-content: center;
     }
     .table-container {
-      zoom: 90%;
+      zoom: 85%;
       width: auto;
       background-color: #fff;
       margin-top: 40px;
@@ -198,6 +198,7 @@
       padding-right: 10px; /* Reduz o padding lateral */
     }
     .searchable-dropdown {
+      font-size: 20px;
       position: relative;
     }
     .searchable-dropdown input {
@@ -214,8 +215,11 @@
       border-radius: 10px;
       max-height: 200px;
       overflow-y: auto;
-      width: 100%;
+      width: 25%;
       display: none;
+      font-size: 20px;
+      font-weight: bold;
+      padding-left: 5px;
     }
     .dropdown-list.active {
       display: block;
@@ -315,273 +319,382 @@
   </style>
 </head>
 <body>
-
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-custom">
-    <div class="container">
-    </div>
+  <nav class="navbar navbar-expand-lg navbar-custom bg-light">
+    <div class="container"></div>
   </nav>
 
-
-<!-- Hero Section -->
-<!-- Hero Section -->
-<section class="hero-vivo">
-  <div class="hero-overlay"></div>
-  <div class="hero-content container text-center">
-    <h1>Dashboard Disponibilidade - Móvel</h1>
-  </div>
-</section>
-
-
-
+  <section class="hero-vivo">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Dashboard Disponibilidade - Móvel</h1>
+    </div>
+  </section>
 
   <div class="container">
-
-    <!-- Dashboard Cards -->
-    <div class="dashboard mb-4">
-      <div class="dashboard-card total" id="totalSitesCard">Total de Sites: 0</div>
-      <div class="dashboard-card red" id="criticalSitesCard">Sites Críticos Mês Atual: 0</div>
-      <div class="dashboard-card green" id="nonCriticalSitesCard">Sites Não Críticos: 0</div>
+    <div class="dashboard d-flex justify-content-between mb-4">
+      <div class="dashboard-card total bg-primary text-white p-3 rounded" id="totalSitesCard">Total de Sites: 0</div>
+      <div class="dashboard-card bg-secondary text-white p-3 rounded" id="sitesBairroCard">Total Sites Bairro: 0</div>
+      <div class="dashboard-card red bg-danger text-white p-3 rounded" id="criticalSitesCard">Sites Críticos: 0</div>
+      <div class="dashboard-card yellow bg-warning text-white p-3 rounded" id="alertSitesCard">Sites em Alerta: 0</div>
+      <div class="dashboard-card green bg-success text-white p-3 rounded" id="nonCriticalSitesCard">Sites Não Críticos: 0</div>
     </div>
 
-    <!-- Filtros -->
-    <div class="search-card mb-4">
-      <div class="row g-2 align-items-center">
-        <div class="col-md-3 searchable-dropdown">
-          <input type="text" id="dddFilterInput" placeholder="Filtrar por DDD" class="form-control">
+    <div class="search-card p-3 bg-white rounded shadow-sm">
+      <div class="row g-2">
+        <div class="col-md-3">
+          <input style="font-size: 20px; font-weight: 800;" type="text" id="dddFilterInput" placeholder="Filtrar por DDD" class="form-control">
           <div id="dddDropdown" class="dropdown-list"></div>
         </div>
-        <div class="col-md-3 searchable-dropdown">
-          <input type="text" id="muniFilterInput" placeholder="Filtrar por Município" class="form-control">
+        <div class="col-md-3">
+          <input style="font-size: 20px; font-weight: 800;" type="text" id="muniFilterInput" placeholder="Filtrar por Município" class="form-control">
           <div id="muniDropdown" class="dropdown-list"></div>
         </div>
-        <div class="col-md-3 searchable-dropdown">
-          <input type="text" id="siteFilterInput" placeholder="Filtrar por Site" class="form-control">
+        <div class="col-md-3">
+          <input style="font-size: 20px; font-weight: 800;" type="text" id="siteFilterInput" placeholder="Filtrar por Site" class="form-control">
           <div id="siteDropdown" class="dropdown-list"></div>
         </div>
         <div class="col-md-1">
-          <button id="clearFilters" class="btn btn-secondary w-100">Limpar</button>
+          <button  style="font-size: 20px; font-weight: 800;" id="clearFilters" class="btn btn-secondary w-100">Limpar</button>
         </div>
         <div class="col-md-2">
-          <button id="exportExcel" class="btn btn-success w-100">Exportar</button>
+          <button style="font-size: 20px; font-weight: 450;" id="exportExcel" class="btn btn-success w-100">Exportar</button>
         </div>
       </div>
     </div>
 
-    <!-- Tabela -->
-    <div class="table-container">
+    <div class="table-container bg-white rounded shadow-sm p-3 overflow-auto">
       <table id="oltTable" class="table table-striped table-bordered nowrap" style="width:100%">
         <thead></thead>
         <tbody></tbody>
       </table>
     </div>
-
   </div>
 
- <!-- Scripts -->
- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
- <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
- <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
- <script>
-   let dadosDisponibilidade = [];
+  <script>
+    let dadosDisponibilidade = [];
+    let dadosSitesBairro = [];
 
-   // Adicionar timestamp para evitar cache
-   const jsonUrl = `https://grupotel-web.github.io/dados.json?timestamp=${new Date().getTime()}`;
+    // Use Promise.all para garantir que ambos os links sejam carregados antes de prosseguir
+    Promise.all([
+      fetch('https://grupotel-web.github.io/dadosteste.json?cacheBust=' + Date.now())
+        .then(resp => resp.json())
+        .then(data => { dadosDisponibilidade = data; }),
+      fetch('https://grupotel-web.github.io/sites.json?cacheBust=' + Date.now())
+        .then(resp => resp.json())
+        .then(data => { dadosSitesBairro = data; })
+    ])
+    .then(() => {
+      // Ambos os links foram carregados, inicialize a tabela e os cards
+      initializeTable();
+      updateSitesBairroCard();
+    })
+    .catch(err => console.error('Error fetching data:', err));
 
-   fetch(jsonUrl)
-     .then(resp => resp.json())
-     .then(data => { dadosDisponibilidade = data; initializeTable(); })
-     .catch(err => console.error('Error fetching data:', err));
+    function formatCell(value) {
+      if (value == null || value === '') return '<td></td>';
+      const n = parseFloat(value.toString().replace(',', '.'));
+      const bg = n <= 96.99 ? '#f238387d' : n <= 98.99 ? '#f2d3387d' : '#47ab297d';
+      const disp = (n === 100 || n === 0) ? String(n) : n.toFixed(2).replace('.', ',');
+      return `<td style="background-color:${bg}" data-order="${n}">${disp}</td>`;
+    }
 
-     function formatCell(value) {
-  if (value == null || value === '') return '<td></td>';
-  // Converte "x,y" ou x para número
-  const n = parseFloat(value.toString().replace(',', '.'));
-  // Define cor de fundo conforme criticidade
-  const bg = n <= 96.99 ? '#f238387d'
-           : n <= 98.99 ? '#f2d3387d'
-           : '#47ab297d';
-  // Exibe o valor exatamente como está no JSON
-  return `<td style="background-color:${bg}" data-order="${n}">${value}</td>`;
+    function calculateColumns(item, dateHeaders) {
+      // Helper function to parse and check values
+      const parseValue = (val) => (val == null || val === '' ? null : parseFloat(val.toString().replace(',', '.')));
+
+      // Criticidade Abril
+      const feb = parseValue(item['Feb']);
+      const mar = parseValue(item['Mar']);
+      const apr = parseValue(item['Apr']);
+      const criticalApril = ((feb < 96 ? 1 : 0) + (mar < 96 ? 1 : 0) + (apr < 96 ? 1 : 0)) >= 2
+        ? 'Crítico'
+        : (apr >= 96 && apr < 98 ? 'Alerta' : 'Não Crítico');
+
+      // Criticidade Maio
+      const may = parseValue(item['May']);
+      const criticalMay = ((mar < 96 ? 1 : 0) + (apr < 96 ? 1 : 0) + (may < 96 ? 1 : 0)) >= 2
+        ? 'Crítico'
+        : (may >= 96 && may < 98 ? 'Alerta' : 'Não Crítico');
+
+      // Proj. Média
+      const recentValues = dateHeaders.slice(0, 4).map(h => parseValue(item[h.key])).filter(v => v != null);
+      const projMedia = recentValues.length > 0
+        ? (recentValues.reduce((sum, v) => sum + v, 0) / recentValues.length).toFixed(2).replace('.', ',')
+        : '0';
+
+      // Proj. Estimulada 100%
+      const projEstimulada = recentValues.length > 0
+        ? ((recentValues.reduce((sum, v) => sum + v, 0) + (31 - recentValues.length) * 100) / 31).toFixed(2).replace('.', ',')
+        : '0';
+
+      return { criticalApril, criticalMay, projMedia, projEstimulada };
+    }
+
+    function initializeTable() {
+  const today = new Date();
+  const dateHeaders = [];
+  for (let i = 8; i >= 1; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    dateHeaders.push({ key: `${dd}/${mm}/${d.getFullYear()}`, display: `Disp. ${dd}/${mm}` });
+  }
+
+  // Calculate columns for all rows
+  dadosDisponibilidade = dadosDisponibilidade.map(item => {
+    const { criticalApril, criticalMay, projMedia, projEstimulada } = calculateColumns(item, dateHeaders);
+    return { ...item, 'Criticidade Abril': criticalApril, 'Criticidade Maio': criticalMay, 'Proj. Média': projMedia, 'Proj. Estimulada 100%': projEstimulada };
+  });
+
+  // Cabeçalhos incluindo meses fixos, datas dinâmicas e novas colunas
+  const headCols = ['DDD', 'MUNICIPIO', 'SITE', 'Feb', 'Mar', 'Apr', 'May',
+    ...dateHeaders.map(h => h.display),
+    'Criticidade Abril', 'Criticidade Maio', 'Proj. Média', 'Proj. Estimulada 100%'];
+  $('#oltTable thead').html('<tr>' + headCols.map(c => `<th>${c}</th>`).join('') + '</tr>');
+
+  let bodyHtml = '';
+  dadosDisponibilidade.forEach(item => {
+    bodyHtml += '<tr>';
+    ['DDD', 'MUNICIPIO', 'SITE'].forEach(f => bodyHtml += `<td>${item[f] || ''}</td>`);
+    ['Feb', 'Mar', 'Apr', 'May'].forEach(m => bodyHtml += formatCell(item[m]));
+    dateHeaders.forEach(h => bodyHtml += formatCell(item[h.key]));
+    bodyHtml += `<td>${item['Criticidade Abril']}</td>`;
+    bodyHtml += `<td>${item['Criticidade Maio']}</td>`;
+    bodyHtml += `<td>${item['Proj. Média']}</td>`;
+    bodyHtml += `<td>${item['Proj. Estimulada 100%']}</td>`;
+    bodyHtml += '</tr>';
+  });
+  $('#oltTable tbody').html(bodyHtml);
+
+  const expected = headCols.length;
+  $('#oltTable tbody tr').each(function () {
+    const $row = $(this);
+    const $tds = $row.find('td');
+    const diff = expected - $tds.length;
+    if (diff > 0) for (let i = 0; i < diff; i++) $row.append('<td></td>');
+    else if (diff < 0) $tds.slice(expected).remove();
+  });
+
+  const table = $('#oltTable').DataTable({
+    paging: true,
+    pageLength: 20,
+    ordering: true,
+    order: [[0, 'asc']],
+    scrollX: true,
+    language: {
+        search: "", 
+        paginate: {
+          previous: "Anterior",
+          next: "Próximo"
+        },
+        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+        infoEmpty: "Mostrando 0 a 0 de 0 registros",
+        zeroRecords: "Nenhum registro encontrado"
+      }
+  });
+
+  // Update critical and non-critical counts to only consider "Sites Bairro"
+  function updateCards() {
+    const bairroSitesSet = new Set(dadosSitesBairro.map(site => site.Site));
+    const filteredData = dadosDisponibilidade.filter(item => bairroSitesSet.has(item.SITE));
+
+    const total = filteredData.length;
+    let crit = 0, nonc = 0, alert = 0;
+    filteredData.forEach(i => {
+      const critMay = i['Criticidade Maio'];
+      if (critMay === 'Crítico') crit++;
+      else if (critMay === 'Não Crítico') nonc++;
+      else if (critMay === 'Alerta') alert++;
+    });
+
+    $('#totalSitesCard').text(`Total de Sites: ${dadosDisponibilidade.length}`);
+    $('#sitesBairroCard').text(`Total Sites Bairro: ${total}`);
+    $('#criticalSitesCard').text(`Sites Críticos: ${crit}`);
+    $('#nonCriticalSitesCard').text(`Sites Não Críticos: ${nonc}`);
+    $('#alertSitesCard').text(`Sites em Alerta: ${alert}`);
+  }
+  updateCards();
+
+  // 5) Popula dropdowns de filtros
+  function populateDropdown(selector, field) {
+    const set = new Set(dadosDisponibilidade.map(i => i[field]?.trim())); // Adicionado .trim() para evitar espaços extras
+    const drop = $(selector).empty();
+
+    // Adicione a opção "Selecionar Todos"
+    drop.append(`
+      <div class="filter-item" data-value="select-all">
+        <input type="checkbox" class="select-all-checkbox"> Selecionar Todos
+      </div>
+    `);
+
+    // Adicione as opções individuais
+    set.forEach(v => {
+      if (v) { // Certifique-se de não adicionar valores nulos ou indefinidos
+        drop.append(`
+          <div class="filter-item" data-value="${v}">
+            <input type="checkbox" class="filter-checkbox" data-value="${v}"> ${v}
+          </div>
+        `);
+      }
+    });
+  }
+  populateDropdown('#dddDropdown', 'DDD');
+  populateDropdown('#muniDropdown', 'MUNICIPIO');
+  populateDropdown('#siteDropdown', 'SITE');
+
+  // 6) Configura dropdowns pesquisáveis
+  function setupFilter(inputSel, dropSel, colIndex) {
+    const input = $(inputSel), dropdown = $(dropSel), selected = new Set();
+    let focusedIndex = -1; // Índice do item atualmente focado
+
+    input.on('focus input', () => {
+      dropdown.addClass('active');
+      const q = input.val().toLowerCase();
+      const items = dropdown.children().filter(function () {
+        return $(this).text().toLowerCase().includes(q);
+      });
+
+      // Atualiza os itens visíveis e define o foco no primeiro item
+      items.removeClass('focused');
+      if (items.length > 0) {
+        focusedIndex = 0; // Foca no primeiro item visível
+        $(items[focusedIndex]).addClass('focused');
+      } else {
+        focusedIndex = -1; // Nenhum item visível
+      }
+    });
+
+    dropdown.on('click', '.filter-item', function(e) {
+      e.stopPropagation(); // Evita fechar o dropdown ao clicar
+      const checkbox = $(this).find('input[type="checkbox"]');
+      const value = $(this).data('value');
+
+      if (value === 'select-all') {
+        // Lógica para "Selecionar Todos"
+        const isChecked = checkbox.prop('checked');
+        dropdown.find('.filter-checkbox').prop('checked', isChecked);
+        if (isChecked) {
+          dropdown.find('.filter-checkbox').each(function() {
+            selected.add($(this).data('value'));
+          });
+        } else {
+          selected.clear();
+        }
+      } else {
+        // Lógica para opções individuais
+        checkbox.prop('checked', !checkbox.prop('checked'));
+        if (checkbox.prop('checked')) {
+          selected.add(value);
+        } else {
+          selected.delete(value);
+          dropdown.find('.select-all-checkbox').prop('checked', false); // Desmarca "Selecionar Todos"
+        }
+      }
+
+      // Atualiza o filtro da tabela
+      table.column(colIndex).search([...selected].join('|'), true, false).draw();
+    });
+
+    // Adiciona suporte para navegação com teclado
+    input.on('keydown', (e) => {
+      const items = dropdown.children(':visible'); // Apenas itens visíveis
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (items.length > 0) {
+          focusedIndex = (focusedIndex + 1) % items.length; // Move para o próximo item
+          items.removeClass('focused');
+          $(items[focusedIndex]).addClass('focused');
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (items.length > 0) {
+          focusedIndex = (focusedIndex - 1 + items.length) % items.length; // Move para o item anterior
+          items.removeClass('focused');
+          $(items[focusedIndex]).addClass('focused');
+        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (focusedIndex >= 0) {
+          $(items[focusedIndex]).trigger('click'); // Simula um clique no item focado
+        }
+      }
+    });
+
+    $(document).click(e => {
+      if (!$(e.target).closest(inputSel + ',' + dropSel).length) {
+        dropdown.removeClass('active');
+      }
+    });
+  }
+
+  setupFilter('#dddFilterInput', '#dddDropdown', 0);
+  setupFilter('#muniFilterInput', '#muniDropdown', 1);
+  setupFilter('#siteFilterInput', '#siteDropdown', 2); // Alterado de 3 para 2
+
+  // 7) Limpar todos os filtros
+  $('#clearFilters').on('click', () => {
+    table.search('').columns().search('').draw();
+    $('.filter-item').removeClass('selected');
+  });
+
+  // 8) Exporta tabela filtrada para XLSX
+  $('#exportExcel').on('click', () => {
+    const headers = headCols;
+    const data = table.rows({ search: 'applied' }).nodes().toArray().map(row => {
+      return $(row).find('td').toArray().map(cell => {
+        // Extrair o texto exibido na célula
+        return $(cell).text().trim();
+      });
+    });
+
+    // Criar a planilha com os dados extraídos
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Disponibilidade');
+    XLSX.writeFile(wb, 'Disponibilidade_Móvel.xlsx');
+  });
+
+
+  // Add click functionality for the cards
+  const bairroSitesRegex = dadosSitesBairro.map(site => `^${site.Site}$`).join('|');
+
+  $('#criticalSitesCard').off('click').on('click', () => {
+    table.search('').columns().search('').draw();
+    table.column(2).search(bairroSitesRegex, true, false).draw(); // Filter "Sites Bairro"
+    table.column(headCols.indexOf('Criticidade Maio')) // Adjust column index dynamically
+      .search('^Crítico$', true, false).draw(); // Filter "Crítico"
+  });
+
+  $('#nonCriticalSitesCard').off('click').on('click', () => {
+    table.search('').columns().search('').draw();
+    table.column(2).search(bairroSitesRegex, true, false).draw(); // Filter "Sites Bairro"
+    table.column(headCols.indexOf('Criticidade Maio')) // Adjust column index dynamically
+      .search('^Não Crítico$', true, false).draw(); // Filter "Não Crítico"
+  });
+
+  $('#alertSitesCard').off('click').on('click', () => {
+    table.search('').columns().search('').draw();
+    table.column(2).search(bairroSitesRegex, true, false).draw(); // Filter "Sites Bairro"
+    table.column(headCols.indexOf('Criticidade Maio')) // Adjust column index dynamically
+      .search('^Alerta$', true, false).draw(); // Filter "Alerta"
+  });
+
+  $('#sitesBairroCard').off('click').on('click', () => {
+    table.search('').columns().search('').draw();
+    table.column(2).search(bairroSitesRegex, true, false).draw(); // Filter "Sites Bairro"
+  });
+
+  $('#totalSitesCard').off('click').on('click', () => {
+    table.search('').columns().search('').draw();
+  });
 }
-
-
-   function initializeTable() {
-     $(document).ready(function() {
-       const today = new Date();
-       const dateHeaders = [];
-       for (let i = 8; i >= 1; i--) {
-         const d = new Date(today);
-         d.setDate(d.getDate() - i);
-         const dd = String(d.getDate()).padStart(2,'0');
-         const mm = String(d.getMonth()+1).padStart(2,'0');
-         const key = `${dd}/${mm}/${d.getFullYear()}`;
-         const display = `Disp. ${dd}/${mm}`;
-         dateHeaders.push({ key, display });
-       }
-
-       const headCols = [
-         'DDD','Município','Bairro','Site',
-         'Fevereiro','Março','Abril','Maio',
-         ...dateHeaders.map(h=>h.display),
-         'Criticidade mês passado','Criticidade mês atual',
-         'Proj. Média','Proj. Estimulada 100%'
-       ];
-       $('#oltTable thead').html(
-         '<tr>' + headCols.map(c=>`<th>${c}</th>`).join('') + '</tr>'
-       );
-
-       let bodyHtml = '';
-       dadosDisponibilidade.forEach(item => {
-         bodyHtml += '<tr>';
-         ['DDD','Município','Bairro','Site'].forEach(f => {
-           if (f==='Bairro')
-             bodyHtml += `<td class="bairro-column"><span>${item[f]}</span></td>`;
-           else
-             bodyHtml += `<td>${item[f]}</td>`;
-         });
-         ['fev','mar','abr','mai'].forEach(m => {
-           bodyHtml += formatCell(item[m]);
-         });
-         dateHeaders.forEach(h => {
-           bodyHtml += formatCell(item[h.key]);
-         });
-         // Criticidade sem formatação numérica
-         bodyHtml += `<td>${item['Criticidade Abril']}</td>`;
-         bodyHtml += `<td>${item['Criticidade Maio']}</td>`;
-         // Projeções usando formatCell
-         bodyHtml += formatCell(item['Proj. Média']);
-         bodyHtml += formatCell(item['Proj. Estimulada 100%']);
-         bodyHtml += '</tr>';
-       });
-       $('#oltTable tbody').html(bodyHtml);
-
-       if ($.fn.DataTable.isDataTable('#oltTable'))
-         $('#oltTable').DataTable().destroy();
-
-       // Índices das colunas numéricas
-       const numCols = [
-         4,5,6,7,               // fev,mar,abr,mai
-         ...Array.from({length:8},(_,i)=>8+i), // 8 dias
-         18,19                  // Proj. Média, Estimulada
-       ];
-
-       const table = $('#oltTable').DataTable({
-         paging: true,
-         pageLength: 20,
-         ordering: true,
-         order: [[0,'asc']],
-         scrollX: true,
-         language: {
-           search: "", paginate: { previous: 'Anterior', next: 'Próximo' },
-           info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
-           zeroRecords: 'Nenhum registro encontrado'
-         },
-         columnDefs: [{
-           targets: numCols,
-           type: 'num',
-           render: function(data, type) {
-             return type === 'display' ? data : parseFloat(data);
-           }
-         }]
-       });
-// 5) Popula dropdowns de filtros
-        function populateDropdown(selector, field) {
-          const set = new Set(dadosDisponibilidade.map(i => i[field]));
-          const drop = $(selector).empty();
-          set.forEach(v => {
-            drop.append(`<div class="filter-item" data-value="${v}">${v}</div>`);
-          });
-        }
-        populateDropdown('#dddDropdown', 'DDD');
-        populateDropdown('#muniDropdown', 'Município');
-        populateDropdown('#siteDropdown', 'Site');
-
-        // 6) Configura dropdowns pesquisáveis
-        function setupFilter(inputSel, dropSel, colIndex) {
-          const input = $(inputSel), dropdown = $(dropSel), selected = new Set();
-          input.on('focus input', () => {
-            dropdown.addClass('active');
-            const q = input.val().toLowerCase();
-            dropdown.children().each(function() {
-              $(this).toggle($(this).text().toLowerCase().includes(q));
-            });
-          });
-          dropdown.on('click', '.filter-item', function() {
-            const v = $(this).data('value');
-            $(this).toggleClass('selected');
-            $(this).hasClass('selected') ? selected.add(v) : selected.delete(v);
-            table.column(colIndex).search([...selected].join('|'), true, false).draw();
-          });
-          $(document).click(e => {
-            if (!$(e.target).closest(inputSel + ',' + dropSel).length) {
-              dropdown.removeClass('active');
-            }
-          });
-        }
-        setupFilter('#dddFilterInput', '#dddDropdown', 0);
-        setupFilter('#muniFilterInput', '#muniDropdown', 1);
-        setupFilter('#siteFilterInput', '#siteDropdown', 3);
-
-        // 7) Limpar todos os filtros
-        $('#clearFilters').on('click', () => {
-          table.search('').columns().search('').draw();
-          $('.filter-item').removeClass('selected');
-        });
-
-        // 8) Exporta tabela filtrada para XLSX
-        $('#exportExcel').on('click', () => {
-          const headers = headCols;
-          const data = table.rows({ search: 'applied' }).nodes().toArray().map(row => {
-            return $(row).find('td').toArray().map(cell => {
-              // Extrair o texto exibido na célula
-              return $(cell).text().trim();
-            });
-          });
-
-          // Criar a planilha com os dados extraídos
-          const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
-          const wb = XLSX.utils.book_new();
-          XLSX.utils.book_append_sheet(wb, ws, 'Disponibilidade');
-          XLSX.writeFile(wb, 'Disponibilidade_Móvel.xlsx');
-        });
-
-        // 9) Atualiza contagem dos cards
-        function updateCards() {
-          const total = dadosDisponibilidade.length;
-          let crit = 0, nonc = 0;
-          dadosDisponibilidade.forEach(i => {
-            if (i['Criticidade Maio'] === 'Crítico') crit++;
-            else nonc++;
-          });
-          $('#totalSitesCard').text(`Total de Sites: ${total}`);
-          $('#criticalSitesCard').text(`Sites Críticos (${ 'Maio' }): ${crit}`);
-          $('#nonCriticalSitesCard').text(`Sites Não Críticos (${ 'Maio' }): ${nonc}`);
-        }
-        updateCards();
-
-        // 10) Filtrar clicando nos cards com índices dinâmicos
-        const headers = table.columns().header().toArray().map(th => $(th).text());
-        const idxLastCrit = headers.indexOf('Criticidade mês passado');
-        const idxCurrCrit = headers.indexOf('Criticidade mês atual');
-
-        $('#criticalSitesCard').off('click').on('click', () => {
-          table.search('').columns().search('').draw();
-          table.column(idxCurrCrit).search('^Crítico$', true, false).draw();
-        });
-        $('#nonCriticalSitesCard').off('click').on('click', () => {
-          table.search('').columns().search('').draw();
-          table.column(idxCurrCrit).search('^Não Crítico$', true, false).draw();
-        });
-        $('#totalSitesCard').off('click').on('click', () => {
-          table.search('').columns().search('').draw();
-          table.rows().every(function() { $(this.node()).show(); });
-        });
-     });
-   }
- </script>
+</script>
 </body>
 </html>
