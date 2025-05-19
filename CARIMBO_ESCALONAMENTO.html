@@ -148,6 +148,8 @@
                 <th style="width: 100px;">ROTA</th>
                 <th style="width: 100px;">DATA ALARME</th>
                 <th style="width: 120px;">TEMPO CORRIDO</th>
+                <th style="width: 100px;">HL4</th>
+                <th style="width: 120px;">RISCO OLT</th>
                 <th style="width: 90px;">RISCO FTTX</th>
                 <th style="width: 90px;">RISCO ADSL</th>
                 <th style="width: 130px;">AFETAÇÃO ERB</th>
@@ -387,6 +389,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let taRaiz = colunas[2].textContent.trim(); // Coluna TA RAIZ (REDE)
         let dataAbertura = colunas[5].textContent.trim(); // Coluna DATA ALARME
         let municipioCompleto = colunas[3].textContent.trim(); // Coluna LOCALIDADE (Município)
+        let oltris = colunas[8].textContent.trim(); // Coluna RISCO OLT
 
         // Pegando apenas o que vem antes do "-" no município
         let municipio = municipioCompleto.split("-")[0].trim();
@@ -396,6 +399,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("taRaiz").value = taRaiz;
         document.getElementById("dataAbertura").value = formatarData(dataAbertura);
         document.getElementById("municipio").value = municipio; // Adicionando o município
+        document.getElementById("oltris").value = oltris; // Adicionando o município
     }
 
     function formatarData(data) {
@@ -427,7 +431,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-function criarLinha(celulas = 20, valores = []) {
+function criarLinha(celulas = 22, valores = []) {
             let tabela = document.getElementById("tabela-body");
             let novaLinha = tabela.rows[0];
 
@@ -563,7 +567,7 @@ function toggleOutroOptions() {
  var dataAbertura = document.getElementById('dataAbertura').value;
  var taRaiz = document.getElementById('taRaiz').value;
  var oltris = document.getElementById('oltris').value;
- var gestorAtual = document.getElementById('gestorAtual').value;
+  var gestorAtual = document.getElementById('gestorAtual').value;
  var tempoNoc = document.getElementById('tempoNoc').value;
  var tempoN1 = document.getElementById('tempoN1').value;
  var tempoRede = document.getElementById('tempoRede').value;
