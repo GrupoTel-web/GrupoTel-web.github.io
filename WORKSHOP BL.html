@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="icons/nt.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Banda Larga</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+            margin: 0;
+            background-color: #e1e1e1;
+            margin-top: 90px;
+            zoom: 100%;
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .carousel {
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            display: none;
+            transition: opacity 0.5s ease;
+            text-align: center;
+        }
+
+        .carousel-item.active {
+            display: block;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            max-width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0);
+            color: rgb(0, 0, 0);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 40px;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            margin-top: 0px;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #007bff00;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            background-color: #0057b300;
+        }
+
+        h1 {
+            color: #000000;
+            font-size: 20px;
+        }
+
+        #pagination-dots {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        #pagination-dots span {
+            font-size: 20px;
+            cursor: pointer;
+            margin: 0 5px;
+            opacity: 0.3;
+        }
+
+        #pagination-dots span.active {
+            opacity: 1;
+        }
+
+
+         #popup-balao {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* Mostra o balão */
+#popup-balao.show {
+    opacity: 1;
+}
+    </style>
+</head>
+<body>
+
+    <div id="popup-balao">Clique no nome para fazer o download da imagem 📥</div>
+    
+    <div class="carousel-container">
+        <button class="carousel-button prev">⯇</button>
+        <div class="carousel">
+            <!-- Itens do Carrossel -->
+         
+            <div class="carousel-item active" id="Índice">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0001.jpg" alt="Índice" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-1.pdf" download="Índice" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Índice</a>
+              </div>
+              
+              <div class="carousel-item" id="Acrônimos e Abreviaturas">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0002.jpg" alt="Acrônimos e Abreviaturas" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-2.pdf" download="Acrônimos e Abreviaturas" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Acrônimos e Abreviaturas</a>
+              </div>
+              
+              <div class="carousel-item" id=" ">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0003.jpg" alt=" " onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-3.pdf" download=" " class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;"> </a>
+              </div>
+              
+              <div class="carousel-item" id="Estrutura Operacional">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0004.jpg" alt="Estrutura Operacional" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-4.pdf" download="Estrutura Operacional" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Estrutura Operacional</a>
+              </div>
+              
+              <div class="carousel-item" id="Volume de atividades">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0005.jpg" alt="Volume de atividades" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-5.pdf" download="Volume de atividades" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Volume de atividades</a>
+              </div>
+              
+              <div class="carousel-item" id="Qtd equipamentos por Regional">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0006.jpg" alt="Qtd equipamentos por Regional" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-6.pdf" download="Qtd equipamentos por Regional" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Qtd equipamentos por Regional</a>
+              </div>
+              
+              <div class="carousel-item" id="  ">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0007.jpg" alt="  " onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-7.pdf" download="  " class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">  </a>
+              </div>
+              
+              <div class="carousel-item" id="Topologia Rede Legado - FSP">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0008.jpg" alt="Topologia Rede Legado - FSP" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-8.pdf" download="Topologia Rede Legado - FSP" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Topologia Rede Legado - FSP</a>
+              </div>
+              
+              <div class="carousel-item" id="Anel Metro / SDH">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0009.jpg" alt="Anel Metro / SDH" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-9.pdf" download="Anel Metro / SDH" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Anel Metro / SDH</a>
+              </div>
+              
+              <div class="carousel-item" id="Serviços de Rede">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0010.jpg" alt="Serviços de Rede" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-10.pdf" download="Serviços de Rede" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Serviços de Rede</a>
+              </div>
+              
+              <div class="carousel-item" id="Topologia de Rede Vivo - DSP">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0011.jpg" alt="Topologia de Rede Vivo - DSP" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-11.pdf" download="Topologia de Rede Vivo - DSP" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Topologia de Rede Vivo - DSP</a>
+              </div>
+              
+              <div class="carousel-item" id="   ">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0012.jpg" alt="   " onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-12.pdf" download="   " class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">   </a>
+              </div>
+              
+              <div class="carousel-item" id="Arquitetura de Transmição Rede Fusion">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0013.jpg" alt="Arquitetura de Transmição Rede Fusion" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-13.pdf" download="Arquitetura de Transmição Rede Fusion" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Arquitetura de Transmição Rede Fusion</a>
+              </div>
+              
+              <div class="carousel-item" id="Topologia Fusion">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0014.jpg" alt="Topologia Fusion" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-14.pdf" download="Topologia Fusion" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Topologia Fusion</a>
+              </div>
+              
+              <div class="carousel-item" id="Topologia e Plataformas">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0015.jpg" alt="Topologia e Plataformas" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-15.pdf" download="Topologia e Plataformas" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Topologia e Plataformas</a>
+              </div>
+              
+              <div class="carousel-item" id="Fusion BGP Seamless - 3ª Via">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0016.jpg" alt="Fusion BGP Seamless - 3ª Via" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-16.pdf" download="Fusion BGP Seamless - 3ª Via" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Fusion BGP Seamless - 3ª Via</a>
+              </div>
+              
+              <div class="carousel-item" id="E-LINE de Proteção do HL4 via Rede Móvel Legada">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0017.jpg" alt="E-LINE de Proteção do HL4 via Rede Móvel Legada" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-17.pdf" download="E-LINE de Proteção do HL4 via Rede Móvel Legada" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">E-LINE de Proteção do HL4 via Rede Móvel Legada</a>
+              </div>
+              
+              <div class="carousel-item" id=" ">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0018.jpg" alt=" " onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-18.pdf" download=" " class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;"> </a>
+              </div>
+              
+              <div class="carousel-item" id="Serviço HSI">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0019.jpg" alt="Serviço HSI" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-19.pdf" download="Serviço HSI" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Serviço HSI</a>
+              </div>
+              
+              <div class="carousel-item" id="Segurança HL4/BRAS">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0020.jpg" alt="Segurança HL4/BRAS" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-20.pdf" download="Segurança HL4/BRAS" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Segurança HL4/BRAS</a>
+              </div>
+              
+              <div class="carousel-item" id="Topologia HUB e SPOKE">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0021.jpg" alt="Topologia HUB e SPOKE" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-21.pdf" download="Topologia HUB e SPOKE" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Topologia HUB e SPOKE</a>
+              </div>
+              
+              <div class="carousel-item" id="DHCP VRF IPTV e SIP(SPOKE)">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0022.jpg" alt="DHCP VRF IPTV e SIP(SPOKE)" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-22.pdf" download="DHCP VRF IPTV e SIP(SPOKE)" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">DHCP VRF IPTV e SIP(SPOKE)</a>
+              </div>
+              
+              <div class="carousel-item" id="DHCP">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0023.jpg" alt="DHCP" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-23.pdf" download="DHCP" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">DHCP</a>
+              </div>
+              
+              <div class="carousel-item" id="Multicast">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0024.jpg" alt="Multicast" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-24.pdf" download="Multicast" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Multicast</a>
+              </div>
+              
+              <div class="carousel-item" id="Multicast MOFRR">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0025.jpg" alt="Multicast MOFRR" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-25.pdf" download="Multicast MOFRR" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Multicast MOFRR</a>
+              </div>
+              
+              <div class="carousel-item" id="Instancias ISIS (Level-2) - Proteção contra LOOP HL4 Vs HL5">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0026.jpg" alt="Instancias ISIS (Level-2) - Proteção contra LOOP HL4 Vs HL5" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-26.pdf" download="Instancias ISIS (Level-2) - Proteção contra LOOP HL4 Vs HL5" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Instancias ISIS (Level-2) - Proteção contra LOOP HL4 Vs HL5</a>
+              </div>
+              
+              <div class="carousel-item" id="Migração RAM/RAC -> HL4">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0027.jpg" alt="Migração RAM/RAC -> HL4" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-27.pdf" download="Migração RAM/RAC -> HL4" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Migração RAM/RAC -> HL4</a>
+              </div>
+              
+              <div class="carousel-item" id=" ">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0028.jpg" alt=" " onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-28.pdf" download=" " class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;"> </a>
+              </div>
+              
+              <div class="carousel-item" id="Estrutura do Serviço ONT-OLT">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0029.jpg" alt="Estrutura do Serviço ONT-OLT" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-29.pdf" download="Estrutura do Serviço ONT-OLT" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Estrutura do Serviço ONT-OLT</a>
+              </div>
+              
+              <div class="carousel-item" id="OLT FSP Layer 3">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0030.jpg" alt="OLT FSP Layer 3" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-30.pdf" download="OLT FSP Layer 3" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">OLT FSP Layer 3</a>
+              </div>
+              
+              <div class="carousel-item" id="OLT FSP Layer 2">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0031.jpg" alt="OLT FSP Layer 2" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-31.pdf" download="OLT FSP Layer 2" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">OLT FSP Layer 2</a>
+              </div>
+              
+              <div class="carousel-item" id="REDE GPON FTTX - Principios GPON - Multiplexação dos Dados">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0032.jpg" alt="REDE GPON FTTX - Principios GPON - Multiplexação dos Dados" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-32.pdf" download="REDE GPON FTTX - Principios GPON - Multiplexação dos Dados" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">REDE GPON FTTX - Principios GPON - Multiplexação dos Dados</a>
+              </div>
+              
+              <div class="carousel-item" id="Rede Óptica de Distribuição ">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0033.jpg" alt="Rede Óptica de Distribuição " onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-33.pdf" download="Rede Óptica de Distribuição " class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Rede Óptica de Distribuição </a>
+              </div>
+              
+              <div class="carousel-item" id="Topologias FiBrasil AGG vs HL4 (Redes Neutras)">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0034.jpg" alt="Topologias FiBrasil AGG vs HL4 (Redes Neutras)" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-34.pdf" download="Topologias FiBrasil AGG vs HL4 (Redes Neutras)" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Topologias FiBrasil AGG vs HL4 (Redes Neutras)</a>
+              </div>
+              
+              <div class="carousel-item" id=" ">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0035.jpg" alt=" " onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-35.pdf" download=" " class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;"> </a>
+              </div>
+              
+              <div class="carousel-item" id="RADIUS FSP">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0036.jpg" alt="RADIUS FSP" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-36.pdf" download="RADIUS FSP" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">RADIUS FSP</a>
+              </div>
+              
+              <div class="carousel-item" id="Operações de Aprovisionamento">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0037.jpg" alt="Operações de Aprovisionamento" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-37.pdf" download="Operações de Aprovisionamento" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Operações de Aprovisionamento</a>
+              </div>
+              
+              <div class="carousel-item" id="DNS Internet Name Servers">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0038.jpg" alt="DNS Internet Name Servers" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-38.pdf" download="DNS Internet Name Servers" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">DNS Internet Name Servers</a>
+              </div>
+              
+              <div class="carousel-item" id="DNS Cache Server - Fixa e Móvel">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0039.jpg" alt="DNS Cache Server - Fixa e Móvel" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-39.pdf" download="DNS Cache Server - Fixa e Móvel" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">DNS Cache Server - Fixa e Móvel</a>
+              </div>
+              
+              <div class="carousel-item" id="DNS - Bloqueio de Dominios">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0040.jpg" alt="DNS - Bloqueio de Dominios" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-40.pdf" download="DNS - Bloqueio de Dominios" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">DNS - Bloqueio de Dominios</a>
+              </div>
+              
+              <div class="carousel-item" id=" ">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0041.jpg" alt=" " onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-41.pdf" download=" " class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;"> </a>
+              </div>
+              
+              <div class="carousel-item" id="Cenário SRv6">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0042.jpg" alt="Cenário SRv6" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-42.pdf" download="Cenário SRv6" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Cenário SRv6</a>
+              </div>
+              
+              <div class="carousel-item" id="Arquitetura Fusion - Cenário Atual">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0043.jpg" alt="Arquitetura Fusion - Cenário Atual" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-43.pdf" download="Arquitetura Fusion - Cenário Atual" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Arquitetura Fusion - Cenário Atual</a>
+              </div>
+              
+              <div class="carousel-item" id="Arquitetura Fusion - Cenário SRv6 (Futuro)">
+                <img src="WORKSHOPBL/Workshop_banda_Larga 4 (1)_pages-to-jpg-0044.jpg" alt="Arquitetura Fusion - Cenário SRv6 (Futuro)" onclick="openFullscreen(this)" style="cursor: pointer;">
+                <a href="WORKSHOPBL/Workshop_banda_Larga 4 (1)-44.pdf" download="Arquitetura Fusion - Cenário SRv6 (Futuro)" class="download-btn" style="display: block; text-align: center; margin-top: 5px; font-size: 20px; color: #000; margin-bottom: 8px; font-weight: bold;">Arquitetura Fusion - Cenário SRv6 (Futuro)</a>
+              </div>
+
+        </div>
+        <button class="carousel-button next">⯈</button>
+        <div id="pagination-dots"></div>
+    </div>
+    <script>
+ const items = document.querySelectorAll('.carousel-item');
+    const totalItems = items.length;
+    let currentIndex = 0;
+
+    // Função para exibir a imagem ativa
+    function showImage(index) {
+        items.forEach((item, idx) => {
+            item.classList.toggle('active', idx === index);
+        });
+        updatePaginationDots(index);
+    }
+
+    // Função para atualizar os pontos de paginação
+    function updatePaginationDots(index) {
+        const dots = document.querySelectorAll('#pagination-dots span');
+        dots.forEach((dot, idx) => {
+            dot.classList.toggle('active', idx === index);
+        });
+    }
+
+    // Função para renderizar os pontos de paginação
+    function renderPaginationDots() {
+        const paginationDots = document.getElementById('pagination-dots');
+        paginationDots.innerHTML = '';
+
+        for (let i = 0; i < totalItems; i++) {
+            const dot = document.createElement('span');
+            dot.textContent = '⬤';
+            dot.classList.toggle('active', i === currentIndex);
+            dot.addEventListener('click', () => {
+                currentIndex = i;
+                showImage(currentIndex);
+            });
+            paginationDots.appendChild(dot);
+        }
+    }
+
+    // Função para mudar a página
+    function changePage(direction) {
+        if (direction === 'prev') {
+            currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+        } else if (direction === 'next') {
+            currentIndex = (currentIndex + 1) % totalItems;
+        }
+        showImage(currentIndex);
+    }
+
+    // Botão Próximo
+    document.querySelector('.next').addEventListener('click', () => changePage('next'));
+
+    // Botão Anterior
+    document.querySelector('.prev').addEventListener('click', () => changePage('prev'));
+
+    // Controle pelas setas do teclado
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowLeft') {
+            changePage('prev');
+        } else if (event.key === 'ArrowRight') {
+            changePage('next');
+        }
+    });
+
+    // Função para mostrar e esconder o balão de aviso
+function showPopup() {
+    const popup = document.getElementById("popup-balao");
+    popup.classList.add("show");
+
+    // Oculta o balão após 10 segundos
+    setTimeout(() => {
+        popup.classList.remove("show");
+    }, 5000);
+}
+
+// Mostra o balão ao carregar a página
+window.addEventListener("load", showPopup);
+
+
+    // Inicializa o carrossel
+    renderPaginationDots();
+    showImage(currentIndex);
+
+
+        function openFullscreen(image) {
+    if (image.requestFullscreen) {
+        image.requestFullscreen();
+    } else if (image.webkitRequestFullscreen) { // Para navegadores Safari
+        image.webkitRequestFullscreen();
+    } else if (image.msRequestFullscreen) { // Para navegadores IE/Edge
+        image.msRequestFullscreen();
+    }
+}
+
+document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && document.fullscreenElement) {
+        document.exitFullscreen();
+    }
+});
+    </script>
+</body>
+</html>
+
+<div class="sair">
+    <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
+    <span>Sair</span>
+</div>
+
+<style>
+    .sair {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        z-index: 9999; /* Fica sempre no topo */
+        background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
+        padding: 5px;
+        border-radius: 8px;
+    }
+
+    .icone-porta {
+        width: 30px;
+        height: 30px;
+        margin-right: 5px;
+    }
+
+    .sair span {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .sair:hover {
+        opacity: 0.8;
+    }
+</style>
+
+<script>
+    document.querySelector('.sair').addEventListener('click', function() {
+        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+    });
+</script>
