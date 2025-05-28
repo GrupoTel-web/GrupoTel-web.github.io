@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evento VPs Vivo - 2LS</title>
+    <link rel="icon" type="image/png" href="icons/nt.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #9900ffa4;
+            align-content: center;
+            zoom: 65%;
+        }
+        .container {
+            border: 2px solid #000;
+            padding: 20px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+        }
+        .titulo {
+            background-color: #9900ffa4; /* Roxo */
+            color: #fff; /* Branco */
+            padding: 10px;
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .carimbo {
+            border: 2px solid #000;
+            padding: 10px;
+            margin-top: 20px;
+            display: none;
+            margin: 20px auto; /* Centralizar o carimbo */
+            text-align: center;
+        }
+        .carimboTitulo {
+            background-color: #9900ffa4; /* Cor de fundo */
+            color: #fff; /* Cor do texto */
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .carimbo table {
+            margin: 0 auto; /* Centralizar a tabela */
+        }
+
+        .emoji {
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5); /* Sombra suave nos emojis */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 3px solid #d3d3d3; /* Linhas cinza claro e mais grossas */
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #9900ffa4; /* Roxo */
+            color: #fff; /* Branco */
+        }
+        td {
+            background-color: #fff; /* Branco */
+        }
+        textarea {
+            width: 10%;
+            height: 100px;
+        }
+        .botoes {
+            margin-top: 20px;
+        }
+        .botoes button {
+            margin-right: 10px;
+        }
+        .textoCompleto {
+            margin-top: 20px;
+        }
+        .textoCompleto textarea {
+            text-align: left;
+        }
+        .container-principal {
+            background-color: #fff; /* Fundo branco */
+            border-radius: 15px; /* Bordas arredondadas */
+            padding: 20px; /* Espaçamento interno */
+            margin: 20px auto; /* Centraliza o container */
+            width: auto; /* Ajustar automaticamente à largura do conteúdo */
+            max-width: 1500px; /* Limita a largura máxima */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
+        }
+        .eventos-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            flex-wrap: nowrap; /* Impedir quebra de linha */
+            overflow-x: auto; /* Adicionar rolagem horizontal se necessário */
+        }
+        .evento-bloco {
+            flex: 0 0 calc(30.333% - 20px); /* Cada bloco ocupa 1/3 da largura com espaçamento */
+            max-width: calc(30.333% - 20px); /* Limitar largura máxima */
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 2px solid #d3d3d3;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        @media (max-width: 900px) {
+            .evento-bloco {
+                flex: 1 1 100%; /* Em telas menores, cada bloco ocupa 100% da largura */
+                max-width: 100%;
+            }
+        }
+    </style>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA5QSTJcJviw1pYLj-0dtDAb-lgGksQ7zo",
+  authDomain: "carimbo-2ls.firebaseapp.com",
+  databaseURL: "https://carimbo-2ls-default-rtdb.firebaseio.com",
+  projectId: "carimbo-2ls",
+  storageBucket: "carimbo-2ls.firebasestorage.app",
+  messagingSenderId: "416913870829",
+  appId: "1:416913870829:web:6897839b16c1a6dc88e1e4",
+  measurementId: "G-3T0QQWSYW1"
+};
+
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+</script>
+
+
+</head>
+<body>
+    <div class="botoes" style="text-align: center; margin-top: 30px;">
+        <button onclick="salvarEventos()">💾 Salvar Tudo</button>
+    </div>
+    <div class="container-principal">
+        <div class="container">
+            <div class="carimboTitulo" style="font-size: 25px;"><span class="emoji">⚠️</span> Eventos Barueri e Santana de Parnaiba <span class="emoji">⚠️</span></div>
+            
+            <label for="status2LS" style="font-size: 30px; font-weight: bold;">Status site 2LS:</label>
+                  <select id="status2LS" name="status2LS" style="font-size: 30px;" required>
+                      <option style="font-weight: bold;" value="" hidden>STATUS</option>
+                      <option style="font-weight: bold; color: #164100;" value="OK">OK</option>
+                      <option style="font-weight: bold; color: #410000;" value="NOK">NOK</option>
+                  </select><br>
+                  <label for="status2LS" style="font-size: 25px;">Observações:</label>
+                  <input id="status2LS" style="font-size: 25px; width: 990px;" type="text" min="0" max="200"/><br><br>
+            
+
+
+                <label for="statusHL4" style="font-size: 30px; font-weight: bold;">Status BRE-RDX-HL4-01:</label>
+                  <select id="statusHL4" name="statusHL4" style="font-size: 30px;" required>
+                      <option style="font-weight: bold;" value="" hidden>STATUS</option>
+                      <option style="font-weight: bold; color: #164100;" value="OK">OK</option>
+                      <option style="font-weight: bold; color: #410000;" value="NOK">NOK</option>
+                  </select><br>
+                  <label for="statusHL4" style="font-size: 25px;">Observações:</label>
+                  <input id="statusHL4" style="font-size: 25px; width: 990px;" type="text" min="0" max="200"/><br><br>
+            
+
+            <div class="eventos-container">
+               
+
+                <div class="evento-bloco">
+                    <h1>Eventos Fixa:</h1>
+                    <label for="eventosfixa">Quantidade de Eventos:</label>
+                    <input id="eventosfixa" name="eventosfixa" type="number" min="0" max="200" /><br><br>
+                    <div id="eventosfixaCampos"></div>
+                </div>
+                <div class="evento-bloco">
+                    <h1>Eventos Móvel:</h1>
+                    <label for="eventosmovel">Quantidade de Eventos:</label>
+                    <input id="eventosmovel" name="eventosmovel" type="number" min="0" max="165" /><br><br>
+                    <div id="eventosmovelCampos"></div>
+                </div>
+                <div class="evento-bloco">
+                    <h1>Eventos Infra:</h1>
+                    <label for="eventosinfra">Quantidade de Eventos:</label>
+                    <input id="eventosinfra" name="eventosinfra" type="number" min="0" max="165" /><br><br>
+                    <div id="eventosinfraCampos"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function criarCamposEvento(tipo, qtd) {
+            const container = document.getElementById(`eventos${tipo}Campos`);
+            container.innerHTML = '';
+            for (let i = 1; i <= qtd; i++) {
+                const bloco = document.createElement('div');
+                bloco.style.marginBottom = '10px';
+                let options = '';
+                if (tipo === 'fixa') {
+                    options = `
+                        <option value="OLT-LINK">OLT-LINK</option>
+                        <option value="OLT-DOWN">OLT-DOWN</option>
+                        <option value="DRACO">DRACO</option>
+                        <option value="DWDM">DWDM</option>
+                        <option value="HL4">HL4</option>
+                        <option value="METRO">METRO</option>
+                        <option value="BBN">BBN</option>
+                    `;
+                } else if (tipo === 'movel') {
+                    options = `
+                        <option value="SETORES">SETORES</option>
+                        <option value="TECNOLOGIA">TECNOLOGIA</option>
+                        <option value="SITE">SITE</option>
+                        <option value="HL5">HL5</option>
+                        <option value="GWD">GWD</option>
+                    `;
+                } else if (tipo === 'infra') {
+                    options = 'input'; // usamos como sinalizador para gerar campo de texto no próximo passo
+                }
+                bloco.innerHTML = `
+    <label>Evento #${i}:</label>
+    <input type="text" name="numeroTA_${tipo}_${i}" placeholder="Numero do TA" style="width: 294px; margin-bottom: 5px; height: 15px;">
+    ${options === 'input'
+        ? `<input type="text" name="outrosOPP_${tipo}_${i}" placeholder="Evento" style="width: 294px; height: 15px; margin-bottom: 5px;">`
+        : `<select name="outrosOPP_${tipo}_${i}" style="width: 294px; height: 20px;">
+                <option value="" hidden>Evento</option>
+                ${options}
+           </select>`
+    }
+    <input type="text" name="tempoOutro_${tipo}_${i}" pattern="^[0-9]+:[0-5][0-9]$" placeholder="Tempo total HH:MM" style="width: 295px; margin-bottom: 5px; height: 15px;">
+    <textarea name="diagnostico_${tipo}_${i}" placeholder="Status Atual" style="height: 50px; width: 417px;" required></textarea>
+`;
+                container.appendChild(bloco);
+            }
+        }
+
+        document.getElementById('eventosfixa').addEventListener('input', function() {
+            const qtd = parseInt(this.value, 10) || 0;
+            criarCamposEvento('fixa', qtd);
+        });
+        document.getElementById('eventosmovel').addEventListener('input', function() {
+            const qtd = parseInt(this.value, 10) || 0;
+            criarCamposEvento('movel', qtd);
+        });
+        document.getElementById('eventosinfra').addEventListener('input', function() {
+            const qtd = parseInt(this.value, 10) || 0;
+            criarCamposEvento('infra', qtd);
+        });
+
+            // Coletar eventos fixa dinâmicos
+            const eventosfixaQtd = parseInt(document.getElementById('eventosfixa').value, 10) || 0;
+            let eventosfixaArr = [];
+            for (let i = 1; i <= eventosfixaQtd; i++) {
+                const evento = this.querySelector(`[name="outrosOPP_fixa_${i}"]`).value;
+                const tempo = this.querySelector(`[name="tempoOutro_fixa_${i}"]`).value;
+                const diagnostico = this.querySelector(`[name="diagnostico_fixa_${i}"]`).value;
+                eventosfixaArr.push({ evento, tempo, diagnostico });
+            }
+
+            // Coletar eventos movel dinâmicos
+            const eventosmovelQtd = parseInt(document.getElementById('eventosmovel').value, 10) || 0;
+            let eventosmovelArr = [];
+            for (let i = 1; i <= eventosmovelQtd; i++) {
+                const evento = this.querySelector(`[name="outrosOPP_movel_${i}"]`).value;
+                const tempo = this.querySelector(`[name="tempoOutro_movel_${i}"]`).value;
+                const diagnostico = this.querySelector(`[name="diagnostico_movel_${i}"]`).value;
+                eventosmovelArr.push({ evento, tempo, diagnostico });
+            }
+
+            // Coletar eventos infra dinâmicos
+            const eventosinfraQtd = parseInt(document.getElementById('eventosinfra').value, 10) || 0;
+            let eventosinfraArr = [];
+            for (let i = 1; i <= eventosinfraQtd; i++) {
+                const evento = this.querySelector(`[name="outrosOPP_infra_${i}"]`).value;
+                const tempo = this.querySelector(`[name="tempoOutro_infra_${i}"]`).value;
+                const diagnostico = this.querySelector(`[name="diagnostico_infra_${i}"]`).value;
+                eventosinfraArr.push({ evento, tempo, diagnostico });
+            }
+
+
+
+            function salvarEventos() {
+    const tipos = ['fixa', 'movel', 'infra'];
+    let dados = {};
+
+    tipos.forEach(tipo => {
+        const qtd = parseInt(document.getElementById(`eventos${tipo}`).value, 10) || 0;
+        let eventos = [];
+
+        for (let i = 1; i <= qtd; i++) {
+            const numeroTA = document.querySelector(`[name="numeroTA_${tipo}_${i}"]`)?.value || "";
+            const evento = document.querySelector(`[name="outrosOPP_${tipo}_${i}"]`)?.value || "";
+            const tempo = document.querySelector(`[name="tempoOutro_${tipo}_${i}"]`)?.value || "";
+            const diagnostico = document.querySelector(`[name="diagnostico_${tipo}_${i}"]`)?.value || "";
+
+            if (numeroTA || evento || tempo || diagnostico) {
+                eventos.push({ numeroTA, evento, tempo, diagnostico });
+            }
+        }
+
+        dados[tipo] = {
+            quantidade: qtd,
+            eventos
+        };
+    });
+
+    // 👇 Salva os novos campos
+    dados.status2LS = {
+        status: document.getElementById("status2LS")?.value || "",
+        observacao: document.querySelector("#status2LS[type='text']")?.value || ""
+    };
+
+    dados.statusHL4 = {
+        status: document.getElementById("statusHL4")?.value || "",
+        observacao: document.querySelector("#statusHL4[type='text']")?.value || ""
+    };
+
+    database.ref("eventos").set(dados).then(() => {
+        alert("✔️ Dados salvos com sucesso!");
+    }).catch(error => {
+        console.error("Erro ao salvar:", error);
+        alert("❌ Erro ao salvar dados.");
+    });
+}
+
+
+function carregarEventos() {
+    database.ref("eventos").once("value").then(snapshot => {
+        const data = snapshot.val();
+        if (!data) return;
+
+        ['fixa', 'movel', 'infra'].forEach(tipo => {
+            const info = data[tipo];
+            if (!info) return;
+
+            document.getElementById(`eventos${tipo}`).value = info.quantidade;
+            criarCamposEvento(tipo, info.quantidade);
+
+            setTimeout(() => {
+                info.eventos.forEach((evento, index) => {
+                    const i = index + 1;
+                    document.querySelector(`[name="numeroTA_${tipo}_${i}"]`).value = evento.numeroTA || '';
+                    document.querySelector(`[name="outrosOPP_${tipo}_${i}"]`).value = evento.evento || '';
+                    document.querySelector(`[name="tempoOutro_${tipo}_${i}"]`).value = evento.tempo || '';
+                    document.querySelector(`[name="diagnostico_${tipo}_${i}"]`).value = evento.diagnostico || '';
+                });
+            }, 100);
+        });
+
+        // 👇 Preenche os campos adicionais
+        if (data.status2LS) {
+            document.getElementById("status2LS").value = data.status2LS.status || "";
+            document.querySelector("#status2LS[type='text']").value = data.status2LS.observacao || "";
+        }
+
+        if (data.statusHL4) {
+            document.getElementById("statusHL4").value = data.statusHL4.status || "";
+            document.querySelector("#statusHL4[type='text']").value = data.statusHL4.observacao || "";
+        }
+    });
+}
+
+
+window.onload = carregarEventos;
+    </script>
+</body>
+</html>
+
+<div class="sair">
+    <img src="icons/HP.png" alt="Ícone de Porta" class="icone-porta">
+    <span>Sair</span>
+</div>
+
+<style>
+    .sair {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        z-index: 9999; /* Fica sempre no topo */
+        background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
+        padding: 5px;
+        border-radius: 8px;
+    }
+
+    .icone-porta {
+        width: 30px;
+        height: 30px;
+        margin-right: 5px;
+    }
+
+    .sair span {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .sair:hover {
+        opacity: 0.8;
+    }
+</style>
+
+<script>
+    document.querySelector('.sair').addEventListener('click', function() {
+        window.location.href = "HOME.html"; // Substitua com o caminho da sua página
+    });
+</script>
