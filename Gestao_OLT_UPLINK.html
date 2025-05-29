@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,6 +10,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
 <style>
  body {
  font-family: 'Poppins', sans-serif;
@@ -201,6 +205,8 @@ td {
             <div style="margin-top: 10px;">
                 <button onclick="generateCharts()" type="button">Gerar Gráficos</button> 
                 <button onclick="resetAll()" type="button">Limpar</button>
+                <button onclick="salvarNoFirebase()">Salvar Relatorio</button>
+
             </div>
     </div>
 <script>
@@ -238,6 +244,23 @@ td {
 <div>NT-SPI GESTÃO de UPLINK OLT's REMOTAS DESC </div>
 </div>
 <script>
+
+  // Configuração do Firebase
+  const firebaseConfig = {
+  apiKey: "AIzaSyB3RcO5CLTdElfKWs-9NRYZK3bYQOaZjvY",
+  authDomain: "gestao-uplink-down.firebaseapp.com",
+  databaseURL: "https://gestao-uplink-down-default-rtdb.firebaseio.com",
+  projectId: "gestao-uplink-down",
+  storageBucket: "gestao-uplink-down.firebasestorage.app",
+  messagingSenderId: "44245495345",
+  appId: "1:44245495345:web:00b6647e40241b6f47af10",
+  measurementId: "G-9267XD7E6T"
+};
+
+  // Inicializa Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
 
 function updateMaxValues() {
         const nokValue = parseInt(document.getElementById('nok').value) || 0;
@@ -390,6 +413,96 @@ function resetAll() {
 
   // Atualiza o horário a cada segundo (1000ms)
   setInterval(updateDateTime, 1000);
+
+
+  function salvarNoFirebase() {
+  const dados = {
+    ok: document.getElementById('ok').value,
+    nok: document.getElementById('nok').value,
+    lessThan8: document.getElementById('lessThan8').value,
+    moreThan8: document.getElementById('moreThan8').value,
+    tabela: []
+  };
+
+  const linhas = document.querySelectorAll("table tbody tr");
+  linhas.forEach((linha) => {
+    const cells = linha.querySelectorAll("td");
+    if (cells.length >= 7) {
+      const eps = cells[3].querySelector("select")?.value || "";
+      const dataCriacao = cells[4].querySelector("input")?.value || "";
+
+      dados.tabela.push({
+        ta: cells[0].innerText,
+        olt: cells[1].innerText,
+        afetacao: cells[2].innerText,
+        eps,
+        dataCriacao,
+        status: cells[6].innerText
+      });
+    }
+  });
+
+  db.ref("registros").set(dados)
+    .then(() => alert("Dados salvos com sucesso!"))
+    .catch((err) => alert("Erro ao salvar: " + err));
+}
+
+
+function carregarDoFirebase() {
+  db.ref("registros").once("value", (snapshot) => {
+    const data = snapshot.val();
+    if (!data) return;
+
+    // Preenche inputs
+    document.getElementById('ok').value = data.ok;
+    document.getElementById('nok').value = data.nok;
+    document.getElementById('lessThan8').value = data.lessThan8;
+    document.getElementById('moreThan8').value = data.moreThan8;
+
+    generateCharts();
+
+    // Preenche tabela
+    const tbody = document.querySelector("table tbody");
+    tbody.innerHTML = "";
+
+    data.tabela.forEach(row => {
+      const newRow = tbody.insertRow();
+      newRow.insertCell().innerText = row.ta;
+      newRow.insertCell().innerText = row.olt;
+      newRow.insertCell().innerText = row.afetacao;
+
+      const select = document.createElement("select");
+      ["SELECIONE", "ABILITY", "TEL-REDE", "TEL-N1", "ICOMON"].forEach(val => {
+        const opt = document.createElement("option");
+        opt.value = val;
+        opt.textContent = val;
+        if (val === row.eps) opt.selected = true;
+        select.appendChild(opt);
+      });
+      newRow.insertCell().appendChild(select);
+
+      const inputDate = document.createElement("input");
+      inputDate.type = "datetime-local";
+      inputDate.value = row.dataCriacao;
+      newRow.insertCell().appendChild(inputDate);
+
+      newRow.insertCell().innerText = ''; // SLA deixado em branco
+
+      newRow.insertCell().innerText = row.status;
+
+      const deleteBtnCell = newRow.insertCell();
+      deleteBtnCell.innerHTML = '<button class="delete-btn" onclick="deleteSpecificRow(this)">❌</button>';
+    });
+
+    calculateSLA();
+  });
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  carregarDoFirebase(); // Puxa dados do Firebase
+});
+
 </script>
 <table border="1" style="width:100%; margin-top:20px;">
   <thead>
