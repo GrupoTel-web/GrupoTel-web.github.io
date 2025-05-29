@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="icons/nt.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Consulta de HL4s</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- DataTables CSS -->
+  <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body { zoom: 95%; background-color: #d3d3d3; font-family: 'Segoe UI', sans-serif; color: #333; margin: 0; padding: 0; }
+    .navbar-custom { background-color: #d5d5d5; border-bottom: 1px solid #e0e0e0; }
+    .hero { background: linear-gradient(135deg, #003327, #d7ffe0, #003327); color: #222; text-shadow: 0 4px 12px #c8f6fe; padding: 60px 15px; text-align: center; }
+    .hero h1 { font-size: 3rem; font-weight: 700; }
+    .search-card { background: #fff; border-radius: 10px; padding: 15px; box-shadow: 0 0px 0px #0019335a; margin-top: -40px; position: relative; z-index:2;height: 70px; }
+    .search-input, .search-select { height:40px; font-size:1rem; }
+    .table-container { zoom:70%; background:#fff; margin:15px 0; border-radius:10px; padding:20px; box-shadow:0 4px 12px #0019335a; overflow-x:auto; }
+    table.dataTable { border-collapse: separate; border-spacing: 0 0.5em; }
+    table.dataTable thead { background:#f8f9fa; border-bottom:2px solid #dee2e6; }
+    table.dataTable thead th { color:#333; border:none; padding:12px 15px; font-size:15px; font-weight:500; white-space:nowrap; text-align: center; }
+    table.dataTable tbody tr { background:#fff; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.08); transition: background 0.3s; margin-bottom:10px; white-space:nowrap; text-align: center;}
+    table.dataTable tbody tr:hover { background:#f1f1f1; }
+    table.dataTable tbody td { padding:12px 15px; border:none; vertical-align:middle; text-align: center;}
+    .dataTables_wrapper .paginate_button { background:#001933!important; color:#fff!important; border-radius:5px; margin:0 2px; }
+    .sair { position:fixed; top:10px; left:10px; background:rgba(255,255,255,0.8); padding:5px; border-radius:8px; cursor:pointer; z-index:9999; display:flex; align-items:center; }
+    .sair img { width:30px; height:30px; margin-right:5px; }
+    #map { height:600px; width: 117%; border-radius:10px; box-shadow:0 4px 12px #0019335a; margin-bottom:80px;margin-left: -100px; }
+
+  </style>
+</head>
+<body>
+
+  <div class="sair">
+    <img src="icons/HP.png" alt="Ícone de Porta">
+    <span>Sair</span>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container"><a class="navbar-brand" href="#"></a></div>
+  </nav>
+
+  <section class="hero">
+    <div class="container"><h1>Consulta de HL4s</h1></div>
+  </section>
+
+  <div class="container">
+    <div class="search-card">
+      <div class="row mb-4">
+        <div class="col-12">
+          <input type="text" id="globalSearch" class="form-control search-input" placeholder="Pesquisar Globalmente">
+        </div>
+      </div>
+    </div><br>
+          <div id="map"></div>
+
+    <div class="table-container">
+     
+      <button id="exportExcel" class="btn btn-primary mb-3">Exportar para Excel</button>
+      <table id="oltTable" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+          <tr>
+            <th>STATUS</th>
+            <th>HOSTNAME</th>
+            <th>SITE SIGLA</th>
+            <th>SITE</th>
+            <th>SIGLA FUSION</th>
+            <th>SITE FIXA</th>
+            <th>OLTs</th>
+            <th>AFETAÇÃO</th>
+            <th>TIPO</th>
+            <th>REGIONAL</th>
+            <th>ID</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script>
+    let table, marcadores = [];
+
+    function limparMarcadores() {
+      marcadores.forEach(m => map.removeLayer(m));
+      marcadores = [];
+    }
+    function atualizarMarcadores() {
+      limparMarcadores();
+      const nodes = table.rows({ search: 'applied' }).nodes().toArray();
+      let count = {};
+      nodes.forEach(n => {
+        const $n = $(n);
+        const lat = parseFloat($n.data('lat')), lng = parseFloat($n.data('long'));
+        if (isNaN(lat)||isNaN(lng)) return;
+        const key = lat.toFixed(6)+"_"+lng.toFixed(6);
+        count[key] = (count[key]||0)+1;
+        const off = 0.0001*(count[key]-1);
+        const d = table.row(n).data();
+        const popup = `<b>${d[1]}</b><br>OLTs: ${d[6]}<br>Afetação: ${d[7]}`;
+        const m = L.marker([lat+off, lng+off], {
+          icon: L.icon({ iconUrl:'icons/icone_HL4.png', iconSize:[18,18], iconAnchor:[15,30], popupAnchor:[0,-30] })
+        }).addTo(map).bindPopup(popup);
+        marcadores.push(m);
+      });
+    }
+
+    $(function(){
+      fetch('https://grupotel-web.github.io/dadosHL4.json')
+        .then(r=>r.json())
+        .then(data=>{
+          let html='';
+          data.forEach(it=>{
+            html+=`
+             <tr data-lat="${it.LAT}" data-long="${it.LONG}">
+                <td>${it.Status}</td>
+                <td>${it.Hostname}</td>
+                <td>${it.Site_Sigla}</td>
+                <td>${it.Site}</td>
+                <td>${it["Sigla Fusion"]}</td>
+                <td>${it["Site fixa"]}</td>
+                <td>${it.OLTs}</td>
+                <td>${it.Afetação}</td>
+                <td>${it.TIPO}</td>
+                <td>${it.regional}</td>
+                <td>${it.ID}</td>
+              </tr>`;
+          });
+          $('#oltTable tbody').html(html);
+
+          table = $('#oltTable').DataTable({
+            paging: true,
+      pageLength: 20,
+      lengthChange: false,
+      ordering: true,
+      order: [[0, 'asc']],
+      scrollX: true,
+      searching: true, 
+      language: {
+        search: "", 
+        paginate: {
+          previous: "Anterior",
+          next: "Próximo"
+        },
+        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+        infoEmpty: "Mostrando 0 a 0 de 0 registros",
+        zeroRecords: "Nenhum registro encontrado"
+      }
+          });
+
+          // popula filtros
+          const fill = (sel, arr)=> new Set(arr).forEach(v=>$(sel).append(`<option value="${v}">${v}</option>`));
+          fill('#tpFilter', data.map(i=>i.Hostname));
+          fill('#equipFilter', data.map(i=>i.Site_Sigla));
+          fill('#fabFilter', data.map(i=>i.Site));
+          fill('#swFilter', data.map(i=>i["Sigla Fusion"]));
+          fill('#hl4Filter', data.map(i=>i["Site fixa"]));
+          fill('#clientesFilter', data.map(i=>i.OLTs));
+          fill('#atFilter', data.map(i=>i.Afetação));
+          fill('#contratoFilter', data.map(i=>i.TIPO));
+          fill('#muniFilter', data.map(i=>i.regional));
+          fill('#AbordFilter', data.map(i=>i.ID));
+          // eventos
+          $('#globalSearch').on('keyup',()=>table.search($('#globalSearch').val()).draw());
+          const cols = { host:1, SSite:2, Site:3, SiglaF:4, SiteF:5, OLTs:6, aft:7, tp:8, reg:9, id:10 };
+          Object.entries(cols).forEach(k=> {
+            $(`#${k[0]}Filter`).on('change',()=> table.column(k[1]).search($(`#${k[0]}Filter`).val()).draw());
+          });
+
+           // mapa
+           window.map = L.map('map', {minZoom: 5,  maxZoom: 10 }).setView([-23.55, -46.63], 6);
+             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '©'}).addTo(map);
+             atualizarMarcadores();
+             table.on('draw.dt', atualizarMarcadores); })
+           .catch(e=>console.error(e));
+
+      // exportar
+      $('#exportExcel').on('click',()=>{
+        const vis = table.rows({ search:'applied' }).data().toArray();
+        const hdr = ['Status','Hostname','Site_Sigla','Site','Sigla Fusion','Site fixa','OLTs','Afetação','TIPO','regional','ID'];
+        const ws = XLSX.utils.aoa_to_sheet([hdr,...vis]);
+        const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'HL4s');
+        XLSX.writeFile(wb,'Consulta_HL4s.xlsx');
+      });
+
+      // sair
+      $('.sair').on('click',()=>window.location.href='HOME.html');
+    });
+  </script>
+</body>
+</html>
