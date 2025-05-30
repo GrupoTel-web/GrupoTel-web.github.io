@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -466,10 +467,24 @@ function carregarDoFirebase() {
 
     data.tabela.forEach(row => {
       const newRow = tbody.insertRow();
-      newRow.insertCell().innerText = row.ta;
-      newRow.insertCell().innerText = row.olt;
-      newRow.insertCell().innerText = row.afetacao;
 
+      // TA
+      const taCell = newRow.insertCell();
+      taCell.contentEditable = true; // Permite edição
+      taCell.innerText = row.ta;
+
+      // OLT
+      const oltCell = newRow.insertCell();
+      oltCell.contentEditable = true; // Permite edição
+      oltCell.innerText = row.olt;
+
+      // Afetação
+      const afetacaoCell = newRow.insertCell();
+      afetacaoCell.contentEditable = true; // Permite edição
+      afetacaoCell.innerText = row.afetacao;
+
+      // EPS (com <select>)
+      const epsCell = newRow.insertCell();
       const select = document.createElement("select");
       ["SELECIONE", "ABILITY", "TEL-REDE", "TEL-N1", "ICOMON"].forEach(val => {
         const opt = document.createElement("option");
@@ -478,22 +493,30 @@ function carregarDoFirebase() {
         if (val === row.eps) opt.selected = true;
         select.appendChild(opt);
       });
-      newRow.insertCell().appendChild(select);
+      epsCell.appendChild(select);
 
+      // Data Criação (com <input type="datetime-local">)
+      const dataCriacaoCell = newRow.insertCell();
       const inputDate = document.createElement("input");
       inputDate.type = "datetime-local";
       inputDate.value = row.dataCriacao;
-      newRow.insertCell().appendChild(inputDate);
+      dataCriacaoCell.appendChild(inputDate);
 
-      newRow.insertCell().innerText = ''; // SLA deixado em branco
+      // SLA (não editável, calculado automaticamente)
+      const slaCell = newRow.insertCell();
+      slaCell.innerText = ''; // Deixe vazio, será calculado depois
 
-      newRow.insertCell().innerText = row.status;
+      // Status
+      const statusCell = newRow.insertCell();
+      statusCell.contentEditable = true; // Permite edição
+      statusCell.innerText = row.status;
 
+      // Botão de exclusão
       const deleteBtnCell = newRow.insertCell();
       deleteBtnCell.innerHTML = '<button class="delete-btn" onclick="deleteSpecificRow(this)">❌</button>';
     });
 
-    calculateSLA();
+    calculateSLA(); // Recalcula o SLA após carregar os dados
   });
 }
 
