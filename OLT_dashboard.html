@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>OLT Warning - Local</title>
+  <link rel="icon" type="image/ico" href="favicon.ico">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+
+  <style>
+    :root { --primary: #0D47A1; --secondary: #1e85e5; --bg: #ECEFF1; --text: #263238; --hover: rgba(13,71,161,0.15); --shadow: rgba(0,0,0,0.1); --panel: #ffffff; --texto: #fff; }
+    [data-theme="dark"] { --bg:#2C2C2C; --primary:#1a9eca; --secondary:#1ee2e5; --text:#FFFFFF; --hover:rgba(255,255,255,0.1); --shadow:rgba(0,0,0,0.2); --panel:#3A3A3A; --texto:#263238; }
+    body { background: var(--bg); color: var(--text); font-family:'Segoe UI',sans-serif; margin:0; padding-top:60px;}
+    header { background: var(--primary); color:#fff; position:fixed; top:0; width:100%; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:.75rem 1.5rem; box-shadow:0 2px 4px var(--shadow);}    
+    header .title { font-size:1.4rem; font-weight:600; display:flex; align-items:center; } header .title i{margin-right:.5rem;}
+    #themeToggle { background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer;margin-left:.5rem; }
+    .container-fluid{padding:2rem 1rem;}
+    .filters{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;background:var(--panel);padding:1rem;border-radius:.75rem;box-shadow:0 2px 6px var(--shadow);align-items:center;}
+    .filters .form-control,.filters .form-select{flex:1;min-width:120px;border-radius:.5rem;transition:.2s;}
+    .filters .form-control:focus,.filters .form-select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(13,71,161,0.15);}    
+    .btn-reset{background:var(--secondary);color:var(--texto);border:none;border-radius:.5rem;padding:.6rem 1rem;}
+    .btn-reset:hover{background:#00a9e6;}
+    .table-wrapper{background:var(--panel);border-radius:.75rem;box-shadow:0 2px 6px var(--shadow);overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;margin:0;}
+    thead{background:var(--primary);color:#fff;cursor:pointer;}
+    th,td{padding:.75rem 1rem;text-align:center;border-bottom:1px solid var(--hover);font-size:.75rem;}
+    tbody tr:hover{background:var(--hover);}    
+    .status-down{color:#b00020;font-weight:600;} .status-up{color:#2e7d32;font-weight:600;}
+    #graficoDashboard {
+  width: 100% !important;
+  max-width: 100% !important;
+  background: var(--bg);
+  border-radius: .75rem;
+  box-shadow: 0 2px 6px var(--shadow);
+  padding: 1rem; /* Adicione padding para evitar cortes */
+  margin: 0; /* Remova margens extras */
+  max-height: 450px;
+  height: auto;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 0.5rem;
+}
+
+.pagination button {
+  padding: 0.5rem 0.75rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: .75rem;
+}
+
+.pagination button.disabled {
+  background: grey;
+  cursor: not-allowed;
+}
+
+
+
+ 
+ </style>
+</head>
+<body>
+  <header>
+    <div class="title"><i class="fas fa-network-wired"></i>OLT Alarme</div>
+    <div>
+      <button id="themeToggle"><i class="fas fa-moon"></i></button>
+      <button id="toggleDashboard" class="btn-reset ms-2">📊 Ver Dashboard</button>
+    </div>
+  </header>
+
+<div class="container-fluid">
+  <div class="filters">
+    <input id="filter-olt" class="form-control" placeholder="Filtrar OLT">
+    <select id="filter-status" class="form-select">
+      <option value="">Todos os status</option>
+      <option value="DOWN">DOWN</option>
+      <option value="UP">Normalizado</option>
+    </select>
+    <div style="position:relative;">
+      <input id="filter-switch" class="form-control" placeholder="Filtrar Rede SW" autocomplete="off">
+      <div id="switch-list" class="autocomplete-list" style="position:absolute;z-index:10;width:99%;background:#fff;border:1px solid #ccc;display:none;max-height:200px;overflow-y:auto;"></div>
+    </div>
+    <div style="position:relative;">
+      <input id="filter-abordagem" class="form-control" placeholder="Filtrar Abordagem" autocomplete="off">
+      <div id="abordagem-list" class="autocomplete-list" style="position:absolute;z-index:10;width:99%;background:#fff;border:1px solid #ccc;display:none;max-height:200px;overflow-y:auto;"></div>
+    </div>
+    <div style="position:relative;">
+      <input id="filter-municipio" class="form-control" placeholder="Filtrar Município" autocomplete="off">
+      <div id="municipio-list" class="autocomplete-list" style="position:absolute;z-index:10;width:99%;background:#fff;border:1px solid #ccc;display:none;max-height:200px;overflow-y:auto;"></div>
+    </div>
+    <button class="btn-reset" onclick="resetFilters()">Limpar Filtros</button>
+    <button id="exportBtn" title="Exportar XLSX" class="btn-reset">Exportar XLSX</button>
+  </div>
+
+  <div id="audio-msg" style="
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  background:#ff0000;
+  padding:.5rem;
+  text-align:center;
+  font-weight:bold;
+  z-index:999;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+">
+  🔊 Clique em qualquer lugar para ativar os alertas sonoros.
+</div>
+
+  <div id="isoladas-wrapper" class="table-wrapper mb-4" style="display: none;">
+    <h5 class="p-3 mb-0">🔴 OLTs Isoladas</h5>
+    <table id="isoladas-table">
+      <thead>
+        <tr>
+          <th>OLT</th>
+          <th>Modelo</th>
+          <th>Rede SW</th>
+          <th>Clientes</th>
+          <th>Município</th>
+          <th>Abordagem</th>
+          <th>Condomínio</th>
+          <th>Data Queda</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div id="dashboard" style="display: none;" class="mb-4">
+    <div class="row g-4 mb-4">
+      <div class="col-md-6">
+        <div class="p-4 shadow-sm rounded" style="background: var(--panel);">
+          <h6>📅 Total OLTs Isoladas (Mês)</h6>
+          <div id="cardPeriodos" class="fs-4 fw-bold">–</div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="p-4 shadow-sm rounded" style="background: var(--panel);">
+          <h6>⏱ Média Normalização</h6>
+          <div id="cardMedia" class="fs-4 fw-bold">–</div>
+        </div>
+      </div>
+    </div>
+    <!-- Botões de navegação de mês -->
+   
+    <div class="p-4 shadow-sm rounded" style="background: var(--panel);">
+      <div class="d-flex justify-content-center align-items-center mb-3" id="dashboard-month-nav">
+        <button id="prevYear" class="btn-reset me-2">&laquo;</button>
+        <button id="prevMonth" class="btn-reset me-2">&lsaquo;</button>
+        <span id="currentMonthLabel" style="min-width:120px;text-align:center;font-weight:600;"></span>
+        <button id="nextMonth" class="btn-reset ms-2">&rsaquo;</button>
+        <button id="nextYear" class="btn-reset ms-2">&raquo;</button>
+      </div>
+      <canvas id="graficoDashboard"></canvas>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table id="olt-table">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>OLT</th>
+          <th>Modelo</th>
+          <th>Rede SW</th>
+          <th>Clientes</th>
+          <th>Município</th>
+          <th>Abordagem</th>
+          <th>Condomínio</th>
+          <th>Data Queda</th>
+          <th>Normalizado em</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="pagination" id="pagination"></div>
+</div>
+
+
+<audio id="alertAudio" src="alert.mp3" preload="auto"></audio>
+<audio id="alertDownAudio" src="up.mp3" preload="auto"></audio>
+<script>
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyCOkphMnDynwb6nsCxIVLjyIfbWmvONRVs",
+    authDomain: "database-olt.firebaseapp.com",
+    databaseURL: "https://database-olt-default-rtdb.firebaseio.com",
+    projectId: "database-olt",
+    storageBucket: "database-olt.appspot.com",
+    messagingSenderId: "244877494813",
+    appId: "1:244877494813:web:e8545b5e20dc7efebb54f4",
+    measurementId: "G-QD3NCTP2QF"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+// ...código existente acima...
+
+const filterOlt = document.getElementById('filter-olt');
+const filterStatus = document.getElementById('filter-status');
+const filterSwitch = document.getElementById('filter-switch');
+const filterSwitchList = document.getElementById('switch-list');
+const filterAbordagem = document.getElementById('filter-abordagem');
+const filterAbordagemList = document.getElementById('abordagem-list');
+const filterMunicipio = document.getElementById('filter-municipio');
+const filterMunicipioList = document.getElementById('municipio-list');
+const alertAudio = document.getElementById('alertAudio');
+const alertDownAudio = document.getElementById('alertDownAudio');
+let allData = [], currentPage = 1, rowsPerPage = 10;
+let lastDownOlts = new Set(), firstLoad = true, lastDataLength = 0, chartInstance = null;
+let oltsInfo = {};
+let filtroDataSelecionada = null;
+let dashboardMesSelecionado = (new Date()).getMonth();
+let dashboardAnoSelecionado = (new Date()).getFullYear();
+let minDashboardDate = null, maxDashboardDate = null;
+
+// Carrega as informações adicionais das OLTs do GitHub
+async function loadOltsInfo() {
+  try {
+    const response = await fetch('https://grupotel-web.github.io/dadosOLT.json');
+    const data = await response.json();
+    oltsInfo = {};
+    data.forEach(olt => {
+      oltsInfo[olt.NOME_REDE_OLT] = olt;
+    });
+  } catch (error) {
+    console.error("Erro ao carregar informações das OLTs:", error);
+  }
+}
+
+function formatarDataHora(d) {
+  if (!d) return '—';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+function formatarData(d) {
+  if (!d) return '—';
+  const dt = new Date(d);
+  return `${dt.getDate().toString().padStart(2, '0')}/${(dt.getMonth() + 1).toString().padStart(2, '0')}`;
+}
+
+function calcularLimitesDashboard() {
+  const downDates = allData
+    .filter(r => r.status === 'DOWN' && r.data_queda)
+    .map(r => new Date(r.data_queda));
+  if (downDates.length === 0) {
+    minDashboardDate = maxDashboardDate = null;
+    return;
+  }
+  minDashboardDate = new Date(Math.min(...downDates));
+  maxDashboardDate = new Date(Math.max(...downDates));
+}
+
+function atualizarEstadoBotoesDashboard() {
+  const prevMonthBtn = document.getElementById('prevMonth');
+  const nextMonthBtn = document.getElementById('nextMonth');
+  const prevYearBtn = document.getElementById('prevYear');
+  const nextYearBtn = document.getElementById('nextYear');
+
+  prevMonthBtn.disabled = false;
+  nextMonthBtn.disabled = false;
+  prevYearBtn.disabled = false;
+  nextYearBtn.disabled = false;
+}
+
+function getUniqueValues(field) {
+  return Array.from(new Set(allData.map(r => (r[field] || '').trim()).filter(Boolean))).sort();
+}
+
+function setupAutocomplete(input, listDiv, field) {
+  input.addEventListener('focus', showList);
+  input.addEventListener('input', showList);
+  input.addEventListener('blur', () => setTimeout(() => listDiv.style.display = 'none', 150));
+  document.addEventListener('click', (e) => {
+    if (!input.contains(e.target) && !listDiv.contains(e.target)) {
+      listDiv.style.display = 'none';
+    }
+  });
+
+  function showList() {
+    const val = input.value.toLowerCase();
+    const options = getUniqueValues(field).filter(opt => opt.toLowerCase().includes(val));
+    if (options.length === 0) {
+      listDiv.style.display = 'none';
+      return;
+    }
+    listDiv.innerHTML = options.map(opt => `<div class="autocomplete-item" style="padding:4px 8px;cursor:pointer;">${opt}</div>`).join('');
+    listDiv.style.display = 'block';
+    Array.from(listDiv.children).forEach(child => {
+      child.onclick = () => {
+        input.value = child.textContent;
+        listDiv.style.display = 'none';
+        currentPage = 1;
+        updateTable();
+      };
+    });
+  }
+}
+
+function setupAllAutocompletes() {
+  setupAutocomplete(filterSwitch, filterSwitchList, 'switch');
+  setupAutocomplete(filterAbordagem, filterAbordagemList, 'abordagem');
+  setupAutocomplete(filterMunicipio, filterMunicipioList, 'municipio');
+}
+
+function loadData() {
+  db.ref('monitoramento').once('value').then(snap => {
+    const snapshotVal = snap.val();
+    if (!snapshotVal) return;
+    const arr = Object.values(snapshotVal);
+    const mudouQtd = arr.length !== lastDataLength;
+    lastDataLength = arr.length;
+
+    allData = arr.map(item => {
+      const infoOlt = oltsInfo[item.olt] || {};
+      return {
+        ...item,
+        switch: infoOlt.NOME_REDE_SWD || '',
+        clientes: infoOlt.Clientes || '',
+        abordagem: infoOlt.ABORDAGEM || '',
+        municipio: infoOlt.MUNI || '',
+        condominio: infoOlt.CONDOMINIO || ''
+      };
+    });
+
+    const currentDownOlts = new Set(
+      allData.filter(r => r.status === 'DOWN').map(r => r.olt)
+    );
+
+    // Toca alertAudio se aumentou
+    if (
+      (firstLoad && currentDownOlts.size > 0) ||
+      (!firstLoad && Array.from(currentDownOlts).some(olt => !lastDownOlts.has(olt)))
+    ) {
+      alertAudio.play().catch(() => {});
+    }
+
+    // Toca alertDownAudio se diminuiu
+    if (
+      !firstLoad &&
+      Array.from(lastDownOlts).some(olt => !currentDownOlts.has(olt))
+    ) {
+      alertDownAudio.play().catch(() => {});
+    }
+
+    firstLoad = false;
+    lastDownOlts = currentDownOlts;
+
+    updateTable();
+    updateIsoladasTable();
+    setupAllAutocompletes();
+    calcularLimitesDashboard();
+    atualizarEstadoBotoesDashboard();
+
+    if (mudouQtd && document.getElementById('dashboard').style.display !== 'none') {
+      gerarDashboard();
+    }
+  }).catch(console.error);
+}
+
+function updateTable() {
+  const tbody = document.querySelector('#olt-table tbody');
+  tbody.innerHTML = '';
+  const fO = filterOlt.value.toLowerCase();
+  const fS = filterStatus.value;
+  const fSwitch = filterSwitch.value.toLowerCase();
+  const fAbordagem = filterAbordagem.value.toLowerCase();
+  const fMunicipio = filterMunicipio.value.toLowerCase();
+
+  let filt = allData.filter(r =>
+    (!fO || r.olt.toLowerCase().includes(fO)) &&
+    (!fS || r.status === fS) &&
+    (!fSwitch || (r.switch || '').toLowerCase().includes(fSwitch)) &&
+    (!fAbordagem || (r.abordagem || '').toLowerCase().includes(fAbordagem)) &&
+    (!fMunicipio || (r.municipio || '').toLowerCase().includes(fMunicipio)) &&
+    (!filtroDataSelecionada || formatarData(r.data_queda) === filtroDataSelecionada)
+  );
+
+  const total = Math.ceil(filt.length / rowsPerPage);
+  const start = (currentPage - 1) * rowsPerPage;
+  filt.slice(start, start + rowsPerPage).forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="status">${r.status === 'DOWN' ? '<i class="fas fa-circle text-danger me-1"></i>DOWN' : '<i class="fas fa-circle text-success me-1"></i>UP'}</td>
+      <td>${r.olt}</td>
+      <td>${r.modelo}</td>
+      <td>${r.switch || '—'}</td>
+      <td>${r.clientes || '—'}</td>
+      <td>${r.municipio || '—'}</td>
+      <td>${r.abordagem || '—'}</td>
+      <td>
+        ${r.condominio
+          ? `<span class="badge bg-success" title="${r.condominio}">SIM</span>`
+          : `<span class="badge bg-danger" title="Não pertence a condomínio">NÃO</span>`}
+      </td>
+      <td>${formatarDataHora(r.data_queda) || '-'}</td>
+      <td>${formatarDataHora(r.normalizado_em) || '-'}</td>`;
+    tbody.appendChild(tr);
+  });
+  renderPagination(total);
+}
+
+function updateIsoladasTable() {
+  const isoladas = allData.filter(d => d.status === 'DOWN');
+  const wrapper = document.getElementById('isoladas-wrapper');
+  const tbody = document.querySelector('#isoladas-table tbody');
+
+  if (isoladas.length === 0) {
+    wrapper.style.display = 'none';
+    return;
+  }
+
+  wrapper.style.display = 'block';
+  tbody.innerHTML = '';
+  isoladas.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.olt}</td>
+      <td>${r.modelo}</td>
+      <td>${r.switch || '—'}</td>
+      <td>${r.clientes || '—'}</td>
+      <td>${r.municipio || '—'}</td>
+      <td>${r.abordagem || '—'}</td>
+      <td>
+        ${r.condominio
+          ? `<span class="badge bg-success" title="${r.condominio}">SIM</span>`
+          : `<span class="badge bg-danger" title="Não pertence a condomínio">NÃO</span>`}
+      </td>
+      <td>${formatarDataHora(r.data_queda) || '-'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderPagination(total) {
+  const p = document.getElementById('pagination');
+  p.innerHTML = '';
+
+  const createButton = (i, label = null, disabled = false) => {
+    const btn = document.createElement('button');
+    btn.textContent = label || i;
+    if (i === currentPage || disabled) btn.classList.add('disabled');
+    btn.onclick = () => {
+      if (!btn.classList.contains('disabled')) {
+        currentPage = i;
+        updateTable();
+      }
+    };
+    p.appendChild(btn);
+  };
+
+  createButton(currentPage - 1, '«', currentPage === 1);
+
+  if (total <= 3) {
+    for (let i = 1; i <= total; i++) createButton(i);
+  } else {
+    createButton(1);
+    if (currentPage > 3) p.appendChild(Object.assign(document.createElement('span'), { textContent: '...' }));
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(total - 1, currentPage + 1);
+    for (let i = start; i <= end; i++) createButton(i);
+    if (currentPage < total - 2) p.appendChild(Object.assign(document.createElement('span'), { textContent: '...' }));
+    createButton(total);
+  }
+  createButton(currentPage + 1, '»', currentPage === total);
+}
+
+function resetFilters() {
+  filterOlt.value = '';
+  filterStatus.value = '';
+  filterSwitch.value = '';
+  filterAbordagem.value = '';
+  filterMunicipio.value = '';
+  filtroDataSelecionada = null;
+  currentPage = 1;
+  updateTable();
+}
+
+filterOlt.oninput = () => { currentPage = 1; updateTable(); };
+filterStatus.onchange = () => { currentPage = 1; updateTable(); };
+filterSwitch.oninput = () => { currentPage = 1; updateTable(); };
+filterAbordagem.oninput = () => { currentPage = 1; updateTable(); };
+filterMunicipio.oninput = () => { currentPage = 1; updateTable(); };
+
+// Tema
+document.getElementById('themeToggle').onclick = () => {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const nxt = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', nxt);
+  localStorage.setItem('theme', nxt);
+  if (document.getElementById('dashboard').style.display !== 'none') gerarDashboard();
+};
+if (localStorage.getItem('theme')) document.documentElement.setAttribute('data-theme', localStorage.getItem('theme'));
+
+// Export XLSX
+document.getElementById('exportBtn').onclick = () => {
+  const ws = XLSX.utils.json_to_sheet(allData.map(r => ({
+    OLT: r.olt,
+    Modelo: r.modelo,
+    'Rede SW': r.switch || '—',
+    Clientes: r.clientes || '—',
+    municipio: r.municipio || '—',
+    Abordagem: r.abordagem || '—',
+    'Condomínio': r.condominio ? 'SIM' : 'NÃO',
+    Status: r.status,
+    'Data Queda': formatarDataHora(r.data_queda) || '-',
+    'Normalizado em': formatarDataHora(r.normalizado_em) || '-'
+  })));
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'OLTs');
+  XLSX.writeFile(wb, 'dashboard_local.xlsx');
+};
+
+// Dashboard
+function atualizarLabelMes() {
+  const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  document.getElementById('currentMonthLabel').textContent = `${meses[dashboardMesSelecionado]}/${dashboardAnoSelecionado}`;
+  atualizarEstadoBotoesDashboard();
+}
+
+document.getElementById('prevMonth').onclick = () => {
+  if (document.getElementById('prevMonth').disabled) return;
+  dashboardMesSelecionado--;
+  if (dashboardMesSelecionado < 0) {
+    dashboardMesSelecionado = 11;
+    dashboardAnoSelecionado--;
+  }
+  atualizarLabelMes();
+  gerarDashboard();
+};
+document.getElementById('nextMonth').onclick = () => {
+  if (document.getElementById('nextMonth').disabled) return;
+  dashboardMesSelecionado++;
+  if (dashboardMesSelecionado > 11) {
+    dashboardMesSelecionado = 0;
+    dashboardAnoSelecionado++;
+  }
+  atualizarLabelMes();
+  gerarDashboard();
+};
+document.getElementById('prevYear').onclick = () => {
+  if (document.getElementById('prevYear').disabled) return;
+  dashboardAnoSelecionado--;
+  atualizarLabelMes();
+  gerarDashboard();
+};
+document.getElementById('nextYear').onclick = () => {
+  if (document.getElementById('nextYear').disabled) return;
+  dashboardAnoSelecionado++;
+  atualizarLabelMes();
+  gerarDashboard();
+};
+
+document.getElementById('toggleDashboard').onclick = () => {
+  const el = document.getElementById('dashboard');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  if (el.style.display === 'block') {
+    atualizarLabelMes();
+    gerarDashboard();
+  }
+};
+
+function gerarDashboard(mes = dashboardMesSelecionado, ano = dashboardAnoSelecionado) {
+  const ctx = document.getElementById("graficoDashboard").getContext("2d");
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  const barColor = isDark ? '#1ee2e5' : '#0D47A1';
+  const lineColor = isDark ? '#ffc107' : '#ff5722';
+  const textColor = isDark ? '#fff' : '#263238';
+  const dadosAgrupados = {};
+
+  allData.forEach(r => {
+    const data = new Date(r.data_queda);
+    const normalizado = r.normalizado_em ? new Date(r.normalizado_em) : null;
+    if (isNaN(data) || data.getMonth() !== mes || data.getFullYear() !== ano) return;
+    const key = `${data.getDate().toString().padStart(2, '0')}/${(data.getMonth() + 1).toString().padStart(2, '0')}`;
+    if (!dadosAgrupados[key]) dadosAgrupados[key] = { isoladas: 0, tempos: [] };
+    dadosAgrupados[key].isoladas++;
+    if (normalizado) {
+      const horas = (normalizado - data) / 3600000;
+      dadosAgrupados[key].tempos.push(horas);
+    }
+  });
+
+  const labels = Object.keys(dadosAgrupados).sort((a, b) => {
+    const [da, ma] = a.split('/').map(Number);
+    const [db, mb] = b.split('/').map(Number);
+    return new Date(ano, ma - 1, da) - new Date(ano, mb - 1, db);
+  });
+
+  const isoladas = labels.map(d => dadosAgrupados[d].isoladas);
+  const medias = labels.map(d => {
+    const t = dadosAgrupados[d].tempos;
+    return t.length ? (t.reduce((a, b) => a + b, 0) / t.length).toFixed(1) : 0;
+  });
+
+  document.getElementById('cardPeriodos').textContent = isoladas.reduce((acc, val) => acc + val, 0);
+  const todasHoras = Object.values(dadosAgrupados).flatMap(d => d.tempos);
+  const mediaGeral = todasHoras.length ? (todasHoras.reduce((a, b) => a + b, 0) / todasHoras.length).toFixed(1) : '–';
+  document.getElementById('cardMedia').textContent = `${mediaGeral}h`;
+
+  if (chartInstance) chartInstance.destroy();
+  chartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'OLTs Isoladas',
+          data: isoladas,
+          backgroundColor: barColor,
+          borderRadius: 6,
+          borderSkipped: false,
+          yAxisID: 'y'
+        },
+        {
+          type: 'line',
+          label: 'Média Normalização (h)',
+          data: medias,
+          borderColor: lineColor,
+          backgroundColor: lineColor,
+          yAxisID: 'y1',
+          tension: 0.3,
+          fill: false,
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      animation: { duration: 1000, easing: 'easeOutQuart' },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels: { color: textColor, boxWidth: 12, padding: 15 }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.type === 'line'
+              ? `Média: ${ctx.parsed.y}h`
+              : `${ctx.parsed.y} ocorrências`
+          }
+        },
+        datalabels: {
+          display: true,
+          color: textColor,
+          font: { weight: 'bold' },
+          anchor: 'end',
+          align: 'top',
+          formatter: (value, context) => context.dataset.type === 'line' ? `${value}h` : value
+        }
+      },
+      onClick: (evt, elements) => {
+        if (elements && elements.length > 0) {
+          const idx = elements[0].index;
+          const diaLabel = labels[idx];
+          filtroDataSelecionada = diaLabel;
+          updateTable();
+          mostrarFiltroDiaSelecionado(diaLabel);
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: textColor, maxRotation: 0, minRotation: 0 },
+          grid: { display: false }
+        },
+        y: {
+          beginAtZero: true,
+          title: { display: false },
+          ticks: { display: false },
+          grid: { display: false },
+          min: 0,
+          suggestedMax: Math.max(...isoladas) * 2.5
+        },
+        y1: {
+          beginAtZero: true,
+          position: 'right',
+          title: { display: false },
+          ticks: { display: false },
+          grid: { drawOnChartArea: false },
+          min: -10,
+          suggestedMax: Math.max(...medias) + 1
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
+
+// Adicione esta função para mostrar/remover o filtro visual do dia selecionado
+function mostrarFiltroDiaSelecionado(diaLabel) {
+  let filtroDiv = document.getElementById('filtro-dia-dashboard');
+  if (!filtroDiv) {
+    filtroDiv = document.createElement('div');
+    filtroDiv.id = 'filtro-dia-dashboard';
+    filtroDiv.style = 'margin: 10px 0; padding: 8px 16px; background: #ffe082; color: #333; border-radius: 8px; font-weight: bold; display: inline-block;';
+    filtroDiv.innerHTML = `Dia filtrado: <span id="diaSelecionadoSpan"></span> <button id="limparFiltroDia" style="margin-left:10px;" class="btn-reset">Limpar filtro</button>`;
+    document.querySelector('.container-fluid').insertBefore(filtroDiv, document.querySelector('.table-wrapper'));
+    document.getElementById('limparFiltroDia').onclick = () => {
+      filtroDataSelecionada = null;
+      updateTable();
+      filtroDiv.remove();
+    };
+  }
+  document.getElementById('diaSelecionadoSpan').textContent = diaLabel;
+}
+
+// Ativa áudio no primeiro clique
+window.addEventListener('DOMContentLoaded', () => {
+  const audioMsg = document.getElementById('audio-msg');
+  document.addEventListener('click', () => {
+    alertAudio.play().then(() => {
+      alertAudio.pause();
+      alertAudio.currentTime = 0;
+    }).catch(() => {});
+    if (audioMsg) {
+      audioMsg.style.opacity = '0';
+      setTimeout(() => audioMsg.remove(), 500);
+    }
+  }, { once: true });
+});
+
+// Inicializa
+loadOltsInfo().then(() => {
+  loadData();
+  setInterval(loadData, 1000);
+});
+</script>
+</body>
+</html>
