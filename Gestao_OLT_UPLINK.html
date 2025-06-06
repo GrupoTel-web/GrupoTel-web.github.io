@@ -415,7 +415,13 @@ function resetAll() {
   setInterval(updateDateTime, 1000);
 
 
-  function salvarNoFirebase() {
+  function isNightShift() {
+  const now = new Date();
+  const hour = now.getHours();
+  return (hour >= 22 || hour < 7);
+}
+
+function salvarNoFirebase(silencioso = false) {
   const dados = {
     ok: document.getElementById('ok').value,
     nok: document.getElementById('nok').value,
@@ -443,10 +449,19 @@ function resetAll() {
   });
 
   db.ref("registros").set(dados)
-    .then(() => alert("Dados salvos com sucesso!"))
-    .catch((err) => alert("Erro ao salvar: " + err));
+    .then(() => { if (!silencioso) alert("Dados salvos com sucesso!"); })
+    .catch((err) => { if (!silencioso) alert("Erro ao salvar: " + err); });
 }
 
+// Início automático do salvamento noturno
+document.addEventListener("DOMContentLoaded", function() {
+  carregarDoFirebase();
+  addRow();
+
+  if (isNightShift()) {
+    setInterval(() => salvarNoFirebase(true), 1800000); // 30 minutos
+  }
+});
 
 function carregarDoFirebase() {
   db.ref("registros").once("value", (snapshot) => {
