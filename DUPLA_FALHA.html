@@ -80,10 +80,71 @@
         max-width: 1200px; /* Limita a largura máxima */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Sombra suave */
         }
+
+        /* Adicione ao <style> do <head> ou em seu CSS principal */
+.btn-salvar {
+    background-color: #FF6347;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 28px;
+    font-size: 1.1em;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    transition: background 0.2s, transform 0.1s;
+}
+.btn-salvar:hover {
+    background-color: #e5533d;
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+}
+
+.select-historico {
+    width: 60%;
+    padding: 8px 12px;
+    border: 2px solid #FF6347;
+    border-radius: 8px;
+    background: #fff;
+    color: #333;
+    font-size: 1em;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    transition: border 0.2s;
+}
+.select-historico:focus {
+    border-color: #e5533d;
+    outline: none;
+    box-shadow: 0 0 0 2px #ff63474d;
+}
+
+.centralizado {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.centralizado .btn-salvar,
+.centralizado .select-historico {
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block;
+}
     </style>
 </head>
 <body>
     <div class="container-principal">
+
+        <div class="centralizado">
+            <button type="button" class="btn-salvar" onclick="salvarFormulario()">💾 Salvar</button>
+            <br><br>
+            <label for="historico"></label>
+            <select id="historico" class="select-historico" onchange="carregarFormularioSelecionado()">
+                <option value="" hidden style="text-align: center;">-- Selecione um evento --</option>
+            </select><br>
+        </div>
+
+
     <div class="container">
         <div class="titulo"> NT-SPI ‼️ DUPLA FALHA ‼️</div>
         <form id="afectacao-form">
@@ -192,7 +253,128 @@
     </div>
 </div>
 
-    <script>
+
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCnrBSyHTXkb_5bH8l7chGQ9s66cN4yQLs",
+  authDomain: "carimbo-dupla-falha.firebaseapp.com",
+  projectId: "carimbo-dupla-falha",
+  storageBucket: "carimbo-dupla-falha.firebasestorage.app",
+  messagingSenderId: "90493358530",
+  appId: "1:90493358530:web:ad501a1a31bde42cb3c65b",
+  measurementId: "G-24031R7BRX"
+};
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+</script>
+
+
+<script>
+
+
+
+function salvarFormulario() {
+    const equipamento = document.getElementById('equipamento').value;
+    const ta = document.getElementById('ta-falha1').value;
+
+    if (!ta) {
+        alert("Informe a TA para salvar.");
+        return;
+    }
+
+    const chave = ta; // TA será a chave única
+    const dados = {
+        equipamento,
+        afectacaoFttx: document.getElementById('afectacao-fttx').value,
+        afectacaoMovel: document.getElementById('afectacao-movel').value,
+        dataFalha1: document.getElementById('data-falha1').value,
+        localFalha1: document.getElementById('local-falha1').value,
+        taFalha1: ta,
+        rotaCaboFalha1: document.getElementById('rota-cabo-falha1').value,
+        statusFalha1: document.getElementById('status-falha1').value,
+        dataFalha2: document.getElementById('data-falha2').value,
+        localFalha2: document.getElementById('local-falha2').value,
+        taFalha2: document.getElementById('ta-falha2').value,
+        rotaCaboFalha2: document.getElementById('rota-cabo-falha2').value,
+        statusFalha2: document.getElementById('status-falha2').value
+    };
+
+    const ref = firebase.database().ref('eventos/' + chave);
+    ref.once('value', function(snapshot) {
+        if (snapshot.exists()) {
+            // TA já existe: atualiza
+            ref.update(dados, function(error) {
+                if (error) {
+                    alert("Erro ao atualizar: " + error);
+                } else {
+                    alert("Evento atualizado com sucesso!");
+                    atualizarDropdown(chave); // já seleciona
+                }
+            });
+        } else {
+            // Nova TA: cria
+            ref.set(dados, function(error) {
+                if (error) {
+                    alert("Erro ao salvar novo: " + error);
+                } else {
+                    alert("Novo evento salvo com sucesso!");
+                    atualizarDropdown(chave);
+                }
+            });
+        }
+    });
+}
+
+
+function atualizarDropdown(selecionarTA = '') {
+    const dropdown = document.getElementById('historico');
+    dropdown.innerHTML = '<option value="">-- Selecione um evento --</option>';
+
+    firebase.database().ref('eventos').once('value', function(snapshot) {
+        snapshot.forEach(function(child) {
+            const ta = child.key;
+            const option = document.createElement('option');
+            option.value = ta;
+            option.textContent = ta;
+            if (ta === selecionarTA) {
+                option.selected = true;
+                carregarFormularioSelecionado(); // carrega imediatamente
+            }
+            dropdown.appendChild(option);
+        });
+    });
+}
+
+
+function carregarFormularioSelecionado() {
+    const chave = document.getElementById('historico').value;
+    if (!chave) return;
+
+    firebase.database().ref('eventos/' + chave).once('value', function(snapshot) {
+        const data = snapshot.val();
+        if (data) {
+            document.getElementById('equipamento').value = data.equipamento || '';
+            document.getElementById('afectacao-fttx').value = data.afectacaoFttx || '';
+            document.getElementById('afectacao-movel').value = data.afectacaoMovel || '';
+            document.getElementById('data-falha1').value = data.dataFalha1 || '';
+            document.getElementById('local-falha1').value = data.localFalha1 || '';
+            document.getElementById('ta-falha1').value = data.taFalha1 || '';
+            document.getElementById('rota-cabo-falha1').value = data.rotaCaboFalha1 || '';
+            document.getElementById('status-falha1').value = data.statusFalha1 || '';
+            document.getElementById('data-falha2').value = data.dataFalha2 || '';
+            document.getElementById('local-falha2').value = data.localFalha2 || '';
+            document.getElementById('ta-falha2').value = data.taFalha2 || '';
+            document.getElementById('rota-cabo-falha2').value = data.rotaCaboFalha2 || '';
+            document.getElementById('status-falha2').value = data.statusFalha2 || '';
+        }
+    });
+}
+
+
+
         function gerarCarimbo() {
             document.getElementById('result-equipamento').textContent = document.getElementById('equipamento').value;
             document.getElementById('result-afectacao-fttx').textContent = document.getElementById('afectacao-fttx').value;
@@ -238,6 +420,10 @@ function formatarDataHora(dataHora) {
     var minutos = String(data.getMinutes()).padStart(2, '0');
     return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
 }
+
+window.onload = function() {
+    atualizarDropdown();
+};
 
 </script>
 </body>
