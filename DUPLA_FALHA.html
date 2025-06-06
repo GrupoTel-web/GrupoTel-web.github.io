@@ -336,9 +336,11 @@ function atualizarDropdown(selecionarTA = '') {
     firebase.database().ref('eventos').once('value', function(snapshot) {
         snapshot.forEach(function(child) {
             const ta = child.key;
+            const data = child.val();
+            const equipamento = data && data.equipamento ? data.equipamento : '';
             const option = document.createElement('option');
             option.value = ta;
-            option.textContent = ta;
+            option.textContent = equipamento ? `${ta} - ${equipamento}` : ta;
             if (ta === selecionarTA) {
                 option.selected = true;
                 carregarFormularioSelecionado(); // carrega imediatamente
