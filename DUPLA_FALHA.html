@@ -377,24 +377,33 @@ function carregarFormularioSelecionado() {
 
 
 
-        function gerarCarimbo() {
-            document.getElementById('result-equipamento').textContent = document.getElementById('equipamento').value;
-            document.getElementById('result-afectacao-fttx').textContent = document.getElementById('afectacao-fttx').value;
-            document.getElementById('result-afectacao-movel').textContent = document.getElementById('afectacao-movel').value;
+       function gerarCarimbo() {
+    // Verifica o horário atual
+    const agora = new Date();
+    const hora = agora.getHours();
 
-            document.getElementById('result-data-falha1').textContent = formatarDataHora(document.getElementById('data-falha1').value);
-            document.getElementById('result-local-falha1').textContent = document.getElementById('local-falha1').value;
-            document.getElementById('result-ta-falha1').textContent = document.getElementById('ta-falha1').value;
-            document.getElementById('result-rota-cabo-falha1').textContent = document.getElementById('rota-cabo-falha1').value;
-            document.getElementById('result-status-falha1').textContent = document.getElementById('status-falha1').value;
-            document.getElementById('result-data-falha2').textContent = formatarDataHora(document.getElementById('data-falha2').value);
-            document.getElementById('result-local-falha2').textContent = document.getElementById('local-falha2').value;
-            document.getElementById('result-ta-falha2').textContent = document.getElementById('ta-falha2').value;
-            document.getElementById('result-rota-cabo-falha2').textContent = document.getElementById('rota-cabo-falha2').value;
-            document.getElementById('result-status-falha2').textContent = document.getElementById('status-falha2').value;
+    // Se for entre 22h e 7h, salva também
+    if (hora >= 22 || hora < 7) {
+        salvarFormulario();
+    }
 
-            document.getElementById('result-section').style.display = 'block';
-        }
+    document.getElementById('result-equipamento').textContent = document.getElementById('equipamento').value;
+    document.getElementById('result-afectacao-fttx').textContent = document.getElementById('afectacao-fttx').value;
+    document.getElementById('result-afectacao-movel').textContent = document.getElementById('afectacao-movel').value;
+
+    document.getElementById('result-data-falha1').textContent = formatarDataHora(document.getElementById('data-falha1').value);
+    document.getElementById('result-local-falha1').textContent = document.getElementById('local-falha1').value;
+    document.getElementById('result-ta-falha1').textContent = document.getElementById('ta-falha1').value;
+    document.getElementById('result-rota-cabo-falha1').textContent = document.getElementById('rota-cabo-falha1').value;
+    document.getElementById('result-status-falha1').textContent = document.getElementById('status-falha1').value;
+    document.getElementById('result-data-falha2').textContent = formatarDataHora(document.getElementById('data-falha2').value);
+    document.getElementById('result-local-falha2').textContent = document.getElementById('local-falha2').value;
+    document.getElementById('result-ta-falha2').textContent = document.getElementById('ta-falha2').value;
+    document.getElementById('result-rota-cabo-falha2').textContent = document.getElementById('rota-cabo-falha2').value;
+    document.getElementById('result-status-falha2').textContent = document.getElementById('status-falha2').value;
+
+    document.getElementById('result-section').style.display = 'block';
+}
 
         function formatarDataHora(dataHora) {
                 if (!dataHora) return '';
