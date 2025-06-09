@@ -372,6 +372,7 @@ function loadData() {
   }).catch(console.error);
 }
 
+// ...existing code...
 function updateTable() {
   const tbody = document.querySelector('#olt-table tbody');
   tbody.innerHTML = '';
@@ -389,6 +390,9 @@ function updateTable() {
     (!fMunicipio || (r.municipio || '').toLowerCase().includes(fMunicipio)) &&
     (!filtroDataSelecionada || formatarData(r.data_queda) === filtroDataSelecionada)
   );
+
+  // Ordena pela data_queda (mais recente primeiro)
+  filt.sort((a, b) => new Date(b.data_queda) - new Date(a.data_queda));
 
   const total = Math.ceil(filt.length / rowsPerPage);
   const start = (currentPage - 1) * rowsPerPage;
@@ -415,7 +419,9 @@ function updateTable() {
 }
 
 function updateIsoladasTable() {
-  const isoladas = allData.filter(d => d.status === 'DOWN');
+  // Ordena isoladas pela data_queda (mais recente primeiro)
+  const isoladas = allData.filter(d => d.status === 'DOWN')
+    .sort((a, b) => new Date(b.data_queda) - new Date(a.data_queda));
   const wrapper = document.getElementById('isoladas-wrapper');
   const tbody = document.querySelector('#isoladas-table tbody');
 
@@ -445,6 +451,7 @@ function updateIsoladasTable() {
     tbody.appendChild(tr);
   });
 }
+// ...existing code...
 
 function renderPagination(total) {
   const p = document.getElementById('pagination');
