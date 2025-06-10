@@ -3,7 +3,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <link rel="icon" type="image/png" href="icons/nt.png">
+  <link rel="icon" type="image/png" href="icone_OLT.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Consulta de OLTs</title>
   <!-- Bootstrap CSS -->
@@ -123,7 +123,7 @@
         const d = table.row(n).data();
         const popup = `<b>${d[0]}</b><br>TP: ${d[1]}<br>Clientes: ${d[6]}`;
         const m = L.marker([lat+off, lng+off], {
-          icon: L.icon({ iconUrl:'icons/icone_OLT.png', iconSize:[18,18], iconAnchor:[15,30], popupAnchor:[0,-30] })
+          icon: L.icon({ iconUrl:'icone_OLT.png', iconSize:[18,18], iconAnchor:[15,30], popupAnchor:[0,-30] })
         }).addTo(map).bindPopup(popup);
         marcadores.push(m);
       });
