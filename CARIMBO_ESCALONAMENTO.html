@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -31,7 +30,7 @@
  border: 2px solid #000;
  padding: 10px;
  margin-top: 20px;
- display: none;
+ display: block;
  
  }
  .carimboTitulo {
@@ -209,6 +208,15 @@
  <label for="taRaiz">OLT's em Risco:</label>
  <input type="number" id="oltris" name="oltris" required><br><br>
 
+  <label for="pontaA">Ponta A:</label>
+ <input type="text" id="pontaa" name="pontaa"><br><br>
+
+  <label for="pontaB">Ponta B:</label>
+ <input type="text" id="pontab" name="pontab"><br><br>
+
+  <label for="cabo">Cabo:</label>
+ <input type="number" id="cabo" name="cabo"><br><br>
+
  <label for="gestorAtual">Gestor Atual:</label>
 <select id="gestorAtual" name="gestorAtual" required>
   <option value="" hidden>SELECIONAR</option>
@@ -325,6 +333,10 @@
         <td><span id="carimbooltris"></span></td>
       </tr>
       <tr>
+        <td>Ponta A/B e Cabo</td>
+        <td><span id="carimbopontABC"></span></td>
+      </tr>
+      <tr>
         <td>Gestor Atual</td>
         <td><span id="carimboGestorAtual"></span></td>
       </tr>
@@ -371,6 +383,53 @@
   </div>
 </div>
  <script>
+let cachedJson = null; // Cache variable for JSON data
+
+function calcularOltsEmRisco(hl4Str) {
+    if (!hl4Str) {
+        document.getElementById("oltris").value = "";
+        return;
+    }
+    // Divide por quebra de linha, vírgula ou ponto e vírgula, remove espaços e vazios
+    let hl4List = Array.isArray(hl4Str.split(/\n|,|;/))
+        ? hl4Str.split(/\n|,|;/)
+            .map(s => s.trim())
+            .filter(item => /^[a-zA-Z0-9\s]+$/.test(item) && item.length > 0) // Validate alphanumeric and spaces, remove vazios
+        : [];
+
+    // Remove duplicados
+    hl4List = [...new Set(hl4List)];
+
+    const processJson = (json) => {
+        let soma = 0;
+        hl4List.forEach(hl4Item => {
+            json.forEach(item => {
+                if (
+                    item["NOME_REDE_SWD"] &&
+                    item["NOME_REDE_SWD"].trim().toUpperCase() === hl4Item.toUpperCase()
+                ) {
+                    let qtd = parseInt(item["OLT por HL4"], 10);
+                    if (!isNaN(qtd)) soma += qtd;
+                }
+            });
+        });
+        document.getElementById("oltris").value = soma;
+    };
+
+    if (cachedJson) {
+        processJson(cachedJson);
+    } else {
+        fetch("https://grupotel-web.github.io/dadosOLT.json")
+            .then(resp => resp.json())
+            .then(json => {
+                cachedJson = json; // Cache the JSON response
+                processJson(json);
+            })
+            .catch(() => {
+                document.getElementById("oltris").value = "";
+            });
+    }
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     function preencherFormulario() {
@@ -383,13 +442,13 @@ document.addEventListener("DOMContentLoaded", function () {
         let ultimaLinha = linhas[linhas.length - 1];
         let colunas = ultimaLinha.querySelectorAll("td");
 
-        if (colunas.length < 4) return; // Garante que tem colunas suficientes antes de preencher
+        if (colunas.length < 9) return; // Garante que tem colunas suficientes antes de preencher
 
         let ta = colunas[1].textContent.trim(); // Coluna DWDM LINHA
         let taRaiz = colunas[2].textContent.trim(); // Coluna TA RAIZ (REDE)
         let dataAbertura = colunas[5].textContent.trim(); // Coluna DATA ALARME
         let municipioCompleto = colunas[3].textContent.trim(); // Coluna LOCALIDADE (Município)
-        let oltris = colunas[8].textContent.trim(); // Coluna RISCO OLT
+        let hl4 = colunas[7].textContent.trim(); // Coluna HL4
 
         // Pegando apenas o que vem antes do "-" no município
         let municipio = municipioCompleto.split("-")[0].trim();
@@ -398,8 +457,10 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("ta").value = ta;
         document.getElementById("taRaiz").value = taRaiz;
         document.getElementById("dataAbertura").value = formatarData(dataAbertura);
-        document.getElementById("municipio").value = municipio; // Adicionando o município
-        document.getElementById("oltris").value = oltris; // Adicionando o município
+        document.getElementById("municipio").value = municipio;
+
+        // Buscar e somar OLT por HL4
+        calcularOltsEmRisco(hl4);
     }
 
     function formatarData(data) {
@@ -420,16 +481,6 @@ document.addEventListener("DOMContentLoaded", function () {
         observer.observe(tabela, { childList: true, subtree: true });
     }
 });
-
-
-
-
-
-
-
-
-
-
 
 function criarLinha(celulas = 22, valores = []) {
             let tabela = document.getElementById("tabela-body");
@@ -567,7 +618,12 @@ function toggleOutroOptions() {
  var dataAbertura = document.getElementById('dataAbertura').value;
  var taRaiz = document.getElementById('taRaiz').value;
  var oltris = document.getElementById('oltris').value;
-  var gestorAtual = document.getElementById('gestorAtual').value;
+
+ var pontaa = document.getElementById('pontaa').value;
+ var pontab = document.getElementById('pontab').value;
+ var cabo = document.getElementById('cabo').value;
+
+ var gestorAtual = document.getElementById('gestorAtual').value;
  var tempoNoc = document.getElementById('tempoNoc').value;
  var tempoN1 = document.getElementById('tempoN1').value;
  var tempoRede = document.getElementById('tempoRede').value;
@@ -609,12 +665,41 @@ function toggleOutroOptions() {
    return `${String(diffHrs).padStart(2, '0')}:${String(diffMins).padStart(2, '0')}`;
  }
 
+
+ 
+
  document.getElementById('carimboEscalonamento').textContent = escalonamento;
  document.getElementById('carimboMunicipio').textContent = municipio;
  document.getElementById('carimboTA').textContent = ta;
  document.getElementById('carimboDataAbertura').textContent = formatarDataHora(dataAbertura);
  document.getElementById('carimboTARaiz').textContent = taRaiz;
  document.getElementById('carimbooltris').textContent = oltris;
+
+ const rotasPlanoQueimadas = [
+  { "Ponta A": "BRH.GV", "Ponta B": "PTG.PT", "CABO": "283" },
+  { "Ponta A": "SRR.VS", "Ponta B": "BRS.BR", "CABO": "42" },
+  { "Ponta A": "ARQ.FI", "Ponta B": "PTG.PT", "CABO": "220" },
+  { "Ponta A": "LUDS.LD", "Ponta B": "NLZ.TM", "CABO": "247" },
+  { "Ponta A": "POR.LE", "Ponta B": "ARQ.FI", "CABO": "290" },
+  { "Ponta A": "CTD.RB", "Ponta B": "SRR.VS", "CABO": "84" },
+  { "Ponta A": "IPV.SM", "Ponta B": "RFA.CP", "CABO": "274" },
+  { "Ponta A": "ARQ.FI", "Ponta B": "SCL.AE", "CABO": "230" },
+  { "Ponta A": "IIN.IP", "Ponta B": "SCL.AE", "CABO": "240" }
+];
+
+const rotaMatch = rotasPlanoQueimadas.find(rota =>
+  ((rota["Ponta A"] === pontaa && rota["Ponta B"] === pontab) ||
+   (rota["Ponta A"] === pontab && rota["Ponta B"] === pontaa)) &&
+   rota["CABO"] === cabo
+);
+
+let textoRota = `${pontaa} / ${pontab} / ${cabo}`;
+if (rotaMatch) {
+  textoRota += `<br><span style="color: red; font-weight: bold;">⚠️ Atenção! ⚠️</span><br><span style="color: red; font-weight: bold;">Rota faz parte do plano queimadas!</span>`;
+}
+ 
+document.getElementById('carimbopontABC').innerHTML = textoRota;
+
  document.getElementById('carimboGestorAtual').textContent = gestorAtual;
  document.getElementById('carimboTempoNoc').textContent = tempoNoc;
  document.getElementById('carimboTempoN1').textContent = tempoN1;
