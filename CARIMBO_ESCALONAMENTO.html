@@ -30,7 +30,7 @@
  border: 2px solid #000;
  padding: 10px;
  margin-top: 20px;
- display: block;
+ display: none;
  
  }
  .carimboTitulo {
@@ -687,17 +687,14 @@ function toggleOutroOptions() {
   { "Ponta A": "IIN.IP", "Ponta B": "SCL.AE", "CABO": "240" }
 ];
 
-const rotaMatch = rotasPlanoQueimadas.find(rota =>
-  ((rota["Ponta A"] === pontaa && rota["Ponta B"] === pontab) ||
-   (rota["Ponta A"] === pontab && rota["Ponta B"] === pontaa)) &&
-   rota["CABO"] === cabo
-);
+// Suponha que a variável 'cabo' já esteja definida
+const rotaMatch = rotasPlanoQueimadas.find(rota => rota["CABO"] === cabo);
 
 let textoRota = `${pontaa} / ${pontab} / ${cabo}`;
 if (rotaMatch) {
   textoRota += `<br><span style="color: red; font-weight: bold;">⚠️ Atenção! ⚠️</span><br><span style="color: red; font-weight: bold;">Rota faz parte do plano queimadas!</span>`;
 }
- 
+
 document.getElementById('carimbopontABC').innerHTML = textoRota;
 
  document.getElementById('carimboGestorAtual').textContent = gestorAtual;
