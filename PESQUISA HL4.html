@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -91,179 +92,200 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-<script>
-  let table, marcadores = [];
-  // Defina a ordem zIndex para cada camada
-  const camadas = {
-    HL1: L.layerGroup({ pane: 'hl1' }),
-    HL2: L.layerGroup({ pane: 'hl2' }),
-    HL3: L.layerGroup({ pane: 'hl3' }),
-    HL4: L.layerGroup({ pane: 'hl4' })
-  };
- 
-  function limparMarcadores() {
-    if (!camadas.HL4 || !marcadores) return;
-    
-    marcadores.forEach(m => {
-      if (m && camadas.HL4.hasLayer(m)) {
-        camadas.HL4.removeLayer(m);
-      }
-    });
-    marcadores = [];
-  }
- 
-  function atualizarMarcadores() {
-    if (!table) return;
-    
-    limparMarcadores();
-    const nodes = table.rows({ search: 'applied' }).nodes().toArray();
-    let count = {};
-    
-    nodes.forEach(n => {
-      const $n = $(n);
-      const lat = parseFloat($n.data('lat')), lng = parseFloat($n.data('long'));
-      if (isNaN(lat) || isNaN(lng)) return;
-      
-      const key = lat.toFixed(6) + "_" + lng.toFixed(6);
-      count[key] = (count[key] || 0) + 1;
-      const off = 0.0001 * (count[key] - 1);
-      const d = table.row(n).data();
-      const popup = `<b>${d[1]}</b><br>OLTs: ${d[6]}<br>Afetação: ${d[7]}`;
-      
-      const m = L.marker([lat + off, lng + off], {
-        icon: L.icon({ 
-          iconUrl: 'icons/icone_HL4.png', 
-          iconSize: [18, 18], 
-          iconAnchor: [15, 30], 
-          popupAnchor: [0, -30] 
-        }),
-        zIndexOffset: -10000 // Coloca HL4 no fundo
-      }).bindPopup(popup);
-      
-      if (camadas.HL4) {
-        m.addTo(camadas.HL4);
-      }
-      marcadores.push(m);
-    });
-  }
- 
-  $(function() {
-    // Inicializa o mapa
-    window.map = L.map('map', { minZoom: 5, maxZoom: 10 }).setView([-23.55, -46.63], 6);
-    
-    // Cria panes (camadas) com ordem z-index específica
-    map.createPane('hl1').style.zIndex = 650;
-    map.createPane('hl2').style.zIndex = 640;
-    map.createPane('hl3').style.zIndex = 630;
-    map.createPane('hl4').style.zIndex = 620;
-    
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
-      attribution: '© OpenStreetMap contributors' 
-    }).addTo(map);
- 
-    // Adiciona todas as camadas ao mapa na ordem correta
-    camadas.HL4.addTo(map); // Primeiro o mais baixo
-    camadas.HL3.addTo(map);
-    camadas.HL2.addTo(map);
-    camadas.HL1.addTo(map); // Por último o mais alto
- 
-    // Carrega dados HL4
-    fetch('https://grupotel-web.github.io/dadosHL4.json')
-      .then(r => r.json())
-      .then(data => {
-        let html = '';
-        data.forEach(it => {
-          html += `<tr data-lat="${it.LAT}" data-long="${it.LONG}">
-            <td>${it.Status}</td>
-            <td>${it.Hostname}</td>
-            <td>${it.Site_Sigla}</td>
-            <td>${it.Site}</td>
-            <td>${it["Sigla Fusion"]}</td>
-            <td>${it["Site fixa"]}</td>
-            <td>${it.OLTs}</td>
-            <td>${it.Afetação}</td>
-            <td>${it.TIPO}</td>
-            <td>${it.regional}</td>
-            <td>${it.ID}</td>
-          </tr>`;
-        });
-        $('#oltTable tbody').html(html);
- 
-        // Inicializa DataTable
-        table = $('#oltTable').DataTable({
-          paging: true,
-          pageLength: 20,
-          lengthChange: false,
-          ordering: true,
-          order: [[0, 'asc']],
-          scrollX: true,
-          searching: true,
-          language: {
-            search: "",
-            paginate: { previous: "Anterior", next: "Próximo" },
-            info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
-            infoEmpty: "Mostrando 0 a 0 de 0 registros",
-            zeroRecords: "Nenhum registro encontrado"
-          }
-        });
- 
-        atualizarMarcadores();
-        table.on('draw.dt', atualizarMarcadores);
-      })
-      .catch(error => console.error('Erro ao carregar dados:', error));
- 
-    // Dados HL1–HL3 fixos
-    const dadosHL = {
-      HL1: [ ["i-br-sp-spo-con-hl1-01", -23.548361, -46.643769], ["i-br-sp-spo-ibr-hl1-01", -23.578158, -46.651847], ["i-br-sp-spo-pdz-hl1-01", -23.536767, -46.677633], ["i-br-sp-spo-vma-hl1-01", -23.587708, -46.640706] ],
-      HL2: [ ["i-br-sp-arq-afl-hl2-01", -21.778008, -48.175197], ["i-br-sp-bru-ac-hl2-01", -22.328236, -49.067192], ["i-br-sp-cas-ce-hl2-01", -22.903992, -47.062583], ["i-br-sp-cas-cst-hl2-01", -22.892906, -47.081475], ["i-br-sp-spo-co-hl2-01", -23.548361, -46.643769], ["i-br-sp-spo-con-hl2-01", -23.548361, -46.643769], ["i-br-sp-spo-ib-hl2-01", -23.578161, -46.651850], ["i-br-sp-spo-ibr-hl2-01", -23.578158, -46.651847], ["i-br-sp-spo-pdz-hl2-01", -23.536767, -46.677633], ["i-br-sp-spo-pdz-hl2-02", -23.536767, -46.677633], ["i-br-sp-spo-vma-hl2-01", -23.587708, -46.640706], ["i-br-sp-spo-vma-hl2-02", -23.587708, -46.640706] ],
-      HL3: [ ["i-br-sp-cas-cen-hl3-01", -22.903992, -47.062583], ["i-br-sp-jai-jai-hl3-01", -23.198361, -46.876067], ["i-br-sp-mmm-mgt-hl3-01", -22.435194, -46.960794], ["i-br-sp-rpo-abl-hl3-01", -21.176497, -47.810533], ["i-br-sp-sjc-hum-hl3-01", -23.188903, -45.886581], ["i-br-sp-spo-jgr-hl3-01", -23.553453, -46.747158], ["i-br-sp-srr-vsp-hl3-01", -20.813636, -49.381875], ["i-br-mg-pso-jst-hl3-01", -23.307867, -46.007711], ["i-br-sp-arc-ari-hl3-01", -21.204814, -50.438717], ["i-br-sp-arq-afl-hl3-01", -21.778008, -48.175197], ["i-br-sp-bru-bac-hl3-01", -22.328236, -49.067192], ["i-br-sp-cas-cst-hl3-01", -22.892906, -47.081475], ["I-BR-SP-SOC-SGN-HL3-01", -23.510833, -47.488333], ["i-br-sp-spo-pdz-hl3-01", -23.536767, -46.677633], ["i-br-sp-cas-ce-hl3-01", -22.903992, -47.062583], ["I-BR-SP-CAS-CMB-HL3-01", -22.894914, -47.041494], ["I-BR-SP-PPE-PPI-HL3-01", -22.125117, -51.387306], ["i-br-sp-spo-mrb-hl3-01", -23.606047, -46.725525], ["I-BR-SP-STS-SWL-HL3-01", -23.955881, -46.325911] ]
+  <script>
+    let table, marcadores = [];
+    const camadas = {
+      HL1: L.layerGroup({ pane: 'hl1' }),
+      HL2: L.layerGroup({ pane: 'hl2' }),
+      HL3: L.layerGroup({ pane: 'hl3' }),
+      HL4: L.layerGroup({ pane: 'hl4' })
     };
- 
-    // Adiciona marcadores HL1–3 com z-index apropriado
-    Object.entries(dadosHL).forEach(([hl, lista]) => {
-      const zIndexValue = hl === 'HL1' ? 1000 : hl === 'HL2' ? 800 : 600;
-      
-      lista.forEach(([nome, lat, lng]) => {
-        const marker = L.marker([lat, lng], {
+   
+    function limparMarcadores() {
+      if (!camadas.HL4 || !marcadores) return;
+      marcadores.forEach(m => {
+        if (m && camadas.HL4.hasLayer(m)) {
+          camadas.HL4.removeLayer(m);
+        }
+      });
+      marcadores = [];
+    }
+   
+    function atualizarMarcadores() {
+      if (!table) return;
+      limparMarcadores();
+      const nodes = table.rows({ search: 'applied' }).nodes().toArray();
+      let count = {};
+      nodes.forEach(n => {
+        const $n = $(n);
+  const lat = parseFloat($n.data('lat')), lng = parseFloat($n.data('long'));
+        if (isNaN(lat) || isNaN(lng)) return;
+        const key = lat.toFixed(6) + "_" + lng.toFixed(6);
+        count[key] = (count[key] || 0) + 1;
+        const off = 0.0001 * (count[key] - 1);
+        const d = table.row(n).data();
+        const popup = `<b>${d[1]}</b><br>OLTs: ${d[6]}<br>Afetação: ${d[7]}`;
+        const m = L.marker([lat + off, lng + off], {
           icon: L.icon({
-            iconUrl: `icons/icone_${hl}.png`,
+            iconUrl: 'icons/icone_HL4.png',
             iconSize: [18, 18],
             iconAnchor: [15, 30],
             popupAnchor: [0, -30]
           }),
-          zIndexOffset: zIndexValue
-        }).bindPopup(`<b>${nome}</b>`);
-        
-        if (camadas[hl]) {
-          marker.addTo(camadas[hl]);
-        }
+          zIndexOffset: -10000
+        }).bindPopup(popup);
+        if (camadas.HL4) m.addTo(camadas.HL4);
+        marcadores.push(m);
       });
+    }
+   
+    $(function() {
+  window.map = L.map('map').setView([-23.55, -46.63], 6);
+      map.createPane('hl1').style.zIndex = 650;
+      map.createPane('hl2').style.zIndex = 640;
+      map.createPane('hl3').style.zIndex = 630;
+      map.createPane('hl4').style.zIndex = 620;
+      map.createPane('queimadas2024').style.zIndex = 500;
+      map.createPane('queimadas2025').style.zIndex = 510;
+   
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+   
+      camadas.HL1.addTo(map);
+      camadas.HL2.addTo(map);
+      camadas.HL3.addTo(map);
+      camadas.HL4.addTo(map);
+      const camadaQueimadas2024 = L.layerGroup({ pane: 'queimadas2024' }).addTo(map);
+      const camadaQueimadas2025 = L.layerGroup({ pane: 'queimadas2025' }).addTo(map);
+   
+  fetch('https://grupotel-web.github.io/dadosHL4.json')
+        .then(r => r.json())
+        .then(data => {
+          let html = '';
+          data.forEach(it => {
+  html += `<tr data-lat="${it.LAT}" data-long="${it.LONG}">
+              <td>${it.Status}</td>
+              <td>${it.Hostname}</td>
+              <td>${it.Site_Sigla}</td>
+              <td>${it.Site}</td>
+              <td>${it["Sigla Fusion"]}</td>
+              <td>${it["Site fixa"]}</td>
+              <td>${it.OLTs}</td>
+              <td>${it.Afetação}</td>
+              <td>${it.TIPO}</td>
+              <td>${it.regional}</td>
+              <td>${it.ID}</td>
+            </tr>`;
+          });
+          $('#oltTable tbody').html(html);
+          table = $('#oltTable').DataTable({
+            paging: true,
+            pageLength: 20,
+            lengthChange: false,
+            ordering: true,
+            order: [[0, 'asc']],
+            scrollX: true,
+            searching: true,
+            language: {
+              search: "",
+              paginate: { previous: "Anterior", next: "Próximo" },
+              info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+              infoEmpty: "Mostrando 0 a 0 de 0 registros",
+              zeroRecords: "Nenhum registro encontrado"
+            }
+          });
+          atualizarMarcadores();
+          table.on('draw.dt', atualizarMarcadores);
+        })
+        .catch(error => console.error('Erro ao carregar dados:', error));
+   
+        const dadosHL = {
+      HL1: [ ["i-br-sp-spo-con-hl1-01", -23.548361, -46.643769], ["i-br-sp-spo-ibr-hl1-01", -23.578158, -46.651847], ["i-br-sp-spo-pdz-hl1-01", -23.536767, -46.677633], ["i-br-sp-spo-vma-hl1-01", -23.587708, -46.640706] ],
+      HL2: [ ["i-br-sp-arq-afl-hl2-01", -21.778008, -48.175197], ["i-br-sp-bru-ac-hl2-01", -22.328236, -49.067192], ["i-br-sp-cas-ce-hl2-01", -22.903992, -47.062583], ["i-br-sp-cas-cst-hl2-01", -22.892906, -47.081475], ["i-br-sp-spo-co-hl2-01", -23.548361, -46.643769], ["i-br-sp-spo-con-hl2-01", -23.548361, -46.643769], ["i-br-sp-spo-ib-hl2-01", -23.578161, -46.651850], ["i-br-sp-spo-ibr-hl2-01", -23.578158, -46.651847], ["i-br-sp-spo-pdz-hl2-01", -23.536767, -46.677633], ["i-br-sp-spo-pdz-hl2-02", -23.536767, -46.677633], ["i-br-sp-spo-vma-hl2-01", -23.587708, -46.640706], ["i-br-sp-spo-vma-hl2-02", -23.587708, -46.640706] ],
+      HL3: [ ["i-br-sp-cas-cen-hl3-01", -22.903992, -47.062583], ["i-br-sp-jai-jai-hl3-01", -23.198361, -46.876067], ["i-br-sp-mmm-mgt-hl3-01", -22.435194, -46.960794], ["i-br-sp-rpo-abl-hl3-01", -21.176497, -47.810533], ["i-br-sp-sjc-hum-hl3-01", -23.188903, -45.886581], ["i-br-sp-spo-jgr-hl3-01", -23.553453, -46.747158], ["i-br-sp-srr-vsp-hl3-01", -20.813636, -49.381875], ["i-br-mg-pso-jst-hl3-01", -23.307867, -46.007711], ["i-br-sp-arc-ari-hl3-01", -21.204814, -50.438717], ["i-br-sp-arq-afl-hl3-01", -21.778008, -48.175197], ["i-br-sp-bru-bac-hl3-01", -22.328236, -49.067192], ["i-br-sp-cas-cst-hl3-01", -22.892906, -47.081475], ["I-BR-SP-SOC-SGN-HL3-01", -23.510833, -47.488333], ["i-br-sp-spo-pdz-hl3-01", -23.536767, -46.677633], ["i-br-sp-cas-ce-hl3-01", -22.903992, -47.062583], ["I-BR-SP-CAS-CMB-HL3-01", -22.894914, -47.041494], ["I-BR-SP-PPE-PPI-HL3-01", -22.125117, -51.387306], ["i-br-sp-spo-mrb-hl3-01", -23.606047, -46.725525], ["I-BR-SP-STS-SWL-HL3-01", -23.955881, -46.325911] ]
+    };
+      Object.entries(dadosHL).forEach(([hl, lista]) => {
+        const zIndexValue = hl === 'HL1' ? 1000 : hl === 'HL2' ? 800 : 600;
+        lista.forEach(([nome, lat, lng]) => {
+          const marker = L.marker([lat, lng], {
+            icon: L.icon({
+              iconUrl: `icons/icone_${hl}.png`,
+              iconSize: [18, 18],
+              iconAnchor: [15, 30],
+              popupAnchor: [0, -30]
+            }),
+            zIndexOffset: zIndexValue
+          }).bindPopup(`<b>${nome}</b>`);
+          camadas[hl].addLayer(marker);
+        });
+      });
+   
+      // CAMADA DE QUEIMADAS COM ÍCONES E POPUP
+  fetch('https://grupotel-web.github.io/queimadas.json')
+        .then(res => res.json())
+        .then(data => {
+          data.forEach(ponto => {
+            const lat = parseFloat(ponto.latitude);
+            const lng = parseFloat(ponto.longitude);
+            const ano = ponto.ANO;
+            if (isNaN(lat) || isNaN(lng)) return;
+   
+            const icone = L.icon({
+              iconUrl: ano === '2025' ? 'icons/fogo2025.png' : 'icons/fogo2024.png',
+              iconSize: [18, 18],
+              iconAnchor: [12, 24],
+              popupAnchor: [0, -24]
+            });
+   
+            const popup = `
+              <b>Localidade:</b> ${ponto.TQA_LOCALIDADE_NOME}<br>
+              <b>Tipo:</b> ${ponto.TQA_TIPO_BILHETE}<br>
+              <b>Data de Criação:</b> ${ponto.TQA_DATA_CRIACAO}<br>
+              <b>Ano:</b> ${ponto.ANO}<br>
+              <b>Rota:</b> ${ponto.ROTAIDA}<br>
+              <b>Código:</b> ${ponto.TQA_CODIGO}<br>
+              <b>Cabo:</b> ${ponto.CABO}
+            `;
+   
+            const marker = L.marker([lat, lng], {
+              icon: icone,
+              pane: ano === '2025' ? 'queimadas2025' : 'queimadas2024',
+              zIndexOffset: ano === '2025' ? 510 : 500
+            }).bindPopup(popup);
+   
+            if (ano === '2025') {
+              camadaQueimadas2025.addLayer(marker);
+            } else {
+              camadaQueimadas2024.addLayer(marker);
+            }
+          });
+        })
+        .catch(err => console.error('Erro ao carregar queimadas:', err));
+   
+      L.control.layers(null, {
+        "HL1": camadas.HL1,
+        "HL2": camadas.HL2,
+        "HL3": camadas.HL3,
+        "HL4": camadas.HL4,
+        "Queimadas 2024": camadaQueimadas2024,
+        "Queimadas 2025": camadaQueimadas2025
+      }, { collapsed: false }).addTo(map);
+   
+      $('#exportExcel').on('click', () => {
+        if (!table) return;
+        const vis = table.rows({ search: 'applied' }).data().toArray();
+        const hdr = ['Status','Hostname','Site_Sigla','Site','Sigla Fusion','Site fixa','OLTs','Afetação','TIPO','regional','ID'];
+        const ws = XLSX.utils.aoa_to_sheet([hdr,...vis]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'HL4s');
+        XLSX.writeFile(wb, 'Consulta_HL4s.xlsx');
+      });
+   
+      $('.sair').on('click', () => window.location.href = 'HOME.html');
     });
- 
-    // Controle de camadas
-    L.control.layers(null, {
-      "HL1": camadas.HL1,
-      "HL2": camadas.HL2,
-      "HL3": camadas.HL3,
-      "HL4": camadas.HL4
-    }, { collapsed: false }).addTo(map);
- 
-    // Botão exportar Excel
-    $('#exportExcel').on('click', () => {
-      if (!table) return;
-      
-      const vis = table.rows({ search: 'applied' }).data().toArray();
-      const hdr = ['Status','Hostname','Site_Sigla','Site','Sigla Fusion','Site fixa','OLTs','Afetação','TIPO','regional','ID'];
-      const ws = XLSX.utils.aoa_to_sheet([hdr,...vis]);
-      const wb = XLSX.utils.book_new(); 
-      XLSX.utils.book_append_sheet(wb, ws, 'HL4s');
-      XLSX.writeFile(wb, 'Consulta_HL4s.xlsx');
-    });
- 
-    // Botão sair
-    $('.sair').on('click', () => window.location.href = 'HOME.html');
-  });
-</script>
+  </script>
  
 </body>
 </html>
+
