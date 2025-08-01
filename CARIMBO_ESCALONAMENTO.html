@@ -191,6 +191,7 @@
   <option value="ADJACÊNCIA">ADJANCÊNCIA</option>
   <option value="BBN">BBN</option>
   <option value="CONDOMÍNIO PLANTA INTERNA">CONDOMÍNIO PLANTA INTERNA</option>
+  <option value="DWDM IMPACTO HL4">DWDM IMPACTO HL4</option>
  </select><br><br>
  
  <label for="municipio">Municipio:</label>
@@ -382,6 +383,64 @@
     </div>
   </div>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const escalonamentoSelect = document.getElementById("escalonamento");
+      const tituloElement = document.querySelector(".titulo");
+      const carimboTitulo = document.querySelector(".carimboTitulo");
+      const botoes = document.querySelectorAll(".botoes button");
+      const ths = document.querySelectorAll("th");
+      const container = document.querySelector(".container");
+      const carimboBox = document.getElementById("carimbo");
+   
+      const COR_PADRAO = "#ff6f00";
+      const COR_CRITICA = "#b30000";
+      const FUNDO_CONTAINER_CRITICO = "#ffeaea";
+      const FUNDO_CONTAINER_NORMAL = "#f9f9f9";
+      const FUNDO_CARIMBO_NORMAL = "#ffffff";
+      const TITULO_PADRAO = "NT-SPI 🌡️ Escalonamentos 🌡️";
+      const TITULO_CRITICO = 'NT - SPI <img src="icons/icone_HL4.png" style="height:20px; vertical-align:middle;"> DWDM IMPACTO HL4 <img src="icons/icone_HL4.png" style="height:20px; vertical-align:middle;">';
+   
+      escalonamentoSelect.addEventListener("change", function () {
+          const isCritico = this.value === "DWDM IMPACTO HL4";
+   
+          // Fundo geral da página
+  document.body.style.backgroundColor = isCritico ? COR_CRITICA : COR_PADRAO;
+   
+          // Botões
+          botoes.forEach(btn => {
+  btn.style.backgroundColor = isCritico ? COR_CRITICA : COR_PADRAO;
+          });
+   
+          // Cabeçalhos da tabela
+          ths.forEach(th => {
+  th.style.backgroundColor = isCritico ? COR_CRITICA : COR_PADRAO;
+          });
+   
+          // Container do formulário
+          if (container) {
+  container.style.backgroundColor = isCritico ? FUNDO_CONTAINER_CRITICO : FUNDO_CONTAINER_NORMAL;
+          }
+   
+          // Container do carimbo
+          if (carimboBox) {
+  carimboBox.style.backgroundColor = isCritico ? FUNDO_CONTAINER_CRITICO : FUNDO_CARIMBO_NORMAL;
+          }
+   
+          // Título do formulário
+          if (tituloElement) {
+              tituloElement.innerHTML = isCritico ? TITULO_CRITICO : TITULO_PADRAO;
+  tituloElement.style.backgroundColor = isCritico ? COR_CRITICA : COR_PADRAO;
+          }
+   
+          // Título do carimbo
+          if (carimboTitulo) {
+              carimboTitulo.innerHTML = isCritico ? TITULO_CRITICO : TITULO_PADRAO;
+  carimboTitulo.style.backgroundColor = isCritico ? COR_CRITICA : COR_PADRAO;
+          }
+      });
+  });
+  </script>
  <script>
 let cachedJson = null; // Cache variable for JSON data
 
